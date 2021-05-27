@@ -4,31 +4,14 @@ import (
 	"github.com/adityameharia/ravel/db"
 	"github.com/dgraph-io/badger/v3"
 	"github.com/hashicorp/raft"
-	"log"
-	"os"
 )
 
 type RavelLogStore struct {
-	db *db.RavelDatabase
-}
-
-func NewRavelLogStore() (*RavelLogStore, error) {
-	var ravelDb db.RavelDatabase
-	path := os.Getenv("LOG_STORE_PATH")
-	err := ravelDb.Init(path)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	return &RavelLogStore{
-		db: &ravelDb,
-	}, nil
 }
 
 func (r *RavelLogStore) FirstIndex() (uint64, error) {
 	var key uint64
-	err := r.db.Conn.View(func(txn *badger.Txn) error {
+	err := db.LogDB.Conn.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		it := txn.NewIterator(opts)
 		defer it.Close()
@@ -66,7 +49,7 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 		key := uint64ToBytes(l.Index)
 		val := raftLogToBytes(*l)
 
-		err := r.db.Write(key, val)
+		err := db.LogDB.Write(key, val)
 		return err
 	}
 
