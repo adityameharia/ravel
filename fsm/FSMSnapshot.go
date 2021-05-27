@@ -10,12 +10,17 @@ import (
 	"github.com/hashicorp/raft"
 )
 
+//implements the FSMSnapshot interface
+type FSMSnapshot struct {
+	db *db.RavelDatabase
+}
+
 type KeyValue struct {
 	Key   []byte `json:"key"`
 	Value []byte `json:"value"`
 }
 
-func Persist(sink raft.SnapshotSink) error {
+func (f *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
 
 	log.Println("Starting Snapshot")
 
@@ -24,7 +29,7 @@ func Persist(sink raft.SnapshotSink) error {
 	var kv KeyValue
 
 	//iterates over all the key in a seperate go routine and passes the values read into a channel
-	go db.KeyValueDB.View(func(txn *badger.Txn) error {
+	go f.db.Conn.View(func(txn *badger.Txn) error {
 
 		opts := badger.DefaultIteratorOptions
 		it := txn.NewIterator(opts)
@@ -74,6 +79,6 @@ func Persist(sink raft.SnapshotSink) error {
 	return nil
 }
 
-func Release() {
+func (f *FSMSnapshot) Release() {
 	log.Println("Snapshot finised")
 }
