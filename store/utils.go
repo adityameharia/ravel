@@ -30,12 +30,10 @@ func raftLogToBytes(l raft.Log) []byte {
 }
 
 // bytesToRaftLog converts []byte to a raft.Log object using msgpack serialization
-func bytesToRaftLog(b []byte) raft.Log {
-	var l raft.Log
-	err := msgpack.Unmarshal(b, &l)
+// and writes it on that pointer
+func bytesToRaftLog(b []byte, raftLog *raft.Log) error {
+	err := msgpack.Unmarshal(b, raftLog)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
-
-	return l
 }

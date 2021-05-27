@@ -2,10 +2,6 @@ package store
 
 import "testing"
 
-func TestNewRavelLogStore(t *testing.T) {
-
-}
-
 func TestRavelLogStore_FirstIndex(t *testing.T) {
 
 }
