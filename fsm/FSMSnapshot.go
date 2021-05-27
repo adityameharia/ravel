@@ -3,7 +3,6 @@ package fsm
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/adityameharia/ravel/db"
@@ -18,12 +17,14 @@ type KeyValue struct {
 
 func Persist(sink raft.SnapshotSink) error {
 
+	log.Println("Starting Snapshot")
+
 	c := make(chan KeyValue)
 
 	var kv KeyValue
 
 	//iterates over all the key in a seperate go routine and passes the values read into a channel
-	go db.Db.View(func(txn *badger.Txn) error {
+	go db.KeyValueDB.View(func(txn *badger.Txn) error {
 
 		opts := badger.DefaultIteratorOptions
 		it := txn.NewIterator(opts)
@@ -68,9 +69,11 @@ func Persist(sink raft.SnapshotSink) error {
 
 	}
 
+	log.Println("All keys have been persisted")
+
 	return nil
 }
 
 func Release() {
-	fmt.Println("Snapshot finised")
+	log.Println("Snapshot finised")
 }
