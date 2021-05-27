@@ -5,7 +5,6 @@ import (
 )
 
 type RavelLogStore struct {
-
 }
 
 func NewRavelLogStore() *RavelLogStore {
@@ -27,7 +26,7 @@ func (r *RavelLogStore) StoreLog(log *raft.Log) error {
 }
 
 func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
-
+	return nil
 }
 
 func (r *RavelLogStore) DeleteRange(min, max uint64) error {

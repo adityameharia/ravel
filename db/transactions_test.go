@@ -1,9 +1,10 @@
 package db
 
 import (
-	"github.com/dgraph-io/badger/v3"
 	"log"
 	"testing"
+
+	"github.com/dgraph-io/badger/v3"
 )
 
 func Setup() {
@@ -14,7 +15,7 @@ func Setup() {
 		log.Println(err)
 	}
 
-	err = db.Update(func(txn *badger.Txn) error {
+	err = Db.Update(func(txn *badger.Txn) error {
 		err := txn.Set([]byte("k1"), []byte("v1"))
 		if err != nil {
 			return err
