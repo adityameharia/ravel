@@ -18,7 +18,7 @@ func Setup() {
 		log.Println(err)
 	}
 
-	err = r.conn.Update(func(txn *badger.Txn) error {
+	err = r.Conn.Update(func(txn *badger.Txn) error {
 		err := txn.Set([]byte("k1"), []byte("v1"))
 		if err != nil {
 			return err

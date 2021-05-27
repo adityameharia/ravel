@@ -7,7 +7,7 @@ import (
 )
 
 type RavelDatabase struct {
-	conn *badger.DB
+	Conn *badger.DB
 }
 
 // Init initialises BadgerDB with the path provided.
@@ -18,7 +18,7 @@ func (r *RavelDatabase) Init(path string) error {
 	options.Logger = nil
 	options.SyncWrites = true
 
-	r.conn, err = badger.Open(options)
+	r.Conn, err = badger.Open(options)
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (r *RavelDatabase) Init(path string) error {
 
 // Close closes the connection to the BadgerDB instance
 func (r *RavelDatabase) Close() {
-	err := r.conn.Close()
+	err := r.Conn.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
