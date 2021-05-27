@@ -15,5 +15,5 @@ func main() {
 
 	badgerPath := os.Getenv("BADGER_PATH")
 	err = datastore.Init(badgerPath)
-	datastore.Close()
+	err = datastore.Close()
 }
