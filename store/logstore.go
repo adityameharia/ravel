@@ -5,6 +5,7 @@ import (
 )
 
 type RavelLogStore struct {
+
 }
 
 func NewRavelLogStore() *RavelLogStore {

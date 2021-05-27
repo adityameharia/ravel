@@ -7,15 +7,18 @@ import (
 	"github.com/dgraph-io/badger/v3"
 )
 
+var r RavelDatabase
+
 func Setup() {
 	path := "/tmp/badger_test"
-	err := Init(path)
+
+	err := r.Init(path)
 	if err != nil {
 		log.Println("Error in starting connection with Badger")
 		log.Println(err)
 	}
 
-	err = Db.Update(func(txn *badger.Txn) error {
+	err = r.conn.Update(func(txn *badger.Txn) error {
 		err := txn.Set([]byte("k1"), []byte("v1"))
 		if err != nil {
 			return err
@@ -31,9 +34,9 @@ func Setup() {
 
 func TestRead(t *testing.T) {
 	Setup()
-	defer Close()
+	defer r.Close()
 
-	v, err := Read([]byte("k1"))
+	v, err := r.Read([]byte("k1"))
 	if err != nil {
 		t.Error("Error in Read", err)
 	}
@@ -46,9 +49,9 @@ func TestRead(t *testing.T) {
 
 func TestWrite(t *testing.T) {
 	Setup()
-	defer Close()
+	defer r.Close()
 
-	err := Write([]byte("k2"), []byte("v2"))
+	err := r.Write([]byte("k2"), []byte("v2"))
 	if err != nil {
 		t.Error("Error in writing to Badger", err)
 	}
@@ -57,9 +60,9 @@ func TestWrite(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	Setup()
-	defer Close()
+	defer r.Close()
 
-	err := Delete([]byte("k1"))
+	err := r.Delete([]byte("k1"))
 	if err != nil {
 		t.Error("Error in deleting from Badger", err)
 	}

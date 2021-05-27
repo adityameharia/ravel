@@ -6,10 +6,10 @@ import (
 )
 
 // Read returns the value with the corresponding key in the db
-func Read(key []byte) ([]byte, error) {
+func (r *RavelDatabase) Read(key []byte) ([]byte, error) {
 	var value []byte
 
-	err := Db.View(func(txn *badger.Txn) error {
+	err := r.conn.View(func(txn *badger.Txn) error {
 		item, err := txn.Get(key)
 		if err != nil {
 			return err
@@ -35,8 +35,8 @@ func Read(key []byte) ([]byte, error) {
 }
 
 // Write writes the key and value to BadgerDB
-func Write(key []byte, val []byte) error {
-	err := Db.Update(func(txn *badger.Txn) error {
+func (r *RavelDatabase) Write(key []byte, val []byte) error {
+	err := r.conn.Update(func(txn *badger.Txn) error {
 		err := txn.Set(key, val)
 		if err != nil {
 			return err
@@ -48,8 +48,8 @@ func Write(key []byte, val []byte) error {
 }
 
 // Delete deletes the key value pair with the corresponding key from BadgerDB
-func Delete(key []byte) error {
-	err := Db.Update(func(txn *badger.Txn) error {
+func (r *RavelDatabase) Delete(key []byte) error {
+	err := r.conn.Update(func(txn *badger.Txn) error {
 		err := txn.Delete(key)
 		if err != nil {
 			return err

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-go test ./datastore
+go test ./db

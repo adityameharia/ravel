@@ -6,17 +6,19 @@ import (
 	badger "github.com/dgraph-io/badger/v3"
 )
 
-var Db *badger.DB
+type RavelDatabase struct {
+	conn *badger.DB
+}
 
 // Init initialises BadgerDB with the path provided.
-func Init(path string) error {
+func (r *RavelDatabase) Init(path string) error {
 	var err error
 
 	options := badger.DefaultOptions(path)
 	options.Logger = nil
 	options.SyncWrites = true
 
-	Db, err = badger.Open(options)
+	r.conn, err = badger.Open(options)
 	if err != nil {
 		return err
 	}
@@ -24,8 +26,8 @@ func Init(path string) error {
 }
 
 // Close closes the connection to the BadgerDB instance
-func Close() {
-	err := Db.Close()
+func (r *RavelDatabase) Close() {
+	err := r.conn.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
