@@ -30,6 +30,8 @@ func Setup() {
 
 func TestRead(t *testing.T) {
 	Setup()
+	defer Close()
+
 	v, err := Read([]byte("k1"))
 	if err != nil {
 		t.Error("Error in Read", err)
@@ -39,34 +41,25 @@ func TestRead(t *testing.T) {
 		t.Error("Error in read value", err)
 	}
 
-	err = Close()
-	if err != nil {
-		t.Error("Error in closing connection", err)
-	}
 }
 
 func TestWrite(t *testing.T) {
 	Setup()
+	defer Close()
+
 	err := Write([]byte("k2"), []byte("v2"))
 	if err != nil {
 		t.Error("Error in writing to Badger", err)
 	}
 
-	err = Close()
-	if err != nil {
-		t.Error("Error in closing connection", err)
-	}
 }
 
 func TestDelete(t *testing.T) {
 	Setup()
+	defer Close()
+
 	err := Delete([]byte("k1"))
 	if err != nil {
 		t.Error("Error in deleting from Badger", err)
-	}
-
-	err = Close()
-	if err != nil {
-		t.Error("Error in closing connection", err)
 	}
 }

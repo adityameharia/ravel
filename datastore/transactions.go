@@ -34,7 +34,7 @@ func Read(key []byte) ([]byte, error) {
 	return value, nil
 }
 
-// Write writes k and v
+// Write writes the key and value to BadgerDB
 func Write(key []byte, val []byte) error {
 	err := db.Update(func(txn *badger.Txn) error {
 		err := txn.Set(key, val)
@@ -47,7 +47,7 @@ func Write(key []byte, val []byte) error {
 	return err
 }
 
-// Delete deletes the k
+// Delete deletes the key value pair with the corresponding key from BadgerDB
 func Delete(key []byte) error {
 	err := db.Update(func(txn *badger.Txn) error {
 		err := txn.Delete(key)

@@ -2,6 +2,7 @@ package datastore
 
 import (
 	badger "github.com/dgraph-io/badger/v3"
+	"log"
 )
 
 var db *badger.DB
@@ -19,10 +20,9 @@ func Init(path string) error {
 }
 
 // Close closes the connection to the BadgerDB instance
-func Close() error {
+func Close() {
 	err := db.Close()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	return nil
 }
