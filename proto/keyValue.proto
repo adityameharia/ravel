@@ -3,6 +3,6 @@ package proto;
 option go_package = "./";
 
 message KeyValue{
-    repeated bytes key=1;
-    repeated bytes value=2;
+    bytes key=1;
+    optional bytes value=2;
 }
