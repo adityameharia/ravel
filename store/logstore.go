@@ -6,11 +6,13 @@ import (
 	"github.com/hashicorp/raft"
 )
 
-type RavelLogStore struct{}
+type RavelLogStore struct {
+	db *db.RavelDatabase
+}
 
 func (r *RavelLogStore) FirstIndex() (uint64, error) {
 	var key uint64
-	err := db.LogDB.Conn.View(func(txn *badger.Txn) error {
+	err := r.db.Conn.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		it := txn.NewIterator(opts)
 		defer it.Close()
@@ -34,7 +36,7 @@ func (r *RavelLogStore) FirstIndex() (uint64, error) {
 
 func (r *RavelLogStore) LastIndex() (uint64, error) {
 	var key uint64
-	err := db.LogDB.Conn.View(func(txn *badger.Txn) error {
+	err := r.db.Conn.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		opts.Reverse = true
 		it := txn.NewIterator(opts)
@@ -59,7 +61,7 @@ func (r *RavelLogStore) LastIndex() (uint64, error) {
 
 func (r *RavelLogStore) GetLog(index uint64, raftLog *raft.Log) error {
 	key := uint64ToBytes(index)
-	val, err := db.LogDB.Read(key)
+	val, err := r.db.Read(key)
 	if err != nil {
 		return err
 	}
@@ -76,7 +78,7 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 		key := uint64ToBytes(l.Index)
 		val := raftLogToBytes(*l)
 
-		err := db.LogDB.Write(key, val)
+		err := r.db.Write(key, val)
 		return err
 	}
 
@@ -87,15 +89,24 @@ func (r *RavelLogStore) DeleteRange(min uint64, max uint64) error {
 	minKey := uint64ToBytes(min)
 	maxKey := uint64ToBytes(max)
 
-	txn := db.LogDB.Conn.NewTransaction(true)
+	txn := r.db.Conn.NewTransaction(true)
 	defer txn.Discard()
 
 	opts := badger.DefaultIteratorOptions
 	it := txn.NewIterator(opts)
 	it.Seek(minKey)
 
-	for i := 0; i < (max-min); i++ {
+	for {
+		key := it.Item().Key()
 
+		if bytesToUint64(key) > max {
+			break
+		}
+
+		err  := r.db.Delete(key)
+
+
+		it.Next()
 	}
 
 	if err := txn.Commit(); err != nil {
