@@ -2,12 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
-
-	"github.com/adityameharia/ravel/db"
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -35,15 +31,4 @@ func init() {
 
 func main() {
 	flag.Parse()
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	badgerPath := os.Getenv("BADGER_PATH")
-	err = db.Init(badgerPath)
-	defer db.Close()
-
-	fmt.Println(c)
 }

@@ -11,7 +11,7 @@ type RavelDatabase struct {
 }
 
 // Init initialises BadgerDB with the path provided.
-func (r *RavelDatabase) Init(path string) (*badger.DB, error) {
+func (r *RavelDatabase) Init(path string) error {
 	var err error
 
 	options := badger.DefaultOptions(path)
@@ -20,9 +20,9 @@ func (r *RavelDatabase) Init(path string) (*badger.DB, error) {
 
 	r.Conn, err = badger.Open(options)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return r.Conn, nil
+	return nil
 }
 
 // Close closes the connection to the BadgerDB instance
