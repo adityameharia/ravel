@@ -10,6 +10,18 @@ type RavelLogStore struct {
 	db *db.RavelDatabase
 }
 
+func NewRavelLogStore(logDBPath string) (RavelLogStore, error) {
+	var ravelDB db.RavelDatabase
+	err := ravelDB.Init(logDBPath)
+	if err != nil {
+		return RavelLogStore{db: nil}, err
+	}
+
+	return RavelLogStore{
+		db: &ravelDB,
+	}, nil
+}
+
 func (r *RavelLogStore) FirstIndex() (uint64, error) {
 	var key uint64
 	err := r.db.Conn.View(func(txn *badger.Txn) error {
@@ -79,7 +91,9 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 		val := raftLogToBytes(*l)
 
 		err := r.db.Write(key, val)
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -87,7 +101,6 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 
 func (r *RavelLogStore) DeleteRange(min uint64, max uint64) error {
 	minKey := uint64ToBytes(min)
-	maxKey := uint64ToBytes(max)
 
 	txn := r.db.Conn.NewTransaction(true)
 	defer txn.Discard()
@@ -103,8 +116,10 @@ func (r *RavelLogStore) DeleteRange(min uint64, max uint64) error {
 			break
 		}
 
-		err  := r.db.Delete(key)
-
+		err := r.db.Delete(key)
+		if err != nil {
+			return err
+		}
 
 		it.Next()
 	}
