@@ -1,0 +1,8 @@
+syntax = "proto2";
+package proto;
+option go_package = "./";
+
+message KeyValue{
+    repeated bytes key=1;
+    repeated bytes value=2;
+}
