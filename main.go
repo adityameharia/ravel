@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/adityameharia/ravel/datastore"
+	"github.com/adityameharia/ravel/db"
 	"github.com/joho/godotenv"
 )
 
@@ -42,8 +42,8 @@ func main() {
 	}
 
 	badgerPath := os.Getenv("BADGER_PATH")
-	err = datastore.Init(badgerPath)
-	defer datastore.Close()
+	err = db.Init(badgerPath)
+	defer db.Close()
 
 	fmt.Println(c)
 }
