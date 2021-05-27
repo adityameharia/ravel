@@ -9,18 +9,20 @@ var db *badger.DB
 // Init initialises BadgerDB with the path provided.
 func Init(path string) error {
 	var err error
-	db, err = badger.Open(badger.DefaultOptions(path))
+	options := badger.DefaultOptions(path)
+	options.Logger = nil
+	db, err = badger.Open(options)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
+// Close closes the connection to the BadgerDB instance
 func Close() error {
 	err := db.Close()
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

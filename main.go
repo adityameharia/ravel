@@ -58,4 +58,5 @@ func main() {
 	}
 	fmt.Println(c)
 
+	err = datastore.Close()
 }
