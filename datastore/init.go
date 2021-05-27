@@ -1,23 +1,26 @@
 package datastore
 
 import (
-	"fmt"
-
 	badger "github.com/dgraph-io/badger/v3"
 )
 
 var db *badger.DB
 
-func OpenDb() error {
+// Init initialises BadgerDB with the path provided.
+func Init(path string) error {
 	var err error
-	db, err = badger.Open(badger.DefaultOptions("/home/adi/badger"))
+	db, err = badger.Open(badger.DefaultOptions(path))
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
 }
 
-func closeDb() {
-	db.Close()
+func Close() error {
+	err := db.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
