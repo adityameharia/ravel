@@ -10,8 +10,11 @@ var db *badger.DB
 // Init initialises BadgerDB with the path provided.
 func Init(path string) error {
 	var err error
+
 	options := badger.DefaultOptions(path)
 	options.Logger = nil
+	options.SyncWrites = true
+
 	db, err = badger.Open(options)
 	if err != nil {
 		return err
