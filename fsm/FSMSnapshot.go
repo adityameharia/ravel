@@ -1,13 +1,12 @@
 package fsm
 
 import (
-	"bytes"
-	"encoding/json"
 	"log"
 
 	"github.com/adityameharia/ravel/db"
 	"github.com/dgraph-io/badger/v3"
 	"github.com/hashicorp/raft"
+	"github.com/vmihailenco/msgpack/v5"
 )
 
 //implements the FSMSnapshot interface
@@ -55,23 +54,27 @@ func (f *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
 		return nil
 	})
 
-	KVBuffer := new(bytes.Buffer)
-	var dataRead KeyValue
+	var dataRead []KeyValue
+	var dr KeyValue
 	var ok bool
 
 	//reads the key values from the channel until it is closed and all the values have been read
 	for {
-		dataRead, ok = (<-c)
+		dr, ok = (<-c)
 		if !ok {
 			break
 		}
 
-		json.NewEncoder(KVBuffer).Encode(dataRead)
+		dataRead = append(dataRead, dr)
+	}
 
-		if _, err := sink.Write(KVBuffer.Bytes()); err != nil {
-			log.Fatal(err)
-		}
+	b, err := msgpack.Marshal(dataRead)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	if _, err := sink.Write(b); err != nil {
+		log.Fatal(err)
 	}
 
 	log.Println("All keys have been persisted")
