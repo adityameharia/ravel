@@ -2,7 +2,6 @@ package fsm
 
 import (
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -76,31 +75,42 @@ func (f *fsm) Apply(l *raft.Log) interface{} {
 }
 
 func (f *fsm) Restore(r io.ReadCloser) error {
-	log.Println("Restoring from Snapshot")
-	kvBuffer, err := ioutil.ReadAll(r)
+	err := f.db.Conn.DropAll()
 	if err != nil {
-		log.Fatal("Unable to read Snapshot")
+		log.Fatal("Unable to delete previous state")
 		return err
 	}
-
-	var KV []KeyValue
-
-	err = msgpack.Unmarshal(kvBuffer, KV)
+	err = f.db.Conn.Load(r, 100)
 	if err != nil {
-		log.Fatal(("Unable to unmarshal Snapshot"))
+		log.Fatal("Unable to restore Snapshot")
 		return err
 	}
-
-	for _, kv := range KV {
-		err = f.db.Write([]byte(kv.Key), []byte(kv.Value))
-		if err != nil {
-			log.Fatal(("Unable to write key"))
-			return err
-		}
-	}
-
-	log.Println("Snapshot restored")
 	return nil
+	// log.Println("Restoring from Snapshot")
+	// kvBuffer, err := ioutil.ReadAll(r)
+	// if err != nil {
+	// 	log.Fatal("Unable to read Snapshot")
+	// 	return err
+	// }
+
+	// var KV []KeyValue
+
+	// err = msgpack.Unmarshal(kvBuffer, KV)
+	// if err != nil {
+	// 	log.Fatal(("Unable to unmarshal Snapshot"))
+	// 	return err
+	// }
+
+	// for _, kv := range KV {
+	// 	err = f.db.Write([]byte(kv.Key), []byte(kv.Value))
+	// 	if err != nil {
+	// 		log.Fatal(("Unable to write key"))
+	// 		return err
+	// 	}
+	// }
+
+	// log.Println("Snapshot restored")
+
 }
 
 func (f *fsm) Close() {
