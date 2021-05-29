@@ -11,14 +11,14 @@ type RavelStableStore struct {
 	db *db.RavelDatabase
 }
 
-func NewRavelStableStore(logDBPath string) (RavelStableStore, error) {
+func NewRavelStableStore(logDBPath string) (*RavelStableStore, error) {
 	var ravelDB db.RavelDatabase
 	err := ravelDB.Init(logDBPath)
 	if err != nil {
-		return RavelStableStore{db: nil}, err
+		return nil, err
 	}
 
-	return RavelStableStore{
+	return &RavelStableStore{
 		db: &ravelDB,
 	}, nil
 }

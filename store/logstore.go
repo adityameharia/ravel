@@ -10,14 +10,14 @@ type RavelLogStore struct {
 	db *db.RavelDatabase
 }
 
-func NewRavelLogStore(logDBPath string) (RavelLogStore, error) {
+func NewRavelLogStore(logDBPath string) (*RavelLogStore, error) {
 	var ravelDB db.RavelDatabase
 	err := ravelDB.Init(logDBPath)
 	if err != nil {
-		return RavelLogStore{db: nil}, err
+		return nil, err
 	}
 
-	return RavelLogStore{
+	return &RavelLogStore{
 		db: &ravelDB,
 	}, nil
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/vmihailenco/msgpack/v5"
 )
 
-type fsm struct {
+type Fsm struct {
 	db *db.RavelDatabase
 }
 
@@ -19,7 +19,7 @@ type LogData struct {
 	Value     string `json:"value"`
 }
 
-func NewFSM(path string) (*fsm, error) {
+func NewFSM(path string) (*Fsm, error) {
 	var r db.RavelDatabase
 	err := r.Init(path)
 	if err != nil {
@@ -29,12 +29,12 @@ func NewFSM(path string) (*fsm, error) {
 
 	log.Println("Initialised FSM")
 
-	return &fsm{
+	return &Fsm{
 		db: &r,
 	}, nil
 }
 
-func (f *fsm) Get(key string) (string, error) {
+func (f *Fsm) Get(key string) (string, error) {
 	v, err := f.db.Read([]byte(key))
 	if err != nil {
 		return "", err
@@ -43,14 +43,14 @@ func (f *fsm) Get(key string) (string, error) {
 }
 
 //returns a FSMSnapshot object for future use by raft lib
-func (f *fsm) Snapshot() (raft.FSMSnapshot, error) {
+func (f *Fsm) Snapshot() (raft.FSMSnapshot, error) {
 	log.Println("Generate FSMSnapshot")
 	return &FSMSnapshot{
 		db: f.db,
 	}, nil
 }
 
-func (f *fsm) Apply(l *raft.Log) interface{} {
+func (f *Fsm) Apply(l *raft.Log) interface{} {
 	var d LogData
 
 	err := msgpack.Unmarshal(l.Data, &d)
@@ -66,7 +66,7 @@ func (f *fsm) Apply(l *raft.Log) interface{} {
 
 }
 
-func (f *fsm) Restore(r io.ReadCloser) error {
+func (f *Fsm) Restore(r io.ReadCloser) error {
 	err := f.db.Conn.DropAll()
 	if err != nil {
 		log.Fatal("Unable to delete previous state")
@@ -105,6 +105,6 @@ func (f *fsm) Restore(r io.ReadCloser) error {
 
 }
 
-func (f *fsm) Close() {
+func (f *Fsm) Close() {
 	f.db.Close()
 }
