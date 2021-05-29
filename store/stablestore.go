@@ -15,6 +15,7 @@ func NewRavelStableStore(logDBPath string) (*RavelStableStore, error) {
 	var ravelDB db.RavelDatabase
 	err := ravelDB.Init(logDBPath)
 	if err != nil {
+		log.Fatal("StableStore: Unable to setup new Stable Store")
 		return nil, err
 	}
 
@@ -33,7 +34,7 @@ func (s *RavelStableStore) Get(key []byte) ([]byte, error) {
 		val = []byte{}
 	}
 	if err != nil && err != badger.ErrKeyNotFound {
-		log.Println(("Error retrieving key from db"))
+		log.Println("StableStore: Error retrieving key from db")
 	}
 	return val, nil
 }
@@ -49,7 +50,7 @@ func (s *RavelStableStore) GetUint64(key []byte) (uint64, error) {
 		valUInt = 0
 	}
 	if err != nil && err != badger.ErrKeyNotFound {
-		log.Println(("Error retrieving key from db"))
+		log.Println("StableStore: Error retrieving key from db")
 	}
 	return valUInt, nil
 }
