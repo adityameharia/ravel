@@ -19,17 +19,17 @@ type KeyValue struct {
 
 func (f *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
 
-	log.Println("Starting Snapshot")
+	log.Println("FSMSnapshot: Starting Snapshot")
 
 	_, err := f.Db.Conn.Backup(sink, 0)
 	if err != nil {
-		log.Println("Unable to take Snapshot")
+		log.Println("FSMSnapshot: Unable to take Snapshot")
 		return err
 	}
 
 	err = sink.Close()
 	if err != nil {
-		log.Println("Unable to close Sink")
+		log.Println("FSMSnapshot: Unable to close Sink")
 		return err
 	}
 
@@ -95,5 +95,5 @@ func (f *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
 }
 
 func (f *FSMSnapshot) Release() {
-	log.Println("Snapshot finised")
+	log.Println("FSMSnapshot: Snapshot finised")
 }

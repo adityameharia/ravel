@@ -23,11 +23,11 @@ func NewFSM(path string) (*Fsm, error) {
 	var r db.RavelDatabase
 	err := r.Init(path)
 	if err != nil {
-		log.Fatal(("Unable to Setup Databas"))
+		log.Fatal("FSM: Unable to Setup Database")
 		return nil, err
 	}
 
-	log.Println("Initialised FSM")
+	log.Println("FSM: Initialised FSM")
 
 	return &Fsm{
 		Db: &r,
@@ -35,6 +35,7 @@ func NewFSM(path string) (*Fsm, error) {
 }
 
 func (f *Fsm) Get(key string) (string, error) {
+	log.Println("FSM: Getting Key")
 	v, err := f.Db.Read([]byte(key))
 	if err != nil {
 		return "", err
@@ -44,18 +45,19 @@ func (f *Fsm) Get(key string) (string, error) {
 
 //returns a FSMSnapshot object for future use by raft lib
 func (f *Fsm) Snapshot() (raft.FSMSnapshot, error) {
-	log.Println("Generate FSMSnapshot")
+	log.Println("FSM: Generate FSMSnapshot")
 	return &FSMSnapshot{
 		Db: f.Db,
 	}, nil
 }
 
 func (f *Fsm) Apply(l *raft.Log) interface{} {
+	log.Println("FSM: Applying set/delete")
 	var d LogData
 
 	err := msgpack.Unmarshal(l.Data, &d)
 	if err != nil {
-		log.Fatal("Unable to get data from log")
+		log.Fatal("FSM: Unable to get data from log")
 	}
 
 	if d.Operation == "set" {
@@ -67,14 +69,15 @@ func (f *Fsm) Apply(l *raft.Log) interface{} {
 }
 
 func (f *Fsm) Restore(r io.ReadCloser) error {
+	log.Println("FSM: Restore called")
 	err := f.Db.Conn.DropAll()
 	if err != nil {
-		log.Fatal("Unable to delete previous state")
+		log.Fatal("FSM: Unable to delete previous state")
 		return err
 	}
 	err = f.Db.Conn.Load(r, 100)
 	if err != nil {
-		log.Fatal("Unable to restore Snapshot")
+		log.Fatal("FSM: Unable to restore Snapshot")
 		return err
 	}
 	return nil
@@ -106,5 +109,6 @@ func (f *Fsm) Restore(r io.ReadCloser) error {
 }
 
 func (f *Fsm) Close() {
+	log.Println("FSM: Close called")
 	f.Db.Close()
 }
