@@ -1,15 +1,15 @@
 package store
 
 import (
-	"github.com/hashicorp/raft"
 	"log"
 	"testing"
 	"time"
+
+	"github.com/hashicorp/raft"
 )
 
-
 func TestRavelLogStore_StoreLog(t *testing.T) {
-	r, err := NewRavelLogStore("/tmp/badger/test")
+	r, err := NewRavelLogStore("/tmp/badger/test/log")
 	if err != nil {
 		log.Println(err)
 	}
@@ -18,10 +18,10 @@ func TestRavelLogStore_StoreLog(t *testing.T) {
 	var i uint64
 	for i = 0; i < 5; i++ {
 		l := raft.Log{
-			Index: i,
-			Term: 0,
-			Type: raft.LogCommand,
-			Data: []byte("Test Log Data"),
+			Index:      i,
+			Term:       0,
+			Type:       raft.LogCommand,
+			Data:       []byte("Test Log Data"),
 			AppendedAt: time.Now(),
 		}
 

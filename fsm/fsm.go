@@ -13,7 +13,7 @@ type fsm struct {
 	db *db.RavelDatabase
 }
 
-type logData struct {
+type LogData struct {
 	Operation string `json:"op,omitempty"`
 	Key       string `json:"key"`
 	Value     string `json:"value"`
@@ -51,7 +51,7 @@ func (f *fsm) Snapshot() (raft.FSMSnapshot, error) {
 }
 
 func (f *fsm) Apply(l *raft.Log) interface{} {
-	var d logData
+	var d LogData
 
 	err := msgpack.Unmarshal(l.Data, &d)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 )
 
 func TestSet(t *testing.T) {
-	s, err := NewRavelStableStore("/tmp/badger/test")
+	s, err := NewRavelStableStore("/tmp/badger/test/stable")
 	if err != nil {
 		t.Error("Error in newstablestore")
 	}
@@ -18,7 +18,7 @@ func TestSet(t *testing.T) {
 }
 
 func TestSetUint64(t *testing.T) {
-	s, err := NewRavelStableStore("/tmp/badger/test")
+	s, err := NewRavelStableStore("/tmp/badger/test/stable")
 	if err != nil {
 		t.Error("Error in newstablestore")
 	}
@@ -30,7 +30,7 @@ func TestSetUint64(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	s, err := NewRavelStableStore("/tmp/badger/test")
+	s, err := NewRavelStableStore("/tmp/badger/test/stable")
 	if err != nil {
 		t.Error("Error in newstablestore")
 	}
@@ -48,7 +48,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestGetUint64(t *testing.T) {
-	s, err := NewRavelStableStore("/tmp/badger/test")
+	s, err := NewRavelStableStore("/tmp/badger/test/stable")
 	if err != nil {
 		t.Error("Error in newstablestore")
 	}
