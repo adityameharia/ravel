@@ -2,7 +2,6 @@ package db
 
 import (
 	"github.com/dgraph-io/badger/v3"
-	"log"
 )
 
 // Read returns the value with the corresponding key in the db
@@ -27,7 +26,6 @@ func (r *RavelDatabase) Read(key []byte) ([]byte, error) {
 	})
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
