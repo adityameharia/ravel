@@ -1,10 +1,11 @@
 package store
 
 import (
+	"log"
+
 	"github.com/adityameharia/ravel/db"
 	"github.com/dgraph-io/badger/v3"
 	"github.com/hashicorp/raft"
-	"log"
 )
 
 // RavelLogStore implements raft.LogStore interface. The functions define the operations possible on the Logs which is
@@ -23,6 +24,7 @@ func NewRavelLogStore(logDBPath string) (*RavelLogStore, error) {
 		return nil, err
 	}
 
+	log.Println("LogStore: Initialised Log Store")
 	return &RavelLogStore{
 		Db: &ravelDB,
 	}, nil

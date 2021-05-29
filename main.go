@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/adityameharia/ravel/node"
 	"log"
 	"os"
+
+	"github.com/adityameharia/ravel/node"
 )
 
 type Config struct {
@@ -33,7 +34,7 @@ func init() {
 func main() {
 	flag.Parse()
 	var r node.RavelNode
-	err := r.Open(true, "1", "/tmp/badger/run", c.raftAddr, "localhost:5000")
+	err := r.Open(true, "1", "/tmp/badger/run", "/tmp/badger/run/snapshot", "localhost:5000")
 	if err != nil {
 		log.Println(err)
 	}

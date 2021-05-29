@@ -8,30 +8,20 @@ import (
 
 	"github.com/adityameharia/ravel/fsm"
 	"github.com/adityameharia/ravel/store"
-	"github.com/dgraph-io/badger/v3"
 	"github.com/hashicorp/raft"
 	"github.com/vmihailenco/msgpack/v5"
 )
 
 // RavelNode represents a node inside the cluster.
 type RavelNode struct {
-	Fsm   *fsm.RavelFSM
-	Raft  *raft.Raft
+	Fsm  *fsm.RavelFSM
+	Raft *raft.Raft
 }
 
 // Open creates initialises a raft.Raft instance
 func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, raftDir string, BindAddr string) error {
 	log.Println("RavelNode: Opening node")
 	var raftNode RavelNode
-	opts := badger.DefaultOptions(badgerPath)
-
-	db, err := badger.Open(opts)
-	if err != nil {
-		log.Fatal("RavelNode: Unable to open DB")
-		return err
-	}
-
-	raftNode.Fsm.Db.Conn = db
 
 	//setting up Raft Config
 	config := raft.DefaultConfig()
@@ -60,25 +50,26 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, r
 	//creating log and stable store
 	var logStore raft.LogStore
 	var stableStore raft.StableStore
-	var f raft.FSM
 
-	logStore, err = store.NewRavelLogStore(raftDir + "/logs")
+	logStore, err = store.NewRavelLogStore(badgerPath + "/logs")
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create Log store")
 		return err
 	}
 
-	stableStore, err = store.NewRavelStableStore(raftDir + "/stable")
+	f, err := fsm.NewFSM(badgerPath + "/fsm")
+	if err != nil {
+		log.Fatal("RavelNode: Unable to create FSM")
+		return err
+	}
+
+	stableStore, err = store.NewRavelStableStore(badgerPath + "/stable")
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create Stable store")
 		return err
 	}
 
-	f, err = fsm.NewFSM(raftDir)
-	if err != nil {
-		log.Fatal("RavelNode: Unable to create FSM")
-		return err
-	}
+	raftNode.Fsm = f
 
 	r, err := raft.NewRaft(config, f, logStore, stableStore, snapshot, transport)
 	if err != nil {
