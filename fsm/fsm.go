@@ -3,11 +3,9 @@ package fsm
 import (
 	"io"
 	"log"
-	"os"
 
 	"github.com/adityameharia/ravel/db"
 	"github.com/hashicorp/raft"
-	"github.com/joho/godotenv"
 	"github.com/vmihailenco/msgpack/v5"
 )
 
@@ -22,14 +20,8 @@ type logData struct {
 }
 
 func NewFSM(path string) (*fsm, error) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	badgerPath := os.Getenv("BADGER_PATH")
 	var r db.RavelDatabase
-	err = r.Init(badgerPath)
+	err := r.Init(path)
 	if err != nil {
 		log.Fatal(("Unable to Setup Databas"))
 		return nil, err
