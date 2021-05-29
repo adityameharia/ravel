@@ -4,6 +4,7 @@ import (
 	"github.com/adityameharia/ravel/db"
 	"github.com/dgraph-io/badger/v3"
 	"github.com/hashicorp/raft"
+	"log"
 )
 
 type RavelLogStore struct {
@@ -14,6 +15,7 @@ func NewRavelLogStore(logDBPath string) (*RavelLogStore, error) {
 	var ravelDB db.RavelDatabase
 	err := ravelDB.Init(logDBPath)
 	if err != nil {
+		log.Fatalf("NewRavelLogStore: %v\n", err)
 		return nil, err
 	}
 
@@ -41,8 +43,10 @@ func (r *RavelLogStore) FirstIndex() (uint64, error) {
 	})
 
 	if err != nil {
+		log.Fatalf("RavelLogStore.FirstIndex: %v\n", err)
 		return 0, err
 	}
+
 	return key, nil
 }
 
@@ -66,6 +70,7 @@ func (r *RavelLogStore) LastIndex() (uint64, error) {
 	})
 
 	if err != nil {
+		log.Fatalf("RavelLogStore.LastIndex: %v\n", err)
 		return 0, err
 	}
 	return key, nil
@@ -75,6 +80,7 @@ func (r *RavelLogStore) GetLog(index uint64, raftLog *raft.Log) error {
 	key := uint64ToBytes(index)
 	val, err := r.Db.Read(key)
 	if err != nil {
+		log.Fatalf("RavelLogStore.GetLog: %v\n", err)
 		return err
 	}
 
@@ -92,6 +98,7 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 
 		err := r.Db.Write(key, val)
 		if err != nil {
+			log.Fatalf("RavelLogStore.StoreLogs: %v\n", err)
 			return err
 		}
 	}
@@ -125,6 +132,7 @@ func (r *RavelLogStore) DeleteRange(min uint64, max uint64) error {
 	}
 
 	if err := txn.Commit(); err != nil {
+		log.Fatalf("RavelLogStore.DeleteRange: %v\n", err)
 		return err
 	}
 	return nil
