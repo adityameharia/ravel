@@ -6,6 +6,8 @@ import (
 	badger "github.com/dgraph-io/badger/v3"
 )
 
+// RavelDatabase represents an overlay on top of BadgerDB, it exposes Init, Close, Read, Write and Delete functions -
+// these functions eventually perform mentioned operations on an instance of BadgerDB and these operations persist on disk
 type RavelDatabase struct {
 	Conn *badger.DB
 }

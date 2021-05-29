@@ -4,7 +4,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/adityameharia/ravel/fsm"
@@ -14,23 +13,21 @@ import (
 	"github.com/vmihailenco/msgpack/v5"
 )
 
-type Node struct {
-	Mu   sync.Mutex
-	Fsm  *fsm.Fsm
-	Raft *raft.Raft
+// RavelNode represents a node inside the cluster.
+type RavelNode struct {
+	Fsm   *fsm.RavelFSM
+	Raft  *raft.Raft
 }
 
-func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdir string, BindAddr string) error {
-
-	log.Println("Node: Opening node")
-
-	var raftNode Node
-
+// Open creates initialises a raft.Raft instance
+func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, raftDir string, BindAddr string) error {
+	log.Println("RavelNode: Opening node")
+	var raftNode RavelNode
 	opts := badger.DefaultOptions(badgerPath)
 
 	db, err := badger.Open(opts)
 	if err != nil {
-		log.Fatal("Node: Unable to open DB")
+		log.Fatal("RavelNode: Unable to open DB")
 		return err
 	}
 
@@ -44,19 +41,19 @@ func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 	// Setup Raft communication
 	addr, err := net.ResolveTCPAddr("tcp", BindAddr)
 	if err != nil {
-		log.Fatal("Node: Unable to resolve TCP Bind Address")
+		log.Fatal("RavelNode: Unable to resolve TCP Bind Address")
 		return err
 	}
 	transport, err := raft.NewTCPTransport(BindAddr, addr, 5, 2*time.Second, os.Stderr)
 	if err != nil {
-		log.Fatal("Node: Unable to create NewTCPTransport")
+		log.Fatal("RavelNode: Unable to create NewTCPTransport")
 		return err
 	}
 
 	// Create the snapshot store. This allows the Raft to truncate the log.
-	snapshot, err := raft.NewFileSnapshotStore(raftdir, 1, os.Stderr)
+	snapshot, err := raft.NewFileSnapshotStore(raftDir, 1, os.Stderr)
 	if err != nil {
-		log.Fatal("Node: Unable to create SnapShot store")
+		log.Fatal("RavelNode: Unable to create SnapShot store")
 		return err
 	}
 
@@ -65,27 +62,27 @@ func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 	var stableStore raft.StableStore
 	var f raft.FSM
 
-	logStore, err = store.NewRavelLogStore(raftdir + "/logs")
+	logStore, err = store.NewRavelLogStore(raftDir + "/logs")
 	if err != nil {
-		log.Fatal("Node: Unable to create Log store")
+		log.Fatal("RavelNode: Unable to create Log store")
 		return err
 	}
 
-	stableStore, err = store.NewRavelStableStore(raftdir + "/stable")
+	stableStore, err = store.NewRavelStableStore(raftDir + "/stable")
 	if err != nil {
-		log.Fatal("Node: Unable to create Stable store")
+		log.Fatal("RavelNode: Unable to create Stable store")
 		return err
 	}
 
-	f, err = fsm.NewFSM(raftdir)
+	f, err = fsm.NewFSM(raftDir)
 	if err != nil {
-		log.Fatal("Node: Unable to create FSM")
+		log.Fatal("RavelNode: Unable to create FSM")
 		return err
 	}
 
 	r, err := raft.NewRaft(config, f, logStore, stableStore, snapshot, transport)
 	if err != nil {
-		log.Fatal("Node: Unable initialise raft node")
+		log.Fatal("RavelNode: Unable initialise raft node")
 		return err
 	}
 
@@ -103,20 +100,21 @@ func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 	}
 
 	return nil
-
 }
 
-func (n *Node) Get(key string) (string, error) {
+// Get returns the value for the given key
+func (n *RavelNode) Get(key string) (string, error) {
 	if n.Raft.State() != raft.Leader {
-		log.Println("Node: Request sent to non leading replica")
+		log.Println("RavelNode: Request sent to non leading replica")
 		return "", raft.ErrNotLeader
 	}
 	return n.Fsm.Get(key)
 }
 
-func (n *Node) Set(key string, value string) error {
+// Set sets the key with the value
+func (n *RavelNode) Set(key string, value string) error {
 	if n.Raft.State() != raft.Leader {
-		log.Println("Node: Request sent to non leading replica")
+		log.Println("RavelNode: Request sent to non leading replica")
 		return raft.ErrNotLeader
 	}
 
@@ -128,7 +126,7 @@ func (n *Node) Set(key string, value string) error {
 
 	dataBuffer, err := msgpack.Marshal(data)
 	if err != nil {
-		log.Fatal("Node: Unable to marhsal key value")
+		log.Fatal("RavelNode: Unable to marhsal key value")
 		return err
 	}
 
@@ -137,9 +135,10 @@ func (n *Node) Set(key string, value string) error {
 	return f.Error()
 }
 
-func (n *Node) Delete(key string) error {
+// Delete deletes the entry with given key
+func (n *RavelNode) Delete(key string) error {
 	if n.Raft.State() != raft.Leader {
-		log.Println("Node: Request sent to non leading replica")
+		log.Println("RavelNode: Request sent to non leading replica")
 		return raft.ErrNotLeader
 	}
 
@@ -151,7 +150,7 @@ func (n *Node) Delete(key string) error {
 
 	dataBuffer, err := msgpack.Marshal(data)
 	if err != nil {
-		log.Fatal("Node: Unable to marhsal key value")
+		log.Fatal("RavelNode: Unable to marhsal key value")
 		return err
 	}
 

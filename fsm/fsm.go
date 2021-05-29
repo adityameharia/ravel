@@ -9,17 +9,21 @@ import (
 	"github.com/vmihailenco/msgpack/v5"
 )
 
-type Fsm struct {
+// RavelFSM implements the raft.FSM interface. It represents the Finite State Machine in a RavelNode. The individual
+// logs are "applied" on the FSM on receiving the commit RPC from the leader.
+type RavelFSM struct {
 	Db *db.RavelDatabase
 }
 
+// LogData represents the structure of individual commands on the Logs
 type LogData struct {
-	Operation string `json:"op,omitempty"`
-	Key       string `json:"key"`
-	Value     string `json:"value"`
+	Operation string
+	Key       string
+	Value     string
 }
 
-func NewFSM(path string) (*Fsm, error) {
+// NewFSM creates an instance of RavelFSM
+func NewFSM(path string) (*RavelFSM, error) {
 	var r db.RavelDatabase
 	err := r.Init(path)
 	if err != nil {
@@ -29,12 +33,13 @@ func NewFSM(path string) (*Fsm, error) {
 
 	log.Println("FSM: Initialised FSM")
 
-	return &Fsm{
+	return &RavelFSM{
 		Db: &r,
 	}, nil
 }
 
-func (f *Fsm) Get(key string) (string, error) {
+// Get returns the value for the provided key
+func (f *RavelFSM) Get(key string) (string, error) {
 	log.Println("FSM: Getting Key")
 	v, err := f.Db.Read([]byte(key))
 	if err != nil {
@@ -43,15 +48,16 @@ func (f *Fsm) Get(key string) (string, error) {
 	return string(v), nil
 }
 
-//returns a FSMSnapshot object for future use by raft lib
-func (f *Fsm) Snapshot() (raft.FSMSnapshot, error) {
+// Snapshot returns an raft.FSMSnapshot which captures a snapshot of the data at that moment in time
+func (f *RavelFSM) Snapshot() (raft.FSMSnapshot, error) {
 	log.Println("FSM: Generate FSMSnapshot")
 	return &FSMSnapshot{
 		Db: f.Db,
 	}, nil
 }
 
-func (f *Fsm) Apply(l *raft.Log) interface{} {
+// Apply commits the given log to the database.
+func (f *RavelFSM) Apply(l *raft.Log) interface{} {
 	log.Println("FSM: Applying set/delete")
 	var d LogData
 
@@ -68,7 +74,8 @@ func (f *Fsm) Apply(l *raft.Log) interface{} {
 
 }
 
-func (f *Fsm) Restore(r io.ReadCloser) error {
+// Restore restores from the data from the last captured snapshot
+func (f *RavelFSM) Restore(r io.ReadCloser) error {
 	log.Println("FSM: Restore called")
 	err := f.Db.Conn.DropAll()
 	if err != nil {
@@ -81,6 +88,7 @@ func (f *Fsm) Restore(r io.ReadCloser) error {
 		return err
 	}
 	return nil
+
 	// log.Println("Restoring from Snapshot")
 	// kvBuffer, err := ioutil.ReadAll(r)
 	// if err != nil {
@@ -105,10 +113,10 @@ func (f *Fsm) Restore(r io.ReadCloser) error {
 	// }
 
 	// log.Println("Snapshot restored")
-
 }
 
-func (f *Fsm) Close() {
+// Close will close the connection to the internal db.RavelDatabase instance
+func (f *RavelFSM) Close() {
 	log.Println("FSM: Close called")
 	f.Db.Close()
 }

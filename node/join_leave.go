@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (n *Node) Join(nodeID, addr string) error {
+func (n *RavelNode) Join(nodeID, addr string) error {
 	log.Printf("received join request for remote node %s, addr %s\n", nodeID, addr)
 	config := n.Raft.GetConfiguration()
 
@@ -30,7 +30,7 @@ func (n *Node) Join(nodeID, addr string) error {
 	return nil
 }
 
-func (n *Node) Leave(nodeID string) error {
+func (n *RavelNode) Leave(nodeID string) error {
 	log.Printf("received leave request for remote node %s", nodeID)
 
 	config := n.Raft.GetConfiguration()
