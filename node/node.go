@@ -90,6 +90,17 @@ func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 	}
 
 	raftNode.Raft = r
+	if enableSingle {
+		configuration := raft.Configuration{
+			Servers: []raft.Server{
+				{
+					ID:      config.LocalID,
+					Address: transport.LocalAddr(),
+				},
+			},
+		}
+		r.BootstrapCluster(configuration)
+	}
 
 	return nil
 
