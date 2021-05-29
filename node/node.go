@@ -13,15 +13,15 @@ import (
 	"github.com/hashicorp/raft"
 )
 
-type node struct {
-	mu   sync.Mutex
-	fsm   *fsm.Fsm
-	raft *raft.Raft
+type Node struct {
+	Mu   sync.Mutex
+	Fsm  *fsm.Fsm
+	Raft *raft.Raft
 }
 
-func (n *node) Open(enableSingle bool, localID string, badgerPath string, raftdir string, BindAddr string) error {
+func (n *Node) Open(enableSingle bool, localID string, badgerPath string, raftdir string, BindAddr string) error {
 
-	var raftNode node
+	var raftNode Node
 
 	opts := badger.DefaultOptions(badgerPath)
 
@@ -31,7 +31,7 @@ func (n *node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 		return err
 	}
 
-	raftNode.fsm. = db
+	raftNode.Fsm.Db.Conn = db
 
 	//setting up Raft Config
 	config := raft.DefaultConfig()
@@ -54,7 +54,7 @@ func (n *node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 		return err
 	}
 
-	//careting log and stable store
+	//creating log and stable store
 	var logStore raft.LogStore
 	var stableStore raft.StableStore
 	var f raft.FSM
@@ -83,12 +83,16 @@ func (n *node) Open(enableSingle bool, localID string, badgerPath string, raftdi
 		return err
 	}
 
-	raftNode.raft = r
+	raftNode.Raft = r
 
 	return nil
 
 }
 
-func (n *node) Get(key string) (string, error) {
-	return n.db.(key)
+func (n *Node) Get(key string) (string, error) {
+	return n.Fsm.Get(key)
+}
+
+func (n *Node) Set(key string, value string) error {
+	return nil
 }

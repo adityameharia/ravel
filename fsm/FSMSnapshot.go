@@ -9,7 +9,7 @@ import (
 
 //implements the FSMSnapshot interface
 type FSMSnapshot struct {
-	db *db.RavelDatabase
+	Db *db.RavelDatabase
 }
 
 type KeyValue struct {
@@ -21,7 +21,7 @@ func (f *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
 
 	log.Println("Starting Snapshot")
 
-	_, err := f.db.Conn.Backup(sink, 0)
+	_, err := f.Db.Conn.Backup(sink, 0)
 	if err != nil {
 		log.Println("Unable to take Snapshot")
 		return err

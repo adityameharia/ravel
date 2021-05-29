@@ -10,7 +10,7 @@ import (
 )
 
 type Fsm struct {
-	db *db.RavelDatabase
+	Db *db.RavelDatabase
 }
 
 type LogData struct {
@@ -30,12 +30,12 @@ func NewFSM(path string) (*Fsm, error) {
 	log.Println("Initialised FSM")
 
 	return &Fsm{
-		db: &r,
+		Db: &r,
 	}, nil
 }
 
 func (f *Fsm) Get(key string) (string, error) {
-	v, err := f.db.Read([]byte(key))
+	v, err := f.Db.Read([]byte(key))
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +46,7 @@ func (f *Fsm) Get(key string) (string, error) {
 func (f *Fsm) Snapshot() (raft.FSMSnapshot, error) {
 	log.Println("Generate FSMSnapshot")
 	return &FSMSnapshot{
-		db: f.db,
+		Db: f.Db,
 	}, nil
 }
 
@@ -59,20 +59,20 @@ func (f *Fsm) Apply(l *raft.Log) interface{} {
 	}
 
 	if d.Operation == "set" {
-		return f.db.Write([]byte(d.Key), []byte(d.Value))
+		return f.Db.Write([]byte(d.Key), []byte(d.Value))
 	} else {
-		return f.db.Delete([]byte(d.Key))
+		return f.Db.Delete([]byte(d.Key))
 	}
 
 }
 
 func (f *Fsm) Restore(r io.ReadCloser) error {
-	err := f.db.Conn.DropAll()
+	err := f.Db.Conn.DropAll()
 	if err != nil {
 		log.Fatal("Unable to delete previous state")
 		return err
 	}
-	err = f.db.Conn.Load(r, 100)
+	err = f.Db.Conn.Load(r, 100)
 	if err != nil {
 		log.Fatal("Unable to restore Snapshot")
 		return err
@@ -106,5 +106,5 @@ func (f *Fsm) Restore(r io.ReadCloser) error {
 }
 
 func (f *Fsm) Close() {
-	f.db.Close()
+	f.Db.Close()
 }

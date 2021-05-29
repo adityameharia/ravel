@@ -8,7 +8,7 @@ import (
 )
 
 type RavelStableStore struct {
-	db *db.RavelDatabase
+	Db *db.RavelDatabase
 }
 
 func NewRavelStableStore(logDBPath string) (*RavelStableStore, error) {
@@ -19,16 +19,16 @@ func NewRavelStableStore(logDBPath string) (*RavelStableStore, error) {
 	}
 
 	return &RavelStableStore{
-		db: &ravelDB,
+		Db: &ravelDB,
 	}, nil
 }
 
 func (s *RavelStableStore) Set(key []byte, val []byte) error {
-	return s.db.Write([]byte(key), []byte(val))
+	return s.Db.Write([]byte(key), []byte(val))
 }
 
 func (s *RavelStableStore) Get(key []byte) ([]byte, error) {
-	val, err := s.db.Read([]byte(key))
+	val, err := s.Db.Read([]byte(key))
 	if err == badger.ErrKeyNotFound {
 		val = []byte{}
 	}
@@ -39,11 +39,11 @@ func (s *RavelStableStore) Get(key []byte) ([]byte, error) {
 }
 
 func (s *RavelStableStore) SetUint64(key []byte, val uint64) error {
-	return s.db.Write([]byte(key), uint64ToBytes(val))
+	return s.Db.Write([]byte(key), uint64ToBytes(val))
 }
 
 func (s *RavelStableStore) GetUint64(key []byte) (uint64, error) {
-	valBytes, err := s.db.Read([]byte(key))
+	valBytes, err := s.Db.Read([]byte(key))
 	valUInt := bytesToUint64(valBytes)
 	if err == badger.ErrKeyNotFound {
 		valUInt = 0
