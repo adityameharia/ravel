@@ -51,6 +51,6 @@ func main() {
 	fmt.Printf("Server is listening on %v ...", address)
 
 	s := grpc.NewServer()
-	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{})
+	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
 	s.Serve(lis)
 }
