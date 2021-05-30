@@ -30,8 +30,8 @@ func TestApplyAndGet(t *testing.T) {
 
 	com := &LogData{
 		Operation: "set",
-		Key:       "testKey",
-		Value:     "testValue",
+		Key:       []byte("testKey"),
+		Value:     []byte("testValue"),
 	}
 	comByte, err := msgpack.Marshal(com)
 	if err != nil {
@@ -51,7 +51,7 @@ func TestApplyAndGet(t *testing.T) {
 		t.Error("Error in apply fsm")
 	}
 
-	_, err = f.Get("testKey")
+	_, err = f.Get([]byte("testKey"))
 	if e != nil {
 		t.Error("Error in getting key which has been set")
 	}

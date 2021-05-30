@@ -7,6 +7,10 @@
 package __
 
 import (
+	context "context"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -20,17 +24,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type KeyValue struct {
+type Node struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Key   []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	Value []byte `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *KeyValue) Reset() {
-	*x = KeyValue{}
+func (x *Node) Reset() {
+	*x = Node{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_ravel_proto_keyValue_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -38,13 +41,13 @@ func (x *KeyValue) Reset() {
 	}
 }
 
-func (x *KeyValue) String() string {
+func (x *Node) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*KeyValue) ProtoMessage() {}
+func (*Node) ProtoMessage() {}
 
-func (x *KeyValue) ProtoReflect() protoreflect.Message {
+func (x *Node) ProtoReflect() protoreflect.Message {
 	mi := &file_ravel_proto_keyValue_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,23 +59,181 @@ func (x *KeyValue) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use KeyValue.ProtoReflect.Descriptor instead.
-func (*KeyValue) Descriptor() ([]byte, []int) {
+// Deprecated: Use Node.ProtoReflect.Descriptor instead.
+func (*Node) Descriptor() ([]byte, []int) {
 	return file_ravel_proto_keyValue_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *KeyValue) GetKey() []byte {
+func (x *Node) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type Response struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Data string `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+}
+
+func (x *Response) Reset() {
+	*x = Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ravel_proto_keyValue_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Response) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Response) ProtoMessage() {}
+
+func (x *Response) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_proto_keyValue_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Response.ProtoReflect.Descriptor instead.
+func (*Response) Descriptor() ([]byte, []int) {
+	return file_ravel_proto_keyValue_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Response) GetData() string {
+	if x != nil {
+		return x.Data
+	}
+	return ""
+}
+
+type Command struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Operation string `protobuf:"bytes,1,opt,name=Operation,proto3" json:"Operation,omitempty"`
+	Key       []byte `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
+	Value     []byte `protobuf:"bytes,3,opt,name=value,proto3,oneof" json:"value,omitempty"`
+}
+
+func (x *Command) Reset() {
+	*x = Command{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ravel_proto_keyValue_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Command) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Command) ProtoMessage() {}
+
+func (x *Command) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_proto_keyValue_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Command.ProtoReflect.Descriptor instead.
+func (*Command) Descriptor() ([]byte, []int) {
+	return file_ravel_proto_keyValue_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Command) GetOperation() string {
+	if x != nil {
+		return x.Operation
+	}
+	return ""
+}
+
+func (x *Command) GetKey() []byte {
 	if x != nil {
 		return x.Key
 	}
 	return nil
 }
 
-func (x *KeyValue) GetValue() []byte {
+func (x *Command) GetValue() []byte {
 	if x != nil {
 		return x.Value
 	}
 	return nil
+}
+
+type Join struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	NodeID  string `protobuf:"bytes,1,opt,name=nodeID,proto3" json:"nodeID,omitempty"`
+	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (x *Join) Reset() {
+	*x = Join{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ravel_proto_keyValue_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Join) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Join) ProtoMessage() {}
+
+func (x *Join) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_proto_keyValue_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Join.ProtoReflect.Descriptor instead.
+func (*Join) Descriptor() ([]byte, []int) {
+	return file_ravel_proto_keyValue_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Join) GetNodeID() string {
+	if x != nil {
+		return x.NodeID
+	}
+	return ""
+}
+
+func (x *Join) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
 }
 
 var File_ravel_proto_keyValue_proto protoreflect.FileDescriptor
@@ -80,12 +241,35 @@ var File_ravel_proto_keyValue_proto protoreflect.FileDescriptor
 var file_ravel_proto_keyValue_proto_rawDesc = []byte{
 	0x0a, 0x1a, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6b, 0x65,
 	0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x22, 0x41, 0x0a, 0x08, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12,
-	0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65,
-	0x79, 0x12, 0x19, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c,
-	0x48, 0x00, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06,
-	0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x42, 0x04, 0x5a, 0x02, 0x2e, 0x2f, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x74, 0x6f, 0x22, 0x16, 0x0a, 0x04, 0x6e, 0x6f, 0x64, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1e, 0x0a, 0x08, 0x72,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x5e, 0x0a, 0x07, 0x63,
+	0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x19, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01,
+	0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x38, 0x0a, 0x04, 0x6a,
+	0x6f, 0x69, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x06, 0x6e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x61,
+	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xe6, 0x01, 0x0a, 0x08, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c,
+	0x75, 0x65, 0x12, 0x2a, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x65, 0x70, 0x74, 0x4a, 0x6f, 0x69, 0x6e,
+	0x12, 0x0b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6a, 0x6f, 0x69, 0x6e, 0x1a, 0x0f, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b,
+	0x0a, 0x0b, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x0b, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6a, 0x6f, 0x69, 0x6e, 0x1a, 0x0f, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2e, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b, 0x0a, 0x0b, 0x61,
+	0x63, 0x63, 0x65, 0x70, 0x74, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x0b, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2e, 0x6e, 0x6f, 0x64, 0x65, 0x1a, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2c, 0x0a, 0x0c, 0x72, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x0b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x6e, 0x6f, 0x64, 0x65, 0x1a, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x26, 0x0a, 0x03, 0x72, 0x75, 0x6e, 0x12, 0x0e, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x1a, 0x0f, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x04,
+	0x5a, 0x02, 0x2e, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -100,13 +284,26 @@ func file_ravel_proto_keyValue_proto_rawDescGZIP() []byte {
 	return file_ravel_proto_keyValue_proto_rawDescData
 }
 
-var file_ravel_proto_keyValue_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_ravel_proto_keyValue_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ravel_proto_keyValue_proto_goTypes = []interface{}{
-	(*KeyValue)(nil), // 0: proto.KeyValue
+	(*Node)(nil),     // 0: proto.node
+	(*Response)(nil), // 1: proto.response
+	(*Command)(nil),  // 2: proto.command
+	(*Join)(nil),     // 3: proto.join
 }
 var file_ravel_proto_keyValue_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
+	3, // 0: proto.KeyValue.acceptJoin:input_type -> proto.join
+	3, // 1: proto.KeyValue.requestJoin:input_type -> proto.join
+	0, // 2: proto.KeyValue.acceptLeave:input_type -> proto.node
+	0, // 3: proto.KeyValue.requestLeave:input_type -> proto.node
+	2, // 4: proto.KeyValue.run:input_type -> proto.command
+	1, // 5: proto.KeyValue.acceptJoin:output_type -> proto.response
+	1, // 6: proto.KeyValue.requestJoin:output_type -> proto.response
+	1, // 7: proto.KeyValue.acceptLeave:output_type -> proto.response
+	1, // 8: proto.KeyValue.requestLeave:output_type -> proto.response
+	1, // 9: proto.KeyValue.run:output_type -> proto.response
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -119,7 +316,43 @@ func file_ravel_proto_keyValue_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_ravel_proto_keyValue_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyValue); i {
+			switch v := v.(*Node); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ravel_proto_keyValue_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ravel_proto_keyValue_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Command); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ravel_proto_keyValue_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Join); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -131,16 +364,16 @@ func file_ravel_proto_keyValue_proto_init() {
 			}
 		}
 	}
-	file_ravel_proto_keyValue_proto_msgTypes[0].OneofWrappers = []interface{}{}
+	file_ravel_proto_keyValue_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ravel_proto_keyValue_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   4,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_ravel_proto_keyValue_proto_goTypes,
 		DependencyIndexes: file_ravel_proto_keyValue_proto_depIdxs,
@@ -150,4 +383,228 @@ func file_ravel_proto_keyValue_proto_init() {
 	file_ravel_proto_keyValue_proto_rawDesc = nil
 	file_ravel_proto_keyValue_proto_goTypes = nil
 	file_ravel_proto_keyValue_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// KeyValueClient is the client API for KeyValue service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type KeyValueClient interface {
+	AcceptJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error)
+	RequestJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error)
+	AcceptLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	RequestLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	Run(ctx context.Context, in *Command, opts ...grpc.CallOption) (*Response, error)
+}
+
+type keyValueClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewKeyValueClient(cc grpc.ClientConnInterface) KeyValueClient {
+	return &keyValueClient{cc}
+}
+
+func (c *keyValueClient) AcceptJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/proto.KeyValue/acceptJoin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keyValueClient) RequestJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/proto.KeyValue/requestJoin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keyValueClient) AcceptLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/proto.KeyValue/acceptLeave", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keyValueClient) RequestLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/proto.KeyValue/requestLeave", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keyValueClient) Run(ctx context.Context, in *Command, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/proto.KeyValue/run", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// KeyValueServer is the server API for KeyValue service.
+type KeyValueServer interface {
+	AcceptJoin(context.Context, *Join) (*Response, error)
+	RequestJoin(context.Context, *Join) (*Response, error)
+	AcceptLeave(context.Context, *Node) (*Response, error)
+	RequestLeave(context.Context, *Node) (*Response, error)
+	Run(context.Context, *Command) (*Response, error)
+}
+
+// UnimplementedKeyValueServer can be embedded to have forward compatible implementations.
+type UnimplementedKeyValueServer struct {
+}
+
+func (*UnimplementedKeyValueServer) AcceptJoin(context.Context, *Join) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcceptJoin not implemented")
+}
+func (*UnimplementedKeyValueServer) RequestJoin(context.Context, *Join) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestJoin not implemented")
+}
+func (*UnimplementedKeyValueServer) AcceptLeave(context.Context, *Node) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcceptLeave not implemented")
+}
+func (*UnimplementedKeyValueServer) RequestLeave(context.Context, *Node) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestLeave not implemented")
+}
+func (*UnimplementedKeyValueServer) Run(context.Context, *Command) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Run not implemented")
+}
+
+func RegisterKeyValueServer(s *grpc.Server, srv KeyValueServer) {
+	s.RegisterService(&_KeyValue_serviceDesc, srv)
+}
+
+func _KeyValue_AcceptJoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Join)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyValueServer).AcceptJoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.KeyValue/AcceptJoin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyValueServer).AcceptJoin(ctx, req.(*Join))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeyValue_RequestJoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Join)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyValueServer).RequestJoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.KeyValue/RequestJoin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyValueServer).RequestJoin(ctx, req.(*Join))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeyValue_AcceptLeave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Node)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyValueServer).AcceptLeave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.KeyValue/AcceptLeave",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyValueServer).AcceptLeave(ctx, req.(*Node))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeyValue_RequestLeave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Node)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyValueServer).RequestLeave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.KeyValue/RequestLeave",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyValueServer).RequestLeave(ctx, req.(*Node))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeyValue_Run_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Command)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyValueServer).Run(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.KeyValue/Run",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyValueServer).Run(ctx, req.(*Command))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _KeyValue_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "proto.KeyValue",
+	HandlerType: (*KeyValueServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "acceptJoin",
+			Handler:    _KeyValue_AcceptJoin_Handler,
+		},
+		{
+			MethodName: "requestJoin",
+			Handler:    _KeyValue_RequestJoin_Handler,
+		},
+		{
+			MethodName: "acceptLeave",
+			Handler:    _KeyValue_AcceptLeave_Handler,
+		},
+		{
+			MethodName: "requestLeave",
+			Handler:    _KeyValue_RequestLeave_Handler,
+		},
+		{
+			MethodName: "run",
+			Handler:    _KeyValue_Run_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "ravel/proto/keyValue.proto",
 }

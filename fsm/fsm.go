@@ -18,8 +18,8 @@ type RavelFSM struct {
 // LogData represents the structure of individual commands on the Logs
 type LogData struct {
 	Operation string
-	Key       string
-	Value     string
+	Key       []byte
+	Value     []byte
 }
 
 // NewFSM creates an instance of RavelFSM
@@ -39,9 +39,9 @@ func NewFSM(path string) (*RavelFSM, error) {
 }
 
 // Get returns the value for the provided key
-func (f *RavelFSM) Get(key string) (string, error) {
+func (f *RavelFSM) Get(key []byte) (string, error) {
 	log.Println("FSM: Get")
-	v, err := f.Db.Read([]byte(key))
+	v, err := f.Db.Read(key)
 	if err != nil {
 		return "", err
 	}
@@ -67,9 +67,9 @@ func (f *RavelFSM) Apply(l *raft.Log) interface{} {
 	}
 
 	if d.Operation == "set" {
-		return f.Db.Write([]byte(d.Key), []byte(d.Value))
+		return f.Db.Write(d.Key, d.Value)
 	} else {
-		return f.Db.Delete([]byte(d.Key))
+		return f.Db.Delete(d.Key)
 	}
 
 }

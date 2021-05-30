@@ -94,7 +94,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, r
 }
 
 // Get returns the value for the given key
-func (n *RavelNode) Get(key string) (string, error) {
+func (n *RavelNode) Get(key []byte) (string, error) {
 	if n.Raft.State() != raft.Leader {
 		log.Println("RavelNode: Request sent to non leading replica")
 		return "", raft.ErrNotLeader
@@ -103,7 +103,7 @@ func (n *RavelNode) Get(key string) (string, error) {
 }
 
 // Set sets the key with the value
-func (n *RavelNode) Set(key string, value string) error {
+func (n *RavelNode) Set(key []byte, value []byte) error {
 	if n.Raft.State() != raft.Leader {
 		log.Println("RavelNode: Request sent to non leading replica")
 		return raft.ErrNotLeader
@@ -127,7 +127,7 @@ func (n *RavelNode) Set(key string, value string) error {
 }
 
 // Delete deletes the entry with given key
-func (n *RavelNode) Delete(key string) error {
+func (n *RavelNode) Delete(key []byte) error {
 	if n.Raft.State() != raft.Leader {
 		log.Println("RavelNode: Request sent to non leading replica")
 		return raft.ErrNotLeader
@@ -137,7 +137,7 @@ func (n *RavelNode) Delete(key string) error {
 
 	data.Operation = "delete"
 	data.Key = key
-	data.Value = ""
+	data.Value = []byte{}
 
 	dataBuffer, err := msgpack.Marshal(data)
 	if err != nil {
