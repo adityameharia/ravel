@@ -1,6 +1,8 @@
 package node
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/hashicorp/raft"
 	"log"
 )
@@ -12,6 +14,25 @@ func (n *RavelNode) Join(nodeID, addr string) error {
 	if err := config.Error(); err != nil {
 		log.Printf("failed to get raft configuration\n")
 		return err
+	}
+
+	if n.Raft.State() != raft.Leader {
+		type response struct {
+			Error string `json:"error"`
+			Leader string `json:"leader"`
+		}
+
+		respBytes, err := json.Marshal(&response{
+			Error: "node is not leader",
+			Leader: string(n.Raft.Leader()),
+		})
+
+		if err != nil {
+			log.Println("RavelNode.Join: Error converting response to JSON")
+			return err
+		}
+
+		return errors.New(string(respBytes))
 	}
 
 	for _, server := range config.Configuration().Servers {
@@ -38,6 +59,25 @@ func (n *RavelNode) Leave(nodeID string) error {
 	if err := config.Error(); err != nil {
 		log.Printf("failed to get raft configuration")
 		return err
+	}
+
+	if n.Raft.State() != raft.Leader {
+		type response struct {
+			Error string `json:"error"`
+			Leader string `json:"leader"`
+		}
+
+		respBytes, err := json.Marshal(&response{
+			Error: "node is not leader",
+			Leader: string(n.Raft.Leader()),
+		})
+
+		if err != nil {
+			log.Println("RavelNode.Join: Error converting response to JSON")
+			return err
+		}
+
+		return errors.New(string(respBytes))
 	}
 
 	for _, server := range config.Configuration().Servers {

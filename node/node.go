@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"os"
@@ -91,8 +90,6 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, r
 		r.BootstrapCluster(configuration)
 	}
 
-	time.Sleep(5 * time.Second)
-	fmt.Println(r.State())
 	return nil
 }
 
