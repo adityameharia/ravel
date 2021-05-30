@@ -24,53 +24,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Node struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *Node) Reset() {
-	*x = Node{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Node) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Node) ProtoMessage() {}
-
-func (x *Node) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Node.ProtoReflect.Descriptor instead.
-func (*Node) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Node) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
 type Response struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -82,7 +35,7 @@ type Response struct {
 func (x *Response) Reset() {
 	*x = Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[1]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -95,7 +48,7 @@ func (x *Response) String() string {
 func (*Response) ProtoMessage() {}
 
 func (x *Response) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[1]
+	mi := &file_ravel_ravelCluster_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +61,7 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Response.ProtoReflect.Descriptor instead.
 func (*Response) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{1}
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Response) GetData() string {
@@ -131,7 +84,7 @@ type Command struct {
 func (x *Command) Reset() {
 	*x = Command{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[2]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -144,7 +97,7 @@ func (x *Command) String() string {
 func (*Command) ProtoMessage() {}
 
 func (x *Command) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[2]
+	mi := &file_ravel_ravelCluster_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,7 +110,7 @@ func (x *Command) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Command.ProtoReflect.Descriptor instead.
 func (*Command) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{2}
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Command) GetOperation() string {
@@ -181,32 +134,32 @@ func (x *Command) GetValue() []byte {
 	return nil
 }
 
-type Join struct {
+type Node struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	NodeID  string `protobuf:"bytes,1,opt,name=NodeID,proto3" json:"NodeID,omitempty"`
-	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	NodeID  string  `protobuf:"bytes,1,opt,name=NodeID,proto3" json:"NodeID,omitempty"`
+	Address *string `protobuf:"bytes,2,opt,name=address,proto3,oneof" json:"address,omitempty"`
 }
 
-func (x *Join) Reset() {
-	*x = Join{}
+func (x *Node) Reset() {
+	*x = Node{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[3]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *Join) String() string {
+func (x *Node) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Join) ProtoMessage() {}
+func (*Node) ProtoMessage() {}
 
-func (x *Join) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[3]
+func (x *Node) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_ravelCluster_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -217,21 +170,21 @@ func (x *Join) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Join.ProtoReflect.Descriptor instead.
-func (*Join) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use Node.ProtoReflect.Descriptor instead.
+func (*Node) Descriptor() ([]byte, []int) {
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Join) GetNodeID() string {
+func (x *Node) GetNodeID() string {
 	if x != nil {
 		return x.NodeID
 	}
 	return ""
 }
 
-func (x *Join) GetAddress() string {
-	if x != nil {
-		return x.Address
+func (x *Node) GetAddress() string {
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
@@ -241,42 +194,33 @@ var File_ravel_ravelCluster_proto protoreflect.FileDescriptor
 var file_ravel_ravelCluster_proto_rawDesc = []byte{
 	0x0a, 0x18, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x2f, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75,
 	0x73, 0x74, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x52, 0x61, 0x76, 0x65,
-	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x22, 0x16, 0x0a, 0x04, 0x4e, 0x6f,
-	0x64, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02,
-	0x69, 0x64, 0x22, 0x1e, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12,
-	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61,
-	0x74, 0x61, 0x22, 0x5e, 0x0a, 0x07, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x1c, 0x0a,
-	0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6b,
-	0x65, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x19, 0x0a,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x05,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x22, 0x38, 0x0a, 0x04, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f,
-	0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65,
-	0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xc4, 0x02, 0x0a,
-	0x0c, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x12, 0x3c, 0x0a,
-	0x0a, 0x41, 0x63, 0x63, 0x65, 0x70, 0x74, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x14, 0x2e, 0x52, 0x61,
-	0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4a, 0x6f, 0x69,
-	0x6e, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72,
-	0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3d, 0x0a, 0x0b, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76,
-	0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4a, 0x6f, 0x69, 0x6e,
-	0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50,
-	0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3d, 0x0a, 0x0b, 0x41, 0x63,
-	0x63, 0x65, 0x70, 0x74, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65,
-	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a,
-	0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42,
-	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3e, 0x0a, 0x0c, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65,
-	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a,
-	0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42,
-	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a, 0x03, 0x52, 0x75, 0x6e,
-	0x12, 0x17, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50,
-	0x42, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65,
-	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x42, 0x12, 0x5a, 0x10, 0x2e, 0x2f, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c,
-	0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x22, 0x1e, 0x0a, 0x08, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x5e, 0x0a, 0x07, 0x43, 0x6f,
+	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x19, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01, 0x01,
+	0x42, 0x08, 0x0a, 0x06, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x49, 0x0a, 0x04, 0x4e, 0x6f,
+	0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x12, 0x1d, 0x0a, 0x07, 0x61, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x07, 0x61,
+	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x88, 0x01, 0x01, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x61, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xb9, 0x01, 0x0a, 0x0c, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43,
+	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x12, 0x36, 0x0a, 0x04, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x14,
+	0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e,
+	0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73,
+	0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x37,
+	0x0a, 0x05, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43,
+	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x18, 0x2e,
+	0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a, 0x03, 0x52, 0x75, 0x6e, 0x12, 0x17,
+	0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e,
+	0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43,
+	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x42, 0x12, 0x5a, 0x10, 0x2e, 0x2f, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73,
+	0x74, 0x65, 0x72, 0x50, 0x42, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -291,26 +235,21 @@ func file_ravel_ravelCluster_proto_rawDescGZIP() []byte {
 	return file_ravel_ravelCluster_proto_rawDescData
 }
 
-var file_ravel_ravelCluster_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_ravel_ravelCluster_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_ravel_ravelCluster_proto_goTypes = []interface{}{
-	(*Node)(nil),     // 0: RavelClusterPB.Node
-	(*Response)(nil), // 1: RavelClusterPB.Response
-	(*Command)(nil),  // 2: RavelClusterPB.Command
-	(*Join)(nil),     // 3: RavelClusterPB.Join
+	(*Response)(nil), // 0: RavelClusterPB.Response
+	(*Command)(nil),  // 1: RavelClusterPB.Command
+	(*Node)(nil),     // 2: RavelClusterPB.Node
 }
 var file_ravel_ravelCluster_proto_depIdxs = []int32{
-	3, // 0: RavelClusterPB.ravelCluster.AcceptJoin:input_type -> RavelClusterPB.Join
-	3, // 1: RavelClusterPB.ravelCluster.RequestJoin:input_type -> RavelClusterPB.Join
-	0, // 2: RavelClusterPB.ravelCluster.AcceptLeave:input_type -> RavelClusterPB.Node
-	0, // 3: RavelClusterPB.ravelCluster.RequestLeave:input_type -> RavelClusterPB.Node
-	2, // 4: RavelClusterPB.ravelCluster.Run:input_type -> RavelClusterPB.Command
-	1, // 5: RavelClusterPB.ravelCluster.AcceptJoin:output_type -> RavelClusterPB.Response
-	1, // 6: RavelClusterPB.ravelCluster.RequestJoin:output_type -> RavelClusterPB.Response
-	1, // 7: RavelClusterPB.ravelCluster.AcceptLeave:output_type -> RavelClusterPB.Response
-	1, // 8: RavelClusterPB.ravelCluster.RequestLeave:output_type -> RavelClusterPB.Response
-	1, // 9: RavelClusterPB.ravelCluster.Run:output_type -> RavelClusterPB.Response
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	2, // 0: RavelClusterPB.ravelCluster.Join:input_type -> RavelClusterPB.Node
+	2, // 1: RavelClusterPB.ravelCluster.Leave:input_type -> RavelClusterPB.Node
+	1, // 2: RavelClusterPB.ravelCluster.Run:input_type -> RavelClusterPB.Command
+	0, // 3: RavelClusterPB.ravelCluster.Join:output_type -> RavelClusterPB.Response
+	0, // 4: RavelClusterPB.ravelCluster.Leave:output_type -> RavelClusterPB.Response
+	0, // 5: RavelClusterPB.ravelCluster.Run:output_type -> RavelClusterPB.Response
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -323,18 +262,6 @@ func file_ravel_ravelCluster_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_ravel_ravelCluster_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Node); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ravel_ravelCluster_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Response); i {
 			case 0:
 				return &v.state
@@ -346,7 +273,7 @@ func file_ravel_ravelCluster_proto_init() {
 				return nil
 			}
 		}
-		file_ravel_ravelCluster_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_ravel_ravelCluster_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Command); i {
 			case 0:
 				return &v.state
@@ -358,8 +285,8 @@ func file_ravel_ravelCluster_proto_init() {
 				return nil
 			}
 		}
-		file_ravel_ravelCluster_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Join); i {
+		file_ravel_ravelCluster_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Node); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -371,6 +298,7 @@ func file_ravel_ravelCluster_proto_init() {
 			}
 		}
 	}
+	file_ravel_ravelCluster_proto_msgTypes[1].OneofWrappers = []interface{}{}
 	file_ravel_ravelCluster_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -378,7 +306,7 @@ func file_ravel_ravelCluster_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ravel_ravelCluster_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -404,10 +332,8 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RavelClusterClient interface {
-	AcceptJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error)
-	RequestJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error)
-	AcceptLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
-	RequestLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
 	Run(ctx context.Context, in *Command, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -419,36 +345,18 @@ func NewRavelClusterClient(cc grpc.ClientConnInterface) RavelClusterClient {
 	return &ravelClusterClient{cc}
 }
 
-func (c *ravelClusterClient) AcceptJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error) {
+func (c *ravelClusterClient) Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/AcceptJoin", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/Join", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *ravelClusterClient) RequestJoin(ctx context.Context, in *Join, opts ...grpc.CallOption) (*Response, error) {
+func (c *ravelClusterClient) Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/RequestJoin", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *ravelClusterClient) AcceptLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/AcceptLeave", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *ravelClusterClient) RequestLeave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
-	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/RequestLeave", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/Leave", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -466,10 +374,8 @@ func (c *ravelClusterClient) Run(ctx context.Context, in *Command, opts ...grpc.
 
 // RavelClusterServer is the server API for RavelCluster service.
 type RavelClusterServer interface {
-	AcceptJoin(context.Context, *Join) (*Response, error)
-	RequestJoin(context.Context, *Join) (*Response, error)
-	AcceptLeave(context.Context, *Node) (*Response, error)
-	RequestLeave(context.Context, *Node) (*Response, error)
+	Join(context.Context, *Node) (*Response, error)
+	Leave(context.Context, *Node) (*Response, error)
 	Run(context.Context, *Command) (*Response, error)
 }
 
@@ -477,17 +383,11 @@ type RavelClusterServer interface {
 type UnimplementedRavelClusterServer struct {
 }
 
-func (*UnimplementedRavelClusterServer) AcceptJoin(context.Context, *Join) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AcceptJoin not implemented")
+func (*UnimplementedRavelClusterServer) Join(context.Context, *Node) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Join not implemented")
 }
-func (*UnimplementedRavelClusterServer) RequestJoin(context.Context, *Join) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestJoin not implemented")
-}
-func (*UnimplementedRavelClusterServer) AcceptLeave(context.Context, *Node) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AcceptLeave not implemented")
-}
-func (*UnimplementedRavelClusterServer) RequestLeave(context.Context, *Node) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestLeave not implemented")
+func (*UnimplementedRavelClusterServer) Leave(context.Context, *Node) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Leave not implemented")
 }
 func (*UnimplementedRavelClusterServer) Run(context.Context, *Command) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Run not implemented")
@@ -497,74 +397,38 @@ func RegisterRavelClusterServer(s *grpc.Server, srv RavelClusterServer) {
 	s.RegisterService(&_RavelCluster_serviceDesc, srv)
 }
 
-func _RavelCluster_AcceptJoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Join)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RavelClusterServer).AcceptJoin(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RavelClusterPB.ravelCluster/AcceptJoin",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RavelClusterServer).AcceptJoin(ctx, req.(*Join))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RavelCluster_RequestJoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Join)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RavelClusterServer).RequestJoin(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RavelClusterPB.ravelCluster/RequestJoin",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RavelClusterServer).RequestJoin(ctx, req.(*Join))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RavelCluster_AcceptLeave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RavelCluster_Join_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Node)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RavelClusterServer).AcceptLeave(ctx, in)
+		return srv.(RavelClusterServer).Join(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/RavelClusterPB.ravelCluster/AcceptLeave",
+		FullMethod: "/RavelClusterPB.ravelCluster/Join",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RavelClusterServer).AcceptLeave(ctx, req.(*Node))
+		return srv.(RavelClusterServer).Join(ctx, req.(*Node))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RavelCluster_RequestLeave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RavelCluster_Leave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Node)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RavelClusterServer).RequestLeave(ctx, in)
+		return srv.(RavelClusterServer).Leave(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/RavelClusterPB.ravelCluster/RequestLeave",
+		FullMethod: "/RavelClusterPB.ravelCluster/Leave",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RavelClusterServer).RequestLeave(ctx, req.(*Node))
+		return srv.(RavelClusterServer).Leave(ctx, req.(*Node))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -592,20 +456,12 @@ var _RavelCluster_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*RavelClusterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AcceptJoin",
-			Handler:    _RavelCluster_AcceptJoin_Handler,
+			MethodName: "Join",
+			Handler:    _RavelCluster_Join_Handler,
 		},
 		{
-			MethodName: "RequestJoin",
-			Handler:    _RavelCluster_RequestJoin_Handler,
-		},
-		{
-			MethodName: "AcceptLeave",
-			Handler:    _RavelCluster_AcceptLeave_Handler,
-		},
-		{
-			MethodName: "RequestLeave",
-			Handler:    _RavelCluster_RequestLeave_Handler,
+			MethodName: "Leave",
+			Handler:    _RavelCluster_Leave_Handler,
 		},
 		{
 			MethodName: "Run",
