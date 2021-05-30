@@ -32,6 +32,7 @@ func NewRavelLogStore(logDBPath string) (*RavelLogStore, error) {
 
 // FirstIndex returns the Index property of the first entry in the Logs.
 func (r *RavelLogStore) FirstIndex() (uint64, error) {
+	log.Println("LogStore: FirstIndex")
 	var key uint64
 	err := r.Db.Conn.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
@@ -59,6 +60,7 @@ func (r *RavelLogStore) FirstIndex() (uint64, error) {
 
 // LastIndex returns the Index property of the last entry in the Logs
 func (r *RavelLogStore) LastIndex() (uint64, error) {
+	log.Println("LogStore: LastIndex")
 	var key uint64
 	err := r.Db.Conn.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
@@ -86,6 +88,7 @@ func (r *RavelLogStore) LastIndex() (uint64, error) {
 
 // GetLog writes the log on position "index" to the pointer "raftLog"
 func (r *RavelLogStore) GetLog(index uint64, raftLog *raft.Log) error {
+	log.Println("LogStore: GetLog")
 	key := uint64ToBytes(index)
 	val, err := r.Db.Read(key)
 	if err != nil {
@@ -97,12 +100,14 @@ func (r *RavelLogStore) GetLog(index uint64, raftLog *raft.Log) error {
 }
 
 // StoreLog inserts a single raft.Log at the end of the Logs
-func (r *RavelLogStore) StoreLog(log *raft.Log) error {
-	return r.StoreLogs([]*raft.Log{log})
+func (r *RavelLogStore) StoreLog(l *raft.Log) error {
+	log.Println("LogStore: StoreLog")
+	return r.StoreLogs([]*raft.Log{l})
 }
 
 // StoreLogs inserts []raft.Log at the end of the Logs
 func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
+	log.Println("LogStore: StoreLogs")
 	for _, l := range logs {
 		key := uint64ToBytes(l.Index)
 		val := raftLogToBytes(*l)
@@ -119,6 +124,7 @@ func (r *RavelLogStore) StoreLogs(logs []*raft.Log) error {
 
 // DeleteRange deletes the entries from "min" to "max" position (both inclusive) in the Logs
 func (r *RavelLogStore) DeleteRange(min uint64, max uint64) error {
+	log.Println("LogStore: DeleteRange")
 	minKey := uint64ToBytes(min)
 
 	txn := r.Db.Conn.NewTransaction(true)

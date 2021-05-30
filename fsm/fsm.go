@@ -40,7 +40,7 @@ func NewFSM(path string) (*RavelFSM, error) {
 
 // Get returns the value for the provided key
 func (f *RavelFSM) Get(key string) (string, error) {
-	log.Println("FSM: Getting Key")
+	log.Println("FSM: Get")
 	v, err := f.Db.Read([]byte(key))
 	if err != nil {
 		return "", err
@@ -50,7 +50,7 @@ func (f *RavelFSM) Get(key string) (string, error) {
 
 // Snapshot returns an raft.FSMSnapshot which captures a snapshot of the data at that moment in time
 func (f *RavelFSM) Snapshot() (raft.FSMSnapshot, error) {
-	log.Println("FSM: Generate FSMSnapshot")
+	log.Println("FSM: Snapshot")
 	return &FSMSnapshot{
 		Db: f.Db,
 	}, nil
@@ -58,7 +58,7 @@ func (f *RavelFSM) Snapshot() (raft.FSMSnapshot, error) {
 
 // Apply commits the given log to the database.
 func (f *RavelFSM) Apply(l *raft.Log) interface{} {
-	log.Println("FSM: Applying set/delete")
+	log.Println("FSM: Apply")
 	var d LogData
 
 	err := msgpack.Unmarshal(l.Data, &d)
@@ -76,7 +76,7 @@ func (f *RavelFSM) Apply(l *raft.Log) interface{} {
 
 // Restore restores from the data from the last captured snapshot
 func (f *RavelFSM) Restore(r io.ReadCloser) error {
-	log.Println("FSM: Restore called")
+	log.Println("FSM: Restore")
 	err := f.Db.Conn.DropAll()
 	if err != nil {
 		log.Fatal("FSM: Unable to delete previous state")
@@ -117,6 +117,6 @@ func (f *RavelFSM) Restore(r io.ReadCloser) error {
 
 // Close will close the connection to the internal db.RavelDatabase instance
 func (f *RavelFSM) Close() {
-	log.Println("FSM: Close called")
+	log.Println("FSM: Close")
 	f.Db.Close()
 }
