@@ -2,10 +2,15 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"net"
 	"os"
 
+	"github.com/adityameharia/ravel/RavelClusterPB"
 	"github.com/adityameharia/ravel/node"
+	"github.com/adityameharia/ravel/server"
+	"google.golang.org/grpc"
 )
 
 type Config struct {
@@ -38,4 +43,14 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+	address := "0.0.0.0:50051"
+	lis, err := net.Listen("tcp", address)
+	if err != nil {
+		log.Fatalf("Error %v", err)
+	}
+	fmt.Printf("Server is listening on %v ...", address)
+
+	s := grpc.NewServer()
+	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{})
+	s.Serve(lis)
 }

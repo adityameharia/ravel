@@ -1,0 +1,31 @@
+syntax = "proto3";
+package RavelClusterPB;
+option go_package = "./RavelClusterPB";
+
+service ravelCluster{
+    rpc AcceptJoin(Join) returns (Response);
+    rpc RequestJoin(Join) returns (Response);
+    rpc AcceptLeave(Node)returns (Response);
+    rpc RequestLeave(Node) returns (Response);
+    rpc Run(Command) returns (Response);
+}
+
+message Node{
+    string id=1;
+}
+
+message Response{
+    string data=1;
+}
+
+message Command{
+    string Operation=1;
+    bytes key=2;
+    optional bytes value=3;
+}
+
+message Join{
+    string NodeID=1;
+    string address=2;
+}
+
