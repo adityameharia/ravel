@@ -7,12 +7,12 @@ import (
 	"github.com/adityameharia/ravel/node"
 )
 
-type Server struct{
+type Server struct {
 	Node *node.RavelNode
 }
 
 func (s *Server) Join(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
-	joinResp := s.Node.Join(req.NodeID, *(req.Address))
+	joinResp := s.Node.Join(req.NodeID, req.Address)
 	resp := RavelClusterPB.Response{Data: joinResp.Error}
 	return &resp, nil
 }

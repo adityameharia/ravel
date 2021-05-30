@@ -20,6 +20,6 @@ message Command{
 
 message Node{
     string NodeID=1;
-    optional string address=2;
+    string address=2;
 }
 
