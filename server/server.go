@@ -12,16 +12,15 @@ type Server struct{
 }
 
 func (s *Server) Join(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
-	err := s.Node.Join(req.NodeID, *(req.Address))
-	if err != nil {
-
-	}
-
-	return nil, nil
+	joinResp := s.Node.Join(req.NodeID, *(req.Address))
+	resp := RavelClusterPB.Response{Data: joinResp.Error}
+	return &resp, nil
 }
 
 func (s *Server) Leave(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
-	return nil, nil
+	leaveResp := s.Node.Leave(req.NodeID)
+	resp := RavelClusterPB.Response{Data: leaveResp.Error}
+	return &resp, nil
 }
 
 func (s *Server) Run(ctx context.Context, req *RavelClusterPB.Command) (*RavelClusterPB.Response, error) {
