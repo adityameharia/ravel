@@ -3,15 +3,9 @@ package RavelClusterPB;
 option go_package = "./RavelClusterPB";
 
 service ravelCluster{
-    rpc AcceptJoin(Join) returns (Response);
-    rpc RequestJoin(Join) returns (Response);
-    rpc AcceptLeave(Node)returns (Response);
-    rpc RequestLeave(Node) returns (Response);
+    rpc Join(Node) returns (Response);
+    rpc Leave(Node) returns (Response);
     rpc Run(Command) returns (Response);
-}
-
-message Node{
-    string id=1;
 }
 
 message Response{
@@ -24,8 +18,8 @@ message Command{
     optional bytes value=3;
 }
 
-message Join{
+message Node{
     string NodeID=1;
-    string address=2;
+    optional string address=2;
 }
 
