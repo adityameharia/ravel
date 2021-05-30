@@ -19,7 +19,7 @@ type RavelNode struct {
 }
 
 // Open creates initialises a raft.Raft instance
-func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, raftDir string, BindAddr string) error {
+func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, BindAddr string) error {
 	log.Println("RavelNode: Opening node")
 	var raftNode RavelNode
 
@@ -41,7 +41,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, r
 	}
 
 	// Create the snapshot store. This allows the Raft to truncate the log.
-	snapshot, err := raft.NewFileSnapshotStore(raftDir, 1, os.Stderr)
+	snapshot, err := raft.NewFileSnapshotStore(badgerPath+"/snapshot", 1, os.Stderr)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create SnapShot store")
 		return err

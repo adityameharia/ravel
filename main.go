@@ -30,7 +30,7 @@ func init() {
 	}
 
 	flag.StringVar(&c.dir, "raftDir", dirname, "raft data directory")
-	flag.StringVar(&c.gRPCAddr, "addr", ":5000", "server listen address")
+	flag.StringVar(&c.gRPCAddr, "addr", "", "server listen address")
 	flag.StringVar(&c.id, "id", "", "replica id")
 	flag.StringVar(&c.joinAddr, "join", "", "join to already exist cluster")
 	flag.StringVar(&c.raftAddr, "raftAddr", "", "Set Raft internal communication address")
@@ -38,22 +38,22 @@ func init() {
 
 func main() {
 	flag.Parse()
-	address := "0.0.0.0:50051"
+	address := c.gRPCAddr
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatalf("Error %v", err)
 	}
 	fmt.Printf("Server is listening on %v ...", address)
 
-	s := grpc.NewServer()
-	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
-	s.Serve(lis)
-
 	var r node.RavelNode
-	err = r.Open(true, "1", "/tmp/badger/run", "/tmp/badger/run/snapshot", "localhost:5000")
+	err = r.Open(c.joinAddr == "", c.id, c.dir, c.raftAddr)
 	if err != nil {
 		log.Println(err)
 	}
+
+	s := grpc.NewServer()
+	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
+	s.Serve(lis)
 
 	if c.joinAddr != "" {
 		if err := server.RequestJoin(c.joinAddr, c.raftAddr, c.id); err != nil {
