@@ -9,27 +9,27 @@ import (
 )
 
 func RequestJoin(nodeID, joinAddr, raftAddr string) error {
-	log.Println("1")
+
 	conn, err := grpc.Dial(joinAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("can not connect with server %v", err)
 		return err
 	}
-	log.Println("2")
+
 	client := RavelClusterPB.NewRavelClusterClient(conn)
 
 	node := &RavelClusterPB.Node{
 		NodeID:  nodeID,
 		Address: raftAddr,
 	}
-	log.Println("3")
+
 	log.Println(node)
 	res, err := client.Join(context.Background(), node)
 	if err != nil {
 		log.Fatalf("join request falied with server %v", err)
 		return err
 	}
-	log.Println("4")
+
 	if res.Data != "" {
 		conn, err := grpc.Dial(res.Data, grpc.WithInsecure())
 		if err != nil {
@@ -47,7 +47,6 @@ func RequestJoin(nodeID, joinAddr, raftAddr string) error {
 			return err
 		}
 	}
-	log.Println("5")
 	return nil
 
 }

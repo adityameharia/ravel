@@ -14,12 +14,12 @@ type Server struct {
 }
 
 func (s *Server) Join(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
-	log.Println("5")
+
 	log.Println(req.NodeID)
 	log.Println(req.Address + "hi")
 	log.Println(s.Node)
 	joinResp := s.Node.Join(req.NodeID, req.Address)
-	log.Println("6")
+
 	if joinResp.Error == "node is not leader" {
 		resp := RavelClusterPB.Response{Data: joinResp.Leader}
 		return &resp, nil
