@@ -25,11 +25,15 @@ func RequestJoin(nodeID, joinAddr, raftAddr string) error {
 
 	log.Println(node)
 	res, err := client.Join(context.Background(), node)
+	if err != nil && err.Error() == "rpc error: code = Unknown desc = node already exists" {
+		return nil
+	}
 	if err != nil {
+
+		log.Println(err.Error())
 		log.Fatalf("join request falied with server %v", err)
 		return err
 	}
-
 	if res.Data != "" {
 		conn, err := grpc.Dial(res.Data, grpc.WithInsecure())
 		if err != nil {

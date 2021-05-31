@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
 
 	"github.com/adityameharia/ravel/RavelClusterPB"
 	"github.com/adityameharia/ravel/node"
@@ -52,8 +53,7 @@ func main() {
 			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
 		}
 	}
-	defer server.RequestLeave(c.id, c.joinAddr)
-
+	onSigInt()
 	address := c.gRPCAddr
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
@@ -64,4 +64,17 @@ func main() {
 	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
 	s.Serve(lis)
 
+}
+
+func onSigInt() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	go func() {
+		<-ch
+		err := server.RequestLeave(c.id, c.joinAddr)
+		if err != nil {
+			log.Println(err)
+		}
+		os.Exit(1)
+	}()
 }
