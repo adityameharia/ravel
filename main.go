@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net"
 	"os"
@@ -38,28 +37,33 @@ func init() {
 
 func main() {
 	flag.Parse()
+
+	var err error
+	var r node.RavelNode
+	r.Raft, r.Fsm, err = r.Open(c.joinAddr == "", c.id, c.dir, c.raftAddr)
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Println("sdfishfgodfnvs kdfgnsdjfgndo")
+
+	if c.joinAddr != "" {
+		log.Println("hi")
+		if err := server.RequestJoin(c.id, c.joinAddr, c.raftAddr); err != nil {
+			log.Fatal("pp")
+			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
+		}
+	}
+	defer server.RequestLeave(c.id, c.joinAddr)
+
 	address := c.gRPCAddr
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatalf("Error %v", err)
 	}
-	fmt.Printf("Server is listening on %v ...", address)
-
-	var r node.RavelNode
-	err = r.Open(c.joinAddr == "", c.id, c.dir, c.raftAddr)
-	if err != nil {
-		log.Println(err)
-	}
-
+	log.Println("Server is listening")
 	s := grpc.NewServer()
 	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
 	s.Serve(lis)
-
-	if c.joinAddr != "" {
-		if err := server.RequestJoin(c.joinAddr, c.raftAddr, c.id); err != nil {
-			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
-		}
-	}
-	defer server.RequestLeave(c.id, c.joinAddr)
 
 }

@@ -89,10 +89,11 @@ func (r *RavelLogStore) LastIndex() (uint64, error) {
 // GetLog writes the log on position "index" to the pointer "raftLog"
 func (r *RavelLogStore) GetLog(index uint64, raftLog *raft.Log) error {
 	log.Println("LogStore: GetLog")
+	log.Println(index)
 	key := uint64ToBytes(index)
 	val, err := r.Db.Read(key)
 	if err != nil {
-		log.Fatalf("RavelLogStore.GetLog: %v\n", err)
+		log.Printf("RavelLogStore.GetLog: %v\n", err)
 		return err
 	}
 

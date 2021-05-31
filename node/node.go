@@ -19,7 +19,8 @@ type RavelNode struct {
 }
 
 // Open creates initialises a raft.Raft instance
-func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, BindAddr string) error {
+func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, BindAddr string) (*raft.Raft, *fsm.RavelFSM, error) {
+	log.Println(enableSingle)
 	log.Println("RavelNode: Opening node")
 	var raftNode RavelNode
 
@@ -32,19 +33,19 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	addr, err := net.ResolveTCPAddr("tcp", BindAddr)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to resolve TCP Bind Address")
-		return err
+		return nil, nil, err
 	}
 	transport, err := raft.NewTCPTransport(BindAddr, addr, 5, 2*time.Second, os.Stderr)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create NewTCPTransport")
-		return err
+		return nil, nil, err
 	}
 
 	// Create the snapshot store. This allows the Raft to truncate the log.
 	snapshot, err := raft.NewFileSnapshotStore(badgerPath+"/snapshot", 1, os.Stderr)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create SnapShot store")
-		return err
+		return nil, nil, err
 	}
 
 	//creating log and stable store
@@ -54,19 +55,19 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	logStore, err = store.NewRavelLogStore(badgerPath + "/logs")
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create Log store")
-		return err
+		return nil, nil, err
 	}
 
 	f, err := fsm.NewFSM(badgerPath + "/fsm")
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create FSM")
-		return err
+		return nil, nil, err
 	}
 
 	stableStore, err = store.NewRavelStableStore(badgerPath + "/stable")
 	if err != nil {
 		log.Fatal("RavelNode: Unable to create Stable store")
-		return err
+		return nil, nil, err
 	}
 
 	raftNode.Fsm = f
@@ -74,7 +75,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	r, err := raft.NewRaft(config, f, logStore, stableStore, snapshot, transport)
 	if err != nil {
 		log.Fatal("RavelNode: Unable initialise raft node")
-		return err
+		return nil, nil, err
 	}
 
 	raftNode.Raft = r
@@ -90,7 +91,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 		r.BootstrapCluster(configuration)
 	}
 
-	return nil
+	return r, f, nil
 }
 
 // Get returns the value for the given key

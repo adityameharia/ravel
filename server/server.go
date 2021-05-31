@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/adityameharia/ravel/RavelClusterPB"
 	"github.com/adityameharia/ravel/node"
@@ -13,9 +14,17 @@ type Server struct {
 }
 
 func (s *Server) Join(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
+	log.Println("5")
+	log.Println(req.NodeID)
+	log.Println(req.Address + "hi")
+	log.Println(s.Node)
 	joinResp := s.Node.Join(req.NodeID, req.Address)
+	log.Println("6")
 	if joinResp.Error == "node is not leader" {
 		resp := RavelClusterPB.Response{Data: joinResp.Leader}
+		return &resp, nil
+	} else if joinResp.Error == "" {
+		resp := RavelClusterPB.Response{Data: ""}
 		return &resp, nil
 	} else {
 		resp := RavelClusterPB.Response{Data: ""}
@@ -27,6 +36,9 @@ func (s *Server) Leave(ctx context.Context, req *RavelClusterPB.Node) (*RavelClu
 	leaveResp := s.Node.Leave(req.NodeID)
 	if leaveResp.Error == "node is not leader" {
 		resp := RavelClusterPB.Response{Data: leaveResp.Leader}
+		return &resp, nil
+	} else if leaveResp.Error == "" {
+		resp := RavelClusterPB.Response{Data: ""}
 		return &resp, nil
 	} else {
 		resp := RavelClusterPB.Response{Data: ""}

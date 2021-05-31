@@ -1,8 +1,9 @@
 package node
 
 import (
-	"github.com/hashicorp/raft"
 	"log"
+
+	"github.com/hashicorp/raft"
 )
 
 type Response struct {
@@ -12,7 +13,7 @@ type Response struct {
 
 func (n *RavelNode) Join(nodeID, addr string) Response {
 	log.Printf("received join request for remote node %s, addr %s\n", nodeID, addr)
-
+	log.Println("10")
 	if n.Raft.State() != raft.Leader {
 		respBytes := Response{
 			Error:  "node is not leader",
@@ -21,13 +22,15 @@ func (n *RavelNode) Join(nodeID, addr string) Response {
 
 		return respBytes
 	}
-
+	log.Println("11")
 	config := n.Raft.GetConfiguration()
+	log.Println("12")
 
 	if err := config.Error(); err != nil {
 		log.Printf("failed to get raft configuration\n")
 		return Response{Error: err.Error(), Leader: ""}
 	}
+	log.Println("13")
 
 	for _, server := range config.Configuration().Servers {
 		if server.ID == raft.ServerID(nodeID) {
@@ -35,11 +38,13 @@ func (n *RavelNode) Join(nodeID, addr string) Response {
 			return Response{Error: "node already exists", Leader: ""}
 		}
 	}
+	log.Println("14")
 
 	f := n.Raft.AddVoter(raft.ServerID(nodeID), raft.ServerAddress(addr), 0, 0)
 	if err := f.Error(); err != nil {
 		return Response{Error: err.Error(), Leader: ""}
 	}
+	log.Println("15")
 
 	log.Printf("node %s at %s joined successfully\n", nodeID, addr)
 	return Response{Error: "", Leader: ""}
