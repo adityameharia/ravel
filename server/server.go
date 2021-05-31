@@ -18,32 +18,31 @@ func (s *Server) Join(ctx context.Context, req *RavelClusterPB.Node) (*RavelClus
 	log.Println(req.NodeID)
 	log.Println(req.Address + "hi")
 	log.Println(s.Node)
-	joinResp := s.Node.Join(req.NodeID, req.Address)
-
-	if joinResp.Error == "node is not leader" {
-		resp := RavelClusterPB.Response{Data: joinResp.Leader}
-		return &resp, nil
-	} else if joinResp.Error == "" {
-		resp := RavelClusterPB.Response{Data: ""}
-		return &resp, nil
-	} else {
-		resp := RavelClusterPB.Response{Data: ""}
-		return &resp, errors.New(joinResp.Error)
+	leader, err := s.Node.Join(req.NodeID, req.Address)
+	log.Println(err)
+	if err != nil && err.Error() == "node is not leader" {
+		resp := &RavelClusterPB.Response{Data: leader}
+		log.Println(resp)
+		return resp, err
+	} else if err != nil {
+		resp := &RavelClusterPB.Response{Data: ""}
+		return resp, err
 	}
+	return &RavelClusterPB.Response{Data: ""}, nil
 }
 
 func (s *Server) Leave(ctx context.Context, req *RavelClusterPB.Node) (*RavelClusterPB.Response, error) {
-	leaveResp := s.Node.Leave(req.NodeID)
-	if leaveResp.Error == "node is not leader" {
-		resp := RavelClusterPB.Response{Data: leaveResp.Leader}
-		return &resp, nil
-	} else if leaveResp.Error == "" {
+	leader, err := s.Node.Leave(req.NodeID)
+	if err != nil && err.Error() == "node is not leader" {
+		resp := RavelClusterPB.Response{Data: leader}
+		return &resp, err
+	} else if err != nil {
 		resp := RavelClusterPB.Response{Data: ""}
-		return &resp, nil
-	} else {
-		resp := RavelClusterPB.Response{Data: ""}
-		return &resp, errors.New(leaveResp.Error)
+		return &resp, err
 	}
+	resp := RavelClusterPB.Response{Data: ""}
+	return &resp, nil
+
 }
 
 func (s *Server) Run(ctx context.Context, req *RavelClusterPB.Command) (*RavelClusterPB.Response, error) {
