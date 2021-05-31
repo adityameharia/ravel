@@ -65,7 +65,7 @@ func RequestLeave(nodeID, requestAddr string) error {
 
 	node := &RavelClusterPB.Node{
 		NodeID:  nodeID,
-		Address: "raftAddr",
+		Address: "",
 	}
 
 	res, err := client.Leave(context.Background(), node)

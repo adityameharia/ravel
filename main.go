@@ -71,7 +71,13 @@ func onSigInt() {
 	signal.Notify(ch, os.Interrupt)
 	go func() {
 		<-ch
-		err := server.RequestLeave(c.id, c.joinAddr)
+		var temp string
+		if c.joinAddr == "" {
+			temp = c.gRPCAddr
+		} else {
+			temp = c.joinAddr
+		}
+		err := server.RequestLeave(c.id, temp)
 		if err != nil {
 			log.Println(err)
 		}
