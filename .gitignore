@@ -1,3 +1,6 @@
 .idea
 .env
 ravel
+cmd/ravel_node/ravel_node
+cmd/ravel_cluster_admin/ravel_cluster_admin
+cmd/ravel_client/ravel_client
