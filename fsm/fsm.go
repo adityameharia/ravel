@@ -1,12 +1,12 @@
 package fsm
 
 import (
+	"encoding/json"
 	"io"
 	"log"
 
 	"github.com/adityameharia/ravel/db"
 	"github.com/hashicorp/raft"
-	"github.com/vmihailenco/msgpack/v5"
 )
 
 // RavelFSM implements the raft.FSM interface. It represents the Finite State Machine in a RavelNode. The individual
@@ -17,9 +17,9 @@ type RavelFSM struct {
 
 // LogData represents the structure of individual commands on the Logs
 type LogData struct {
-	Operation string
-	Key       []byte
-	Value     []byte
+	Operation string `json:"Operation"`
+	Key       []byte `json:"Key"`
+	Value     []byte `json:"Value"`
 }
 
 // NewFSM creates an instance of RavelFSM
@@ -61,7 +61,7 @@ func (f *RavelFSM) Apply(l *raft.Log) interface{} {
 	log.Println("FSM: Apply")
 	var d LogData
 
-	err := msgpack.Unmarshal(l.Data, &d)
+	err := json.Unmarshal(l.Data, &d)
 	if err != nil {
 		log.Fatal("FSM: Unable to get data from log")
 	}

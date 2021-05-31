@@ -2,9 +2,10 @@ package store
 
 import (
 	"encoding/binary"
-	"github.com/hashicorp/raft"
-	"github.com/vmihailenco/msgpack/v5"
+	"encoding/json"
 	"log"
+
+	"github.com/hashicorp/raft"
 )
 
 // Converts bytes to an integer
@@ -21,7 +22,7 @@ func uint64ToBytes(u uint64) []byte {
 
 // raftLogToBytes converts a raft.Log object to []bytes using msgpack serialization
 func raftLogToBytes(l raft.Log) []byte {
-	bytes, err := msgpack.Marshal(l)
+	bytes, err := json.Marshal(l)
 	if err != nil {
 		log.Println(err)
 	}
@@ -32,7 +33,7 @@ func raftLogToBytes(l raft.Log) []byte {
 // bytesToRaftLog converts []byte to a raft.Log object using msgpack serialization
 // and writes it on that pointer
 func bytesToRaftLog(b []byte, raftLog *raft.Log) error {
-	err := msgpack.Unmarshal(b, raftLog)
+	err := json.Unmarshal(b, raftLog)
 	if err != nil {
 		return err
 	}

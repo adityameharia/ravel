@@ -1,6 +1,7 @@
 package node
 
 import (
+	"encoding/json"
 	"log"
 	"net"
 	"os"
@@ -9,7 +10,6 @@ import (
 	"github.com/adityameharia/ravel/fsm"
 	"github.com/adityameharia/ravel/store"
 	"github.com/hashicorp/raft"
-	"github.com/vmihailenco/msgpack/v5"
 )
 
 // RavelNode represents a node inside the cluster.
@@ -28,6 +28,8 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	config := raft.DefaultConfig()
 	config.LocalID = raft.ServerID(localID)
 	config.SnapshotThreshold = 5000
+
+	log.Println(config)
 
 	// Setup Raft communication
 	addr, err := net.ResolveTCPAddr("tcp", BindAddr)
@@ -74,7 +76,9 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 
 	r, err := raft.NewRaft(config, f, logStore, stableStore, snapshot, transport)
 	if err != nil {
+		log.Println(err)
 		log.Fatal("RavelNode: Unable initialise raft node")
+
 		return nil, nil, err
 	}
 
@@ -116,7 +120,7 @@ func (n *RavelNode) Set(key []byte, value []byte) error {
 	data.Key = key
 	data.Value = value
 
-	dataBuffer, err := msgpack.Marshal(data)
+	dataBuffer, err := json.Marshal(data)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to marhsal key value")
 		return err
@@ -140,7 +144,7 @@ func (n *RavelNode) Delete(key []byte) error {
 	data.Key = key
 	data.Value = []byte{}
 
-	dataBuffer, err := msgpack.Marshal(data)
+	dataBuffer, err := json.Marshal(data)
 	if err != nil {
 		log.Fatal("RavelNode: Unable to marhsal key value")
 		return err

@@ -45,12 +45,10 @@ func main() {
 		log.Println(err)
 	}
 
-	log.Println("sdfishfgodfnvs kdfgnsdjfgndo")
-
 	if c.joinAddr != "" {
-		log.Println("hi")
+
 		if err := server.RequestJoin(c.id, c.joinAddr, c.raftAddr); err != nil {
-			log.Fatal("pp")
+
 			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
 		}
 	}
