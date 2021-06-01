@@ -19,6 +19,8 @@ type Replica struct {
 type server struct {
 }
 
+var serverList [][]Replica
+
 func Init() {
 	flag.StringVar(&gRPCAddr, "gRPCAddr", "", "Address (with port) at which gRPC server is started")
 }

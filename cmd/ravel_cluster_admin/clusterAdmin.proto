@@ -3,11 +3,15 @@ package RavelClusterAdminPB;
 option go_package = "./RavelClusterAdminPB";
 
 service RavelClusterAdmin{
-    rpc GetLeader(Void) returns (Response);
+    rpc GetLeader(cluster) returns (Response);
     rpc AddToReplicaMap(Node) returns (Void);
 }
 
 message Void{
+}
+
+message cluster{
+    string clusterID=1;
 }
 
 message Response{

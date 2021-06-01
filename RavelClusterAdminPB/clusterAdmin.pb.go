@@ -62,6 +62,53 @@ func (*Void) Descriptor() ([]byte, []int) {
 	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{0}
 }
 
+type Cluster struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClusterID string `protobuf:"bytes,1,opt,name=clusterID,proto3" json:"clusterID,omitempty"`
+}
+
+func (x *Cluster) Reset() {
+	*x = Cluster{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Cluster) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Cluster) ProtoMessage() {}
+
+func (x *Cluster) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Cluster.ProtoReflect.Descriptor instead.
+func (*Cluster) Descriptor() ([]byte, []int) {
+	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Cluster) GetClusterID() string {
+	if x != nil {
+		return x.ClusterID
+	}
+	return ""
+}
+
 type Response struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -73,7 +120,7 @@ type Response struct {
 func (x *Response) Reset() {
 	*x = Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[1]
+		mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -86,7 +133,7 @@ func (x *Response) String() string {
 func (*Response) ProtoMessage() {}
 
 func (x *Response) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[1]
+	mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -99,7 +146,7 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Response.ProtoReflect.Descriptor instead.
 func (*Response) Descriptor() ([]byte, []int) {
-	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{1}
+	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Response) GetData() string {
@@ -121,7 +168,7 @@ type Node struct {
 func (x *Node) Reset() {
 	*x = Node{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[2]
+		mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -134,7 +181,7 @@ func (x *Node) String() string {
 func (*Node) ProtoMessage() {}
 
 func (x *Node) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[2]
+	mi := &file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -147,7 +194,7 @@ func (x *Node) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Node.ProtoReflect.Descriptor instead.
 func (*Node) Descriptor() ([]byte, []int) {
-	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{2}
+	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Node) GetNodeID() string {
@@ -172,25 +219,28 @@ var file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDesc = []byte{
 	0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x12, 0x13, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72,
 	0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42, 0x22, 0x06, 0x0a, 0x04, 0x56, 0x6f, 0x69, 0x64, 0x22,
-	0x1e, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64,
-	0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22,
-	0x40, 0x0a, 0x04, 0x4e, 0x6f, 0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49,
-	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x12,
-	0x20, 0x0a, 0x0b, 0x67, 0x52, 0x50, 0x43, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x67, 0x52, 0x50, 0x43, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73,
-	0x73, 0x32, 0xa3, 0x01, 0x0a, 0x11, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74,
-	0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x12, 0x45, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x4c, 0x65,
-	0x61, 0x64, 0x65, 0x72, 0x12, 0x19, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73,
-	0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42, 0x2e, 0x56, 0x6f, 0x69, 0x64, 0x1a,
-	0x1d, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64,
-	0x6d, 0x69, 0x6e, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x47,
-	0x0a, 0x0f, 0x41, 0x64, 0x64, 0x54, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x4d, 0x61,
-	0x70, 0x12, 0x19, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72,
-	0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x19, 0x2e, 0x52,
+	0x27, 0x0a, 0x07, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x6c,
+	0x75, 0x73, 0x74, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63,
+	0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x49, 0x44, 0x22, 0x1e, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x40, 0x0a, 0x04, 0x4e, 0x6f, 0x64, 0x65,
+	0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x12, 0x20, 0x0a, 0x0b, 0x67, 0x52, 0x50, 0x43,
+	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x67,
+	0x52, 0x50, 0x43, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xa6, 0x01, 0x0a, 0x11, 0x52,
 	0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e,
-	0x50, 0x42, 0x2e, 0x56, 0x6f, 0x69, 0x64, 0x42, 0x17, 0x5a, 0x15, 0x2e, 0x2f, 0x52, 0x61, 0x76,
-	0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x12, 0x48, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x4c, 0x65, 0x61, 0x64, 0x65, 0x72, 0x12, 0x1c, 0x2e,
+	0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69,
+	0x6e, 0x50, 0x42, 0x2e, 0x63, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x1a, 0x1d, 0x2e, 0x52, 0x61,
+	0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50,
+	0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x47, 0x0a, 0x0f, 0x41, 0x64,
+	0x64, 0x54, 0x6f, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x4d, 0x61, 0x70, 0x12, 0x19, 0x2e,
+	0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69,
+	0x6e, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x19, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c,
+	0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42, 0x2e, 0x56,
+	0x6f, 0x69, 0x64, 0x42, 0x17, 0x5a, 0x15, 0x2e, 0x2f, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c,
+	0x75, 0x73, 0x74, 0x65, 0x72, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x50, 0x42, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -205,16 +255,17 @@ func file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescGZIP() []byte 
 	return file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDescData
 }
 
-var file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_goTypes = []interface{}{
 	(*Void)(nil),     // 0: RavelClusterAdminPB.Void
-	(*Response)(nil), // 1: RavelClusterAdminPB.Response
-	(*Node)(nil),     // 2: RavelClusterAdminPB.Node
+	(*Cluster)(nil),  // 1: RavelClusterAdminPB.cluster
+	(*Response)(nil), // 2: RavelClusterAdminPB.Response
+	(*Node)(nil),     // 3: RavelClusterAdminPB.Node
 }
 var file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_depIdxs = []int32{
-	0, // 0: RavelClusterAdminPB.RavelClusterAdmin.GetLeader:input_type -> RavelClusterAdminPB.Void
-	2, // 1: RavelClusterAdminPB.RavelClusterAdmin.AddToReplicaMap:input_type -> RavelClusterAdminPB.Node
-	1, // 2: RavelClusterAdminPB.RavelClusterAdmin.GetLeader:output_type -> RavelClusterAdminPB.Response
+	1, // 0: RavelClusterAdminPB.RavelClusterAdmin.GetLeader:input_type -> RavelClusterAdminPB.cluster
+	3, // 1: RavelClusterAdminPB.RavelClusterAdmin.AddToReplicaMap:input_type -> RavelClusterAdminPB.Node
+	2, // 2: RavelClusterAdminPB.RavelClusterAdmin.GetLeader:output_type -> RavelClusterAdminPB.Response
 	0, // 3: RavelClusterAdminPB.RavelClusterAdmin.AddToReplicaMap:output_type -> RavelClusterAdminPB.Void
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
@@ -242,7 +293,7 @@ func file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_init() {
 			}
 		}
 		file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Response); i {
+			switch v := v.(*Cluster); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -254,6 +305,18 @@ func file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_init() {
 			}
 		}
 		file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Node); i {
 			case 0:
 				return &v.state
@@ -272,7 +335,7 @@ func file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ravel_cmd_ravel_cluster_admin_clusterAdmin_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -298,7 +361,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RavelClusterAdminClient interface {
-	GetLeader(ctx context.Context, in *Void, opts ...grpc.CallOption) (*Response, error)
+	GetLeader(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Response, error)
 	AddToReplicaMap(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Void, error)
 }
 
@@ -310,7 +373,7 @@ func NewRavelClusterAdminClient(cc grpc.ClientConnInterface) RavelClusterAdminCl
 	return &ravelClusterAdminClient{cc}
 }
 
-func (c *ravelClusterAdminClient) GetLeader(ctx context.Context, in *Void, opts ...grpc.CallOption) (*Response, error) {
+func (c *ravelClusterAdminClient) GetLeader(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, "/RavelClusterAdminPB.RavelClusterAdmin/GetLeader", in, out, opts...)
 	if err != nil {
@@ -330,7 +393,7 @@ func (c *ravelClusterAdminClient) AddToReplicaMap(ctx context.Context, in *Node,
 
 // RavelClusterAdminServer is the server API for RavelClusterAdmin service.
 type RavelClusterAdminServer interface {
-	GetLeader(context.Context, *Void) (*Response, error)
+	GetLeader(context.Context, *Cluster) (*Response, error)
 	AddToReplicaMap(context.Context, *Node) (*Void, error)
 }
 
@@ -338,7 +401,7 @@ type RavelClusterAdminServer interface {
 type UnimplementedRavelClusterAdminServer struct {
 }
 
-func (*UnimplementedRavelClusterAdminServer) GetLeader(context.Context, *Void) (*Response, error) {
+func (*UnimplementedRavelClusterAdminServer) GetLeader(context.Context, *Cluster) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLeader not implemented")
 }
 func (*UnimplementedRavelClusterAdminServer) AddToReplicaMap(context.Context, *Node) (*Void, error) {
@@ -350,7 +413,7 @@ func RegisterRavelClusterAdminServer(s *grpc.Server, srv RavelClusterAdminServer
 }
 
 func _RavelClusterAdmin_GetLeader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Void)
+	in := new(Cluster)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -362,7 +425,7 @@ func _RavelClusterAdmin_GetLeader_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/RavelClusterAdminPB.RavelClusterAdmin/GetLeader",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RavelClusterAdminServer).GetLeader(ctx, req.(*Void))
+		return srv.(RavelClusterAdminServer).GetLeader(ctx, req.(*Cluster))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 )
 
-func (s *server) GetLeader(ctx context.Context, v *RavelClusterAdminPB.Void) (*RavelClusterAdminPB.Response, error) {
+func (s *server) GetLeader(ctx context.Context, v *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
 	return nil, nil
 }
 
