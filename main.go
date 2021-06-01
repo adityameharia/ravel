@@ -10,6 +10,7 @@ import (
 	"github.com/adityameharia/ravel/RavelClusterPB"
 	"github.com/adityameharia/ravel/node"
 	"github.com/adityameharia/ravel/server"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 )
 
@@ -28,10 +29,11 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	id := uuid.New().String()
 
 	flag.StringVar(&c.dir, "raftDir", dirname, "raft data directory")
 	flag.StringVar(&c.gRPCAddr, "addr", "", "server listen address")
-	flag.StringVar(&c.id, "id", "", "replica id")
+	flag.StringVar(&c.id, "id", id, "replica id")
 	flag.StringVar(&c.joinAddr, "join", "", "join to already exist cluster")
 	flag.StringVar(&c.raftAddr, "raftAddr", "", "Set Raft internal communication address")
 }
