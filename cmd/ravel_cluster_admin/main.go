@@ -21,7 +21,10 @@ type server struct {
 
 var serverList [][]Replica
 
+var leader Replica
+
 func Init() {
+	serverList = [][]Replica{}
 	flag.StringVar(&gRPCAddr, "gRPCAddr", "", "Address (with port) at which gRPC server is started")
 }
 

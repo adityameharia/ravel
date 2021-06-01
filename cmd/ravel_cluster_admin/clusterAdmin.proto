@@ -11,7 +11,7 @@ message Void{
 }
 
 message cluster{
-    string clusterID=1;
+    int32 clusterID=1;
 }
 
 message Response{
@@ -21,4 +21,5 @@ message Response{
 message Node{
     string NodeID=1;
     string gRPCaddress=2;
+    int32 clusterID=3;
 }
