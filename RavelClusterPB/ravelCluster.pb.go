@@ -24,6 +24,44 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Void struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Void) Reset() {
+	*x = Void{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ravel_ravelCluster_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Void) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Void) ProtoMessage() {}
+
+func (x *Void) ProtoReflect() protoreflect.Message {
+	mi := &file_ravel_ravelCluster_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Void.ProtoReflect.Descriptor instead.
+func (*Void) Descriptor() ([]byte, []int) {
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{0}
+}
+
 type Response struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -35,7 +73,7 @@ type Response struct {
 func (x *Response) Reset() {
 	*x = Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[0]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -48,7 +86,7 @@ func (x *Response) String() string {
 func (*Response) ProtoMessage() {}
 
 func (x *Response) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[0]
+	mi := &file_ravel_ravelCluster_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,7 +99,7 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Response.ProtoReflect.Descriptor instead.
 func (*Response) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{0}
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Response) GetData() string {
@@ -84,7 +122,7 @@ type Command struct {
 func (x *Command) Reset() {
 	*x = Command{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[1]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -97,7 +135,7 @@ func (x *Command) String() string {
 func (*Command) ProtoMessage() {}
 
 func (x *Command) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[1]
+	mi := &file_ravel_ravelCluster_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -110,7 +148,7 @@ func (x *Command) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Command.ProtoReflect.Descriptor instead.
 func (*Command) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{1}
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Command) GetOperation() string {
@@ -146,7 +184,7 @@ type Node struct {
 func (x *Node) Reset() {
 	*x = Node{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ravel_ravelCluster_proto_msgTypes[2]
+		mi := &file_ravel_ravelCluster_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -159,7 +197,7 @@ func (x *Node) String() string {
 func (*Node) ProtoMessage() {}
 
 func (x *Node) ProtoReflect() protoreflect.Message {
-	mi := &file_ravel_ravelCluster_proto_msgTypes[2]
+	mi := &file_ravel_ravelCluster_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -172,7 +210,7 @@ func (x *Node) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Node.ProtoReflect.Descriptor instead.
 func (*Node) Descriptor() ([]byte, []int) {
-	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{2}
+	return file_ravel_ravelCluster_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Node) GetNodeID() string {
@@ -194,27 +232,27 @@ var File_ravel_ravelCluster_proto protoreflect.FileDescriptor
 var file_ravel_ravelCluster_proto_rawDesc = []byte{
 	0x0a, 0x18, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x2f, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75,
 	0x73, 0x74, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x52, 0x61, 0x76, 0x65,
-	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x22, 0x1e, 0x0a, 0x08, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0x5e, 0x0a, 0x07, 0x43, 0x6f,
-	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c,
-	0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x19, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01, 0x01,
-	0x42, 0x08, 0x0a, 0x06, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x38, 0x0a, 0x04, 0x4e, 0x6f,
-	0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65, 0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64,
-	0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64,
-	0x72, 0x65, 0x73, 0x73, 0x32, 0xb9, 0x01, 0x0a, 0x0c, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c,
-	0x75, 0x73, 0x74, 0x65, 0x72, 0x12, 0x36, 0x0a, 0x04, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x14, 0x2e,
-	0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e,
-	0x6f, 0x64, 0x65, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74,
-	0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x37, 0x0a,
-	0x05, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c,
-	0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x18, 0x2e, 0x52,
-	0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x38, 0x0a, 0x03, 0x52, 0x75, 0x6e, 0x12, 0x17, 0x2e,
+	0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x22, 0x06, 0x0a, 0x04, 0x76, 0x6f,
+	0x69, 0x64, 0x22, 0x1e, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12,
+	0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61,
+	0x74, 0x61, 0x22, 0x5e, 0x0a, 0x07, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x1c, 0x0a,
+	0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x09, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x6b,
+	0x65, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x19, 0x0a,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52, 0x05,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x76, 0x61, 0x6c,
+	0x75, 0x65, 0x22, 0x38, 0x0a, 0x04, 0x4e, 0x6f, 0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x4e, 0x6f,
+	0x64, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x4e, 0x6f, 0x64, 0x65,
+	0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0xb1, 0x01, 0x0a,
+	0x0c, 0x72, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x12, 0x32, 0x0a,
+	0x04, 0x4a, 0x6f, 0x69, 0x6e, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75,
+	0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x1a, 0x14, 0x2e, 0x52, 0x61,
+	0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x76, 0x6f, 0x69,
+	0x64, 0x12, 0x33, 0x0a, 0x05, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x12, 0x14, 0x2e, 0x52, 0x61, 0x76,
+	0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x4e, 0x6f, 0x64, 0x65,
+	0x1a, 0x14, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50,
+	0x42, 0x2e, 0x76, 0x6f, 0x69, 0x64, 0x12, 0x38, 0x0a, 0x03, 0x52, 0x75, 0x6e, 0x12, 0x17, 0x2e,
 	0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c, 0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x43,
 	0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x1a, 0x18, 0x2e, 0x52, 0x61, 0x76, 0x65, 0x6c, 0x43, 0x6c,
 	0x75, 0x73, 0x74, 0x65, 0x72, 0x50, 0x42, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
@@ -234,19 +272,20 @@ func file_ravel_ravelCluster_proto_rawDescGZIP() []byte {
 	return file_ravel_ravelCluster_proto_rawDescData
 }
 
-var file_ravel_ravelCluster_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_ravel_ravelCluster_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ravel_ravelCluster_proto_goTypes = []interface{}{
-	(*Response)(nil), // 0: RavelClusterPB.Response
-	(*Command)(nil),  // 1: RavelClusterPB.Command
-	(*Node)(nil),     // 2: RavelClusterPB.Node
+	(*Void)(nil),     // 0: RavelClusterPB.void
+	(*Response)(nil), // 1: RavelClusterPB.Response
+	(*Command)(nil),  // 2: RavelClusterPB.Command
+	(*Node)(nil),     // 3: RavelClusterPB.Node
 }
 var file_ravel_ravelCluster_proto_depIdxs = []int32{
-	2, // 0: RavelClusterPB.ravelCluster.Join:input_type -> RavelClusterPB.Node
-	2, // 1: RavelClusterPB.ravelCluster.Leave:input_type -> RavelClusterPB.Node
-	1, // 2: RavelClusterPB.ravelCluster.Run:input_type -> RavelClusterPB.Command
-	0, // 3: RavelClusterPB.ravelCluster.Join:output_type -> RavelClusterPB.Response
-	0, // 4: RavelClusterPB.ravelCluster.Leave:output_type -> RavelClusterPB.Response
-	0, // 5: RavelClusterPB.ravelCluster.Run:output_type -> RavelClusterPB.Response
+	3, // 0: RavelClusterPB.ravelCluster.Join:input_type -> RavelClusterPB.Node
+	3, // 1: RavelClusterPB.ravelCluster.Leave:input_type -> RavelClusterPB.Node
+	2, // 2: RavelClusterPB.ravelCluster.Run:input_type -> RavelClusterPB.Command
+	0, // 3: RavelClusterPB.ravelCluster.Join:output_type -> RavelClusterPB.void
+	0, // 4: RavelClusterPB.ravelCluster.Leave:output_type -> RavelClusterPB.void
+	1, // 5: RavelClusterPB.ravelCluster.Run:output_type -> RavelClusterPB.Response
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -261,7 +300,7 @@ func file_ravel_ravelCluster_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_ravel_ravelCluster_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Response); i {
+			switch v := v.(*Void); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -273,7 +312,7 @@ func file_ravel_ravelCluster_proto_init() {
 			}
 		}
 		file_ravel_ravelCluster_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Command); i {
+			switch v := v.(*Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -285,6 +324,18 @@ func file_ravel_ravelCluster_proto_init() {
 			}
 		}
 		file_ravel_ravelCluster_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Command); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ravel_ravelCluster_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Node); i {
 			case 0:
 				return &v.state
@@ -297,14 +348,14 @@ func file_ravel_ravelCluster_proto_init() {
 			}
 		}
 	}
-	file_ravel_ravelCluster_proto_msgTypes[1].OneofWrappers = []interface{}{}
+	file_ravel_ravelCluster_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ravel_ravelCluster_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -330,8 +381,8 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RavelClusterClient interface {
-	Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
-	Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Void, error)
+	Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Void, error)
 	Run(ctx context.Context, in *Command, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -343,8 +394,8 @@ func NewRavelClusterClient(cc grpc.ClientConnInterface) RavelClusterClient {
 	return &ravelClusterClient{cc}
 }
 
-func (c *ravelClusterClient) Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
+func (c *ravelClusterClient) Join(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Void, error) {
+	out := new(Void)
 	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/Join", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -352,8 +403,8 @@ func (c *ravelClusterClient) Join(ctx context.Context, in *Node, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *ravelClusterClient) Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
+func (c *ravelClusterClient) Leave(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Void, error) {
+	out := new(Void)
 	err := c.cc.Invoke(ctx, "/RavelClusterPB.ravelCluster/Leave", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -372,8 +423,8 @@ func (c *ravelClusterClient) Run(ctx context.Context, in *Command, opts ...grpc.
 
 // RavelClusterServer is the server API for RavelCluster service.
 type RavelClusterServer interface {
-	Join(context.Context, *Node) (*Response, error)
-	Leave(context.Context, *Node) (*Response, error)
+	Join(context.Context, *Node) (*Void, error)
+	Leave(context.Context, *Node) (*Void, error)
 	Run(context.Context, *Command) (*Response, error)
 }
 
@@ -381,10 +432,10 @@ type RavelClusterServer interface {
 type UnimplementedRavelClusterServer struct {
 }
 
-func (*UnimplementedRavelClusterServer) Join(context.Context, *Node) (*Response, error) {
+func (*UnimplementedRavelClusterServer) Join(context.Context, *Node) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Join not implemented")
 }
-func (*UnimplementedRavelClusterServer) Leave(context.Context, *Node) (*Response, error) {
+func (*UnimplementedRavelClusterServer) Leave(context.Context, *Node) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Leave not implemented")
 }
 func (*UnimplementedRavelClusterServer) Run(context.Context, *Command) (*Response, error) {
