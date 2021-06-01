@@ -22,6 +22,8 @@ type Config struct {
 	raftAddr string
 }
 
+var adminAddress string
+
 var c Config
 
 func init() {
@@ -36,6 +38,7 @@ func init() {
 	flag.StringVar(&c.id, "id", id, "replica id")
 	flag.StringVar(&c.joinAddr, "join", "", "join to already exist cluster")
 	flag.StringVar(&c.raftAddr, "raftAddr", "", "Set Raft internal communication address")
+	flag.StringVar(&adminAddress, "admin", "", "get the address of the admin cluster")
 }
 
 func main() {
