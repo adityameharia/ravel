@@ -6,6 +6,7 @@ import (
 
 	"github.com/adityameharia/ravel/RavelClusterPB"
 	"github.com/adityameharia/ravel/node"
+	"github.com/hashicorp/raft"
 )
 
 type Server struct {
@@ -28,6 +29,14 @@ func (s *Server) Leave(ctx context.Context, req *RavelClusterPB.Node) (*RavelClu
 	}
 
 	return &RavelClusterPB.Void{}, nil
+}
+
+func (s *Server) IsLeader(ctx context.Context, v *RavelClusterPB.Void) (*RavelClusterPB.Boolean, error) {
+	if s.Node.Raft.State() != raft.Leader {
+		return &RavelClusterPB.Boolean{Leader: false}, nil
+	}
+	return &RavelClusterPB.Boolean{Leader: true}, nil
+
 }
 
 func (s *Server) Run(ctx context.Context, req *RavelClusterPB.Command) (*RavelClusterPB.Response, error) {

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package RavelClusterAdminPB;
+option go_package = "./RavelClusterAdminPB";
+
+service RavelClusterAdmin{
+    rpc GetLeader(Void) returns (Response);
+    rpc AddToReplicaMap(Node) returns (Void);
+}
+
+message Void{
+}
+
+message Response{
+    string data=1;
+}
+
+message Node{
+    string NodeID=1;
+    string gRPCaddress=2;
+}

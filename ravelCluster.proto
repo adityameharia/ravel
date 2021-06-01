@@ -6,9 +6,14 @@ service ravelCluster{
     rpc Join(Node) returns (void);
     rpc Leave(Node) returns (void);
     rpc Run(Command) returns (Response);
+    rpc isLeader(void) returns (Boolean);
 }
 
 message void{
+}
+
+message Boolean{
+    bool leader=1;    
 }
 
 message Response{
