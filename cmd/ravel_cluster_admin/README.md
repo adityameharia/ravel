@@ -1,0 +1,7 @@
+- This will have a grpc server to talk to nodes
+  - this will handle new nodes joining in the cluster
+  - this will manage the list of the leaders
+- this will have a http server to talk to the client
+- this will have the logic to shard the keys and values coming from the client
+  - keep a track of partition id's assigned to the various members
+  - keep track of which keys go into which partition
