@@ -2,14 +2,16 @@ package main
 
 import (
 	"flag"
-	"github.com/adityameharia/ravel/RavelClusterPB"
-	"github.com/adityameharia/ravel/node"
-	"github.com/adityameharia/ravel/server"
-	"google.golang.org/grpc"
 	"log"
 	"net"
 	"os"
 	"os/signal"
+
+	"github.com/adityameharia/ravel/RavelClusterPB"
+	"github.com/adityameharia/ravel/node"
+	"github.com/adityameharia/ravel/server"
+	"github.com/google/uuid"
+	"google.golang.org/grpc"
 )
 
 type Config struct {
@@ -28,9 +30,11 @@ func init() {
 		log.Fatal(err)
 	}
 
+	id := uuid.New().String()
+
 	flag.StringVar(&nodeConfig.storageDir, "storageDir", dirname, "Data Directory for Raft")
 	flag.StringVar(&nodeConfig.gRPCAddr, "gRPCAddr", "", "Address (with port) at which gRPC server is started")
-	flag.StringVar(&nodeConfig.nodeID, "nodeID", "", "Unique ID for the Node")
+	flag.StringVar(&nodeConfig.nodeID, "nodeID", id, "Unique ID for the Node")
 	flag.StringVar(&nodeConfig.joinAddr, "joinAddr", "", "Address of the leader node to which this node is supposed to join")
 	flag.StringVar(&nodeConfig.raftInternalAddr, "raftAddr", "", "Raft internal communication address with port")
 }
