@@ -47,6 +47,7 @@ func (s *server) GetLeader(ctx context.Context, cluster *RavelClusterAdminPB.Clu
 			}
 
 			if res.Leader == true {
+				leader[cluster.ClusterID] = rep
 				return &RavelClusterAdminPB.Response{Data: rep.gRPCAddress}, nil
 			}
 		}
