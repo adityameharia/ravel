@@ -5,6 +5,7 @@ option go_package = "./RavelClusterAdminPB";
 service RavelClusterAdmin{
     rpc GetLeader(cluster) returns (Response);
     rpc AddToReplicaMap(Node) returns (Void);
+    rpc DeleteFromReplicaMap(Node)returns (Void);
 }
 
 message Void{

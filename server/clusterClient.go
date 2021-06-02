@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func RequestJoin(nodeID, joinAddr, raftAddr string) error {
+func RequestJoinToLeader(nodeID, joinAddr, raftAddr string) error {
 
 	conn, err := grpc.Dial(joinAddr, grpc.WithInsecure())
 	if err != nil {
@@ -36,7 +36,7 @@ func RequestJoin(nodeID, joinAddr, raftAddr string) error {
 
 }
 
-func RequestLeave(nodeID, requestAddr string) error {
+func RequestLeaveToLeader(nodeID, requestAddr string) error {
 	conn, err := grpc.Dial(requestAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("can not connect with server %v", err)

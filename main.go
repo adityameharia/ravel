@@ -53,7 +53,7 @@ func main() {
 
 	if c.joinAddr != "" {
 
-		if err := server.RequestJoin(c.id, c.joinAddr, c.raftAddr); err != nil {
+		if err := server.RequestJoinToLeader(c.id, c.joinAddr, c.raftAddr); err != nil {
 
 			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
 		}
@@ -82,7 +82,7 @@ func onSigInt() {
 		} else {
 			temp = c.joinAddr
 		}
-		err := server.RequestLeave(c.id, temp)
+		err := server.RequestLeaveToLeader(c.id, temp)
 		if err != nil {
 			log.Println(err)
 		}

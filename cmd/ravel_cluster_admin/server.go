@@ -11,12 +11,13 @@ import (
 )
 
 func (s *server) GetLeader(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
-
+	mu.Lock()
+	defer mu.Unlock()
 	if len(serverList[cluster.ClusterID]) == 0 {
 		return &RavelClusterAdminPB.Response{Data: ""}, nil
 	}
 
-	conn, err := grpc.Dial(leader.gRPCAddress, grpc.WithInsecure())
+	conn, err := grpc.Dial(leader[cluster.ClusterID].gRPCAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Printf("cannot connect with server %v", err)
 	}
@@ -29,7 +30,7 @@ func (s *server) GetLeader(ctx context.Context, cluster *RavelClusterAdminPB.Clu
 	}
 
 	if res.Leader == true {
-		return &RavelClusterAdminPB.Response{Data: leader.gRPCAddress}, nil
+		return &RavelClusterAdminPB.Response{Data: leader[cluster.ClusterID].gRPCAddress}, nil
 	} else {
 		for _, rep := range serverList[cluster.ClusterID] {
 
@@ -61,4 +62,18 @@ func (s *server) AddToReplicaMap(ctx context.Context, cluster *RavelClusterAdmin
 	}
 	serverList[cluster.ClusterID] = append(serverList[cluster.ClusterID], rep)
 	return &RavelClusterAdminPB.Void{}, nil
+}
+
+func (s *server) RemoveReplicaFromMap(ctx context.Context, cluster *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Void, error) {
+	for i, r := range serverList[cluster.ClusterID] {
+		if r.NodeID == cluster.NodeID {
+			serverList[cluster.ClusterID] = RemoveIndex(serverList[cluster.ClusterID], i)
+			return &RavelClusterAdminPB.Void{}, nil
+		}
+	}
+	return nil, errors.New("Replica not found in the server list")
+}
+
+func RemoveIndex(sl []Replica, index int) []Replica {
+	return append(sl[:index], sl[index+1:]...)
 }

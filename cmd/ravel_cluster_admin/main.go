@@ -4,10 +4,13 @@ import (
 	"flag"
 	"log"
 	"net"
+	"sync"
 
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 	"google.golang.org/grpc"
 )
+
+var mu sync.Mutex
 
 var gRPCAddr string
 
@@ -21,10 +24,11 @@ type server struct {
 
 var serverList [][]Replica
 
-var leader Replica
+var leader []Replica
 
 func Init() {
 	serverList = [][]Replica{}
+	leader = []Replica{}
 	flag.StringVar(&gRPCAddr, "gRPCAddr", "", "Address (with port) at which gRPC server is started")
 }
 
