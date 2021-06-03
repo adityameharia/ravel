@@ -14,7 +14,8 @@ service RavelNode {
 message Node {
     string node_id = 1;
     string grpc_address = 2;
-    string cluster_id = 3;
+    string raft_address = 3;
+    string cluster_id = 4;
 }
 
 message Void {

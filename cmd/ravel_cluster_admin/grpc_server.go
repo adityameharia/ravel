@@ -50,6 +50,7 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: minReplicaClusterID,
 		LeaderGrpcAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.GrpcAddress,
+		LeaderRaftAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.RaftAddress,
 	}, nil
 }
 
@@ -64,6 +65,7 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: newClusterID,
 		LeaderGrpcAddress: node.GrpcAddress, // same as the node that sent the request
+		LeaderRaftAddress: node.RaftAddress,
 	}, nil
 }
 
@@ -85,6 +87,8 @@ func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *
 
 func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Node, error) {
 	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
 	cInfo, exists := s.ClusterLeaderMap[cluster.ClusterId]
 	if !exists {
 		return nil, errors.New("invalid cluster id")
