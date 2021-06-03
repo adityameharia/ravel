@@ -71,7 +71,7 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 
 func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
 	s.mutex.Lock()
-	defer s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	if cInfo, exists := s.ClusterLeaderMap[node.ClusterId]; exists {
 		s.ClusterLeaderMap[node.ClusterId] = cInfo
