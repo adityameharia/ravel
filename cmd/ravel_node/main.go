@@ -80,6 +80,7 @@ func main() {
 			RaftAddress: nodeConfig.raftInternalAddr,
 			ClusterId: "",
 		})
+
 		if err != nil {
 			log.Fatal("Error in JoinExistingCluster: ", err)
 		} else {
@@ -105,6 +106,7 @@ func main() {
 
 	go func() {
 		leaderChange := <- ravelNode.Raft.LeaderCh()
+		log.Println("Sending leader change req")
 		if leaderChange {
 			err := RequestLeaderUpdateToCluster(nodeConfig.adminGRPCAddr, &RavelClusterAdminPB.Node{
 				NodeId: nodeConfig.nodeID,
@@ -155,6 +157,18 @@ func onSignalInterrupt() {
 			log.Println(err)
 		}
 
+		resp, err := adminClient.LeaveCluster(context.TODO(), &RavelClusterAdminPB.Node{
+			NodeId: nodeConfig.nodeID,
+			ClusterId: nodeConfig.clusterID,
+			GrpcAddress: nodeConfig.gRPCAddr,
+			RaftAddress: nodeConfig.raftInternalAddr,
+		})
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		log.Println(resp)
 		os.Exit(1)
 	}()
 }

@@ -8,6 +8,7 @@ service RavelClusterAdmin {
     rpc JoinExistingCluster(Node) returns (Cluster);
     rpc JoinAsClusterLeader(Node) returns (Cluster);
     rpc UpdateClusterLeader(Node) returns (Response);
+    rpc LeaveCluster(Node) returns (Response);
     rpc GetClusterLeader(Cluster) returns (Node);
 }
 
