@@ -1,28 +1,20 @@
-package server
+package main
 
 import (
 	"context"
-	"log"
-
-	"github.com/adityameharia/ravel/RavelClusterPB"
+	"github.com/adityameharia/ravel/RavelNodePB"
 	"google.golang.org/grpc"
+	"log"
 )
 
-func RequestJoinToLeader(nodeID, joinAddr, raftAddr string) error {
-
-	conn, err := grpc.Dial(joinAddr, grpc.WithInsecure())
+func RequestJoinToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) error {
+	conn, err := grpc.Dial(leaderGRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("can not connect with server %v", err)
 		return err
 	}
 
-	client := RavelClusterPB.NewRavelClusterClient(conn)
-
-	node := &RavelClusterPB.Node{
-		NodeID:  nodeID,
-		Address: raftAddr,
-	}
-
+	client := RavelNodePB.NewRavelNodeClient(conn)
 	_, err = client.Join(context.Background(), node)
 
 	if err != nil && err.Error() == "rpc error: code = Unknown desc = node already exists" {
@@ -32,27 +24,23 @@ func RequestJoinToLeader(nodeID, joinAddr, raftAddr string) error {
 		log.Fatalf("join request falied with server %v", err)
 		return err
 	}
-	return nil
 
+	return nil
 }
 
-func RequestLeaveToLeader(nodeID, requestAddr string) error {
-	conn, err := grpc.Dial(requestAddr, grpc.WithInsecure())
+func RequestLeaveToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) error {
+	conn, err := grpc.Dial(leaderGRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("can not connect with server %v", err)
 		return err
 	}
-	client := RavelClusterPB.NewRavelClusterClient(conn)
-
-	node := &RavelClusterPB.Node{
-		NodeID:  nodeID,
-		Address: "",
-	}
+	client := RavelNodePB.NewRavelNodeClient(conn)
 
 	_, err = client.Leave(context.Background(), node)
 	if err != nil {
 		log.Fatalf("join request falied with server %v", err)
 		return err
 	}
+
 	return nil
 }

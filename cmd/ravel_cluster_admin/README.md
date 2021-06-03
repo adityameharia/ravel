@@ -5,3 +5,10 @@
 - this will have the logic to shard the keys and values coming from the client
   - keep a track of partition id's assigned to the various members
   - keep track of which keys go into which partition
+  
+
+```shell
+protoc --go_out=. \
+    --go-grpc_out=require_unimplemented_servers=false:. \
+    cmd/ravel_cluster_admin/cluster_admin.proto
+```

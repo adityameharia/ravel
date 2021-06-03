@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package RavelClusterAdminPB;
+
+option go_package = "./RavelClusterAdminPB";
+
+service RavelClusterAdmin {
+    rpc JoinExistingCluster(Node) returns (Cluster);
+    rpc JoinAsClusterLeader(Node) returns (Cluster);
+    rpc UpdateClusterLeader(Node) returns (Response);
+    rpc GetClusterLeader(Cluster) returns (Node);
+}
+
+message Cluster {
+    string cluster_id = 1;
+    string leader_grpc_address = 2;
+}
+
+message Response {
+    string data = 1;
+}
+
+message Node {
+    string node_id = 1;
+    string grpc_address = 2;
+    string cluster_id = 3;
+}

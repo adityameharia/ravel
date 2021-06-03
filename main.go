@@ -7,9 +7,9 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/adityameharia/ravel/RavelClusterPB"
+	"github.com/adityameharia/ravel/RavelNodePB"
 	"github.com/adityameharia/ravel/node"
-	"github.com/adityameharia/ravel/server"
+	"github.com/adityameharia/ravel/node_server"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 )
@@ -53,7 +53,7 @@ func main() {
 
 	if c.joinAddr != "" {
 
-		if err := server.RequestJoinToLeader(c.id, c.joinAddr, c.raftAddr); err != nil {
+		if err := node_server.RequestJoinToLeader(c.id, c.joinAddr, c.raftAddr); err != nil {
 
 			log.Fatalf("failed to join node at %s: %s", c.joinAddr, err.Error())
 		}
@@ -66,7 +66,7 @@ func main() {
 	}
 	log.Println("Server is listening")
 	s := grpc.NewServer()
-	RavelClusterPB.RegisterRavelClusterServer(s, &server.Server{Node: &r})
+	RavelNodePB.RegisterRavelClusterServer(s, &node_server.Server{Node: &r})
 	s.Serve(lis)
 
 }
@@ -82,7 +82,7 @@ func onSigInt() {
 		} else {
 			temp = c.joinAddr
 		}
-		err := server.RequestLeaveToLeader(c.id, temp)
+		err := node_server.RequestLeaveToLeader(c.id, temp)
 		if err != nil {
 			log.Println(err)
 		}

@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package RavelClusterPB;
+
+option go_package = "./RavelNodePB";
+
+service RavelNode {
+    rpc Join(Node) returns (Void);
+    rpc Leave(Node) returns (Void);
+    rpc Run(Command) returns (Response);
+    rpc IsLeader(Void) returns (Boolean);
+}
+
+message Node {
+    string node_id = 1;
+    string grpc_address = 2;
+    string cluster_id = 3;
+}
+
+message Void {
+}
+
+message Boolean {
+    bool leader = 1;
+}
+
+message Response {
+    string data = 1;
+}
+
+message Command {
+    string operation = 1;
+    bytes key = 2;
+    bytes value = 3;
+}
+
+

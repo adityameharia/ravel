@@ -1,45 +1,21 @@
 package main
 
 import (
-	"flag"
+	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 	"log"
 	"net"
-	"sync"
-
-	"github.com/adityameharia/ravel/RavelClusterAdminPB"
-	"google.golang.org/grpc"
 )
 
-var mu sync.Mutex
-
-var gRPCAddr string
-
-type Replica struct {
-	NodeID      string
-	gRPCAddress string
-}
-
-type server struct {
-}
-
-var serverList [][]Replica
-
-var leader []Replica
-
-func Init() {
-	serverList = [][]Replica{}
-	leader = []Replica{}
-	flag.StringVar(&gRPCAddr, "gRPCAddr", "", "Address (with port) at which gRPC server is started")
-}
+const RavelClusterAdminGRPCAddr = "localhost:42000"
 
 func main() {
-	listener, err := net.Listen("tcp", gRPCAddr)
+	log.Println("Starting Ravel Cluster Admin gRPC Server on ", RavelClusterAdminGRPCAddr)
+	listener, err := net.Listen("tcp", RavelClusterAdminGRPCAddr)
 	if err != nil {
-		log.Fatalf("Error %v", err)
+		log.Fatalf("Error in starting Ravel Cluster Admin TCP Listener: %v\n", err)
 	}
-	grpcServer := grpc.NewServer()
-	log.Printf("Starting TCP Server on %v for gRPC\n", gRPCAddr)
-	RavelClusterAdminPB.RegisterRavelClusterAdminServer(grpcServer, &server{})
-	grpcServer.Serve(listener)
 
+	clusterAdminServer := NewClusterAdminGRPCServer()
+	RavelClusterAdminPB.RegisterRavelClusterAdminServer(clusterAdminServer.Server, clusterAdminServer)
+	err = clusterAdminServer.Server.Serve(listener)
 }
