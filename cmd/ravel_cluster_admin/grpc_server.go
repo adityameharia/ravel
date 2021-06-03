@@ -71,15 +71,16 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 
 func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
 	s.mutex.Lock()
+	defer s.mutex.Lock()
 
 	if cInfo, exists := s.ClusterLeaderMap[node.ClusterId]; exists {
 		s.ClusterLeaderMap[node.ClusterId] = cInfo
 	} else {
-		s.mutex.Unlock()
 		return nil, errors.New("invalid cluster id")
 	}
 
-	s.mutex.Unlock()
+	log.Println(s.ClusterLeaderMap)
+
 	return &RavelClusterAdminPB.Response{
 		Data: "leader updated successfully",
 	}, nil
