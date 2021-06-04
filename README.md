@@ -26,4 +26,4 @@ and [hashicorp/raft](https://github.com/hashicorp/raft).
 
 ## License
 
-Copyright (c) Aditya Meharia. All rights reserved. Released under the [MIT](LICENSE) License
+Copyright (c) **Aditya Meharia**. All rights reserved. Released under the [MIT](LICENSE) License
