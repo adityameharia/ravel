@@ -1,7 +1,10 @@
 ![](header.png)
 
 Ravel is a sharded, fault-tolerant key-value store written using [BadgerDB](https://github.com/dgraph-io/badger) 
-and [hashicorp/raft](https://github.com/hashicorp/raft). 
+and [hashicorp/raft](https://github.com/hashicorp/raft). You can shard your key-value data across multiple clusters
+with multiple replicas, the data is persisted on disk with BadgerDB for high performance read and write. 
+Ravel exposes a simple HTTP API for the user to read and write data and Ravel handles the sharding
+and the replication of data across replicas in clusters.
 
 ## Table of Contents
 
