@@ -52,8 +52,6 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 	cInfo.ReplicaCount += 1
 	s.ClusterLeaderMap[minReplicaClusterID] = cInfo
 
-	log.Println(s.ClusterLeaderMap)
-
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: minReplicaClusterID,
 		LeaderGrpcAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.GrpcAddress,
@@ -64,11 +62,14 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Cluster, error) {
 	log.Println("JoinAsClusterLeader: Request from", node.GrpcAddress)
 	newClusterID := uuid.New().String()
+
 	s.mutex.Lock()
 	s.ClusterLeaderMap[newClusterID] = clusterInfo{node, 1}
 	s.mutex.Unlock()
 
-	log.Println("Adding", node.GrpcAddress, "as a new cluster with ID:", newClusterID)
+	log.Println("Adding", node.GrpcAddress, "as a new clusterID with ID:", newClusterID)
+	consistentHash.AddCluster(clusterID(newClusterID))
+
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: newClusterID,
 		LeaderGrpcAddress: node.GrpcAddress, // same as the node that sent the request
@@ -83,7 +84,7 @@ func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *
 	if cInfo, exists := s.ClusterLeaderMap[node.ClusterId]; exists {
 		s.ClusterLeaderMap[node.ClusterId] = clusterInfo{node, cInfo.ReplicaCount}
 	} else {
-		return nil, errors.New("invalid cluster id")
+		return nil, errors.New("invalid clusterID id")
 	}
 
 	log.Println(s.ClusterLeaderMap)
@@ -99,7 +100,7 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 
 	cInfo, exists := s.ClusterLeaderMap[node.ClusterId]
 	if !exists {
-		return nil, errors.New("invalid cluster id")
+		return nil, errors.New("invalid clusterID id")
 	}
 
 	cInfo.ReplicaCount -= 1
@@ -118,7 +119,7 @@ func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *
 
 	cInfo, exists := s.ClusterLeaderMap[cluster.ClusterId]
 	if !exists {
-		return nil, errors.New("invalid cluster id")
+		return nil, errors.New("invalid clusterID id")
 	}
 
 	return cInfo.LeaderNode, nil
@@ -161,6 +162,24 @@ func (s *ClusterAdminGRPCServer) ReadKey(key []byte, clusterID string) ([]byte, 
 		return nil, err
 	}
 
-	log.Println(resp.Data)
+	return resp.Data, nil
+}
+
+func (s *ClusterAdminGRPCServer) DeleteKey(key []byte, clusterID string) error {
+	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+
+	client := RavelNodePB.NewRavelNodeClient(conn)
+	resp, err := client.Run(context.TODO(), &RavelNodePB.Command{
+		Operation: "delete",
+		Key:       key,
+	})
+
+	if err != nil {
+		return err
+	}
+	log.Println(resp.Msg)
 	return nil
 }

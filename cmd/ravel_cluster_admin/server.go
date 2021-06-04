@@ -10,14 +10,14 @@ package main
 //	"google.golang.org/grpc"
 //)
 //
-//func (s *server) GetLeader(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
+//func (s *server) GetLeader(ctx context.Context, clusterID *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
 //	mu.Lock()
 //	defer mu.Unlock()
-//	if len(serverList[cluster.ClusterID]) == 0 {
+//	if len(serverList[clusterID.ClusterID]) == 0 {
 //		return &RavelClusterAdminPB.Response{Data: ""}, nil
 //	}
 //
-//	conn, err := grpc.Dial(leader[cluster.ClusterID].gRPCAddress, grpc.WithInsecure())
+//	conn, err := grpc.Dial(leader[clusterID.ClusterID].gRPCAddress, grpc.WithInsecure())
 //	if err != nil {
 //		log.Printf("cannot connect with server %v", err)
 //	}
@@ -30,9 +30,9 @@ package main
 //	}
 //
 //	if res.Leader == true {
-//		return &RavelClusterAdminPB.Response{Data: leader[cluster.ClusterID].gRPCAddress}, nil
+//		return &RavelClusterAdminPB.Response{Data: leader[clusterID.ClusterID].gRPCAddress}, nil
 //	} else {
-//		for _, rep := range serverList[cluster.ClusterID] {
+//		for _, rep := range serverList[clusterID.ClusterID] {
 //
 //			conn, err = grpc.Dial(rep.gRPCAddress, grpc.WithInsecure())
 //			if err != nil {
@@ -55,19 +55,19 @@ package main
 //	}
 //}
 //
-//func (s *server) AddToReplicaMap(ctx context.Context, cluster *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Void, error) {
+//func (s *server) AddToReplicaMap(ctx context.Context, clusterID *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Void, error) {
 //	rep := Replica{
-//		NodeID:      cluster.NodeID,
-//		gRPCAddress: cluster.GRPCaddress,
+//		NodeID:      clusterID.NodeID,
+//		gRPCAddress: clusterID.GRPCaddress,
 //	}
-//	serverList[cluster.ClusterID] = append(serverList[cluster.ClusterID], rep)
+//	serverList[clusterID.ClusterID] = append(serverList[clusterID.ClusterID], rep)
 //	return &RavelClusterAdminPB.Void{}, nil
 //}
 //
-//func (s *server) RemoveReplicaFromMap(ctx context.Context, cluster *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Void, error) {
-//	for i, r := range serverList[cluster.ClusterID] {
-//		if r.NodeID == cluster.NodeID {
-//			serverList[cluster.ClusterID] = RemoveIndex(serverList[cluster.ClusterID], i)
+//func (s *server) RemoveReplicaFromMap(ctx context.Context, clusterID *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Void, error) {
+//	for i, r := range serverList[clusterID.ClusterID] {
+//		if r.NodeID == clusterID.NodeID {
+//			serverList[clusterID.ClusterID] = RemoveIndex(serverList[clusterID.ClusterID], i)
 //			return &RavelClusterAdminPB.Void{}, nil
 //		}
 //	}
