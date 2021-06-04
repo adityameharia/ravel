@@ -46,19 +46,21 @@ func (s *Server) Run(ctx context.Context, req *RavelNodePB.Command) (*RavelNodeP
 		if err != nil {
 			return nil, err
 		}
-		return &RavelNodePB.Response{Data: val}, nil
+		return &RavelNodePB.Response{
+			Msg:  "get successfull",
+			Data: val}, nil
 	case "set":
 		err := s.Node.Set(req.Key, req.Value)
 		if err != nil {
 			return nil, err
 		}
-		return &RavelNodePB.Response{Data: "set successful"}, nil
+		return &RavelNodePB.Response{Msg: "set successful", Data: []byte{}}, nil
 	case "delete":
 		err := s.Node.Delete(req.Key)
 		if err != nil {
 			return nil, err
 		}
-		return &RavelNodePB.Response{Data: "delete successful"}, nil
+		return &RavelNodePB.Response{Msg: "delete successful", Data: []byte{}}, nil
 	default:
 		return nil, errors.New("invalid operation")
 	}

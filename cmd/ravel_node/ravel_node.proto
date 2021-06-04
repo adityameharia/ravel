@@ -26,7 +26,8 @@ message Boolean {
 }
 
 message Response {
-    string data = 1;
+    string msg = 1;
+    bytes data=2;
 }
 
 message Command {

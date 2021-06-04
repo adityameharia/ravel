@@ -99,10 +99,10 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 }
 
 // Get returns the value for the given key
-func (n *RavelNode) Get(key []byte) (string, error) {
+func (n *RavelNode) Get(key []byte) ([]byte, error) {
 	if n.Raft.State() != raft.Leader {
 		log.Println("RavelNode: Request sent to non leading replica")
-		return "", raft.ErrNotLeader
+		return []byte{}, raft.ErrNotLeader
 	}
 	return n.Fsm.Get(key)
 }

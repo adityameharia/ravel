@@ -39,13 +39,13 @@ func NewFSM(path string) (*RavelFSM, error) {
 }
 
 // Get returns the value for the provided key
-func (f *RavelFSM) Get(key []byte) (string, error) {
+func (f *RavelFSM) Get(key []byte) ([]byte, error) {
 	log.Println("FSM: Get")
 	v, err := f.Db.Read(key)
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
-	return string(v), nil
+	return v, nil
 }
 
 // Snapshot returns an raft.FSMSnapshot which captures a snapshot of the data at that moment in time
