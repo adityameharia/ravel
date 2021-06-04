@@ -47,7 +47,7 @@ func (s *Server) Run(ctx context.Context, req *RavelNodePB.Command) (*RavelNodeP
 			return nil, err
 		}
 		return &RavelNodePB.Response{
-			Msg:  "get successfull",
+			Msg:  "get successful",
 			Data: val}, nil
 	case "set":
 		err := s.Node.Set(req.Key, req.Value)

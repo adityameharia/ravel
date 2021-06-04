@@ -2,18 +2,33 @@ package main
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"math"
 )
 
+type fileType string
+
+type keyType string
+
+const (
+	stringKeyType keyType = "string"
+	floatKeyType  keyType = "float"
+	jsonKeyType   keyType = "json"
+	fileKeyType   keyType = "file"
+	imageKeyType  keyType = "image"
+)
+
 type ClusterAdminHTTPServer struct {
-	Router *gin.Engine
+	Router     *gin.Engine
+	KeyTypeMap map[string]keyType
 }
 
 func NewClusterAdminHTTPServer() *ClusterAdminHTTPServer {
 	var server ClusterAdminHTTPServer
 	server.Router = gin.Default()
 	server.setupPaths()
+	server.KeyTypeMap = make(map[string]keyType)
 	return &server
 }
 
@@ -23,9 +38,15 @@ func float64ToByte(f float64) []byte {
 	return buf[:]
 }
 
+func byteTofloat64(bytes []byte) float64 {
+	bits := binary.BigEndian.Uint64(bytes)
+	float := math.Float64frombits(bits)
+	return float
+}
+
 func (s *ClusterAdminHTTPServer) setupPaths() {
 	type putRequest struct {
-		Key string `json:"key"`
+		Key string      `json:"key"`
 		Val interface{} `json:"val"`
 	}
 
@@ -37,7 +58,7 @@ func (s *ClusterAdminHTTPServer) setupPaths() {
 		c.JSON(200, "HTTP Server for Ravel Cluster Admin")
 	})
 
-	s.Router.POST("/get", func(c *gin.Context){
+	s.Router.POST("/get", func(c *gin.Context) {
 		var req getRequest
 		if err := c.Bind(&req); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
@@ -51,10 +72,23 @@ func (s *ClusterAdminHTTPServer) setupPaths() {
 			return
 		}
 
-		c.JSON(200, gin.H{"key": req.Key, "msg": string(val)})
+		switch clusterAdminHTTPServer.KeyTypeMap[req.Key] {
+		case "float":
+			c.JSON(200, gin.H{"key": req.Key, "val": byteTofloat64(val)})
+		case "string":
+			c.JSON(200, gin.H{"key": req.Key, "val": string(val)})
+		case "json":
+			var r interface{}
+			err := json.Unmarshal(val, &r)
+			if err != nil {
+				c.JSON(500, gin.H{"error": err.Error()})
+			}
+
+			c.JSON(200, gin.H{"key": req.Key, "val": r})
+		}
 	})
 
-	s.Router.POST("/put", func(c *gin.Context){
+	s.Router.POST("/put", func(c *gin.Context) {
 		var req putRequest
 		if err := c.Bind(&req); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
@@ -65,23 +99,34 @@ func (s *ClusterAdminHTTPServer) setupPaths() {
 
 		switch req.Val.(type) {
 		case float64:
+			clusterAdminHTTPServer.KeyTypeMap[req.Key] = "float"
 			v := float64ToByte(req.Val.(float64))
-			err := clusterAdminGRPCServer.WriteKeyValue([]byte(req.Key), v ,clusterID.String())
+			err := clusterAdminGRPCServer.WriteKeyValue([]byte(req.Key), v, clusterID.String())
 			if err != nil {
 				c.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
-		case string:
-			err := clusterAdminGRPCServer.WriteKeyValue([]byte(req.Key), []byte(req.Val.(string)) ,clusterID.String())
-			if err != nil {
-				c.JSON(500, gin.H{"error": err.Error()})
-				return
-			}
-		case map[string]interface{}: // js object
-			c.JSON(200, gin.H{"msg": "yet to implement"})
-			return
-		}
 
-		c.JSON(200, gin.H{"msg": "ok"})
+			c.JSON(200, gin.H{"msg": "ok"})
+		case string:
+			clusterAdminHTTPServer.KeyTypeMap[req.Key] = "string"
+			err := clusterAdminGRPCServer.WriteKeyValue([]byte(req.Key), []byte(req.Val.(string)), clusterID.String())
+			if err != nil {
+				c.JSON(500, gin.H{"error": err.Error()})
+				return
+			}
+
+			c.JSON(200, gin.H{"msg": "ok"})
+		case map[string]interface{}: // json object
+			clusterAdminHTTPServer.KeyTypeMap[req.Key] = "json"
+			jsonBytes, err := json.Marshal(req.Val)
+			err = clusterAdminGRPCServer.WriteKeyValue([]byte(req.Key), jsonBytes, clusterID.String())
+			if err != nil {
+				c.JSON(500, gin.H{"error": err.Error()})
+				return
+			}
+
+			c.JSON(200, gin.H{"msg": "ok"})
+		}
 	})
 }
