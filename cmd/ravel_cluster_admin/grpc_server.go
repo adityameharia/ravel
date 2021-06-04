@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
+	"github.com/adityameharia/ravel/RavelNodePB"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"log"
@@ -121,4 +122,45 @@ func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *
 	}
 
 	return cInfo.LeaderNode, nil
+}
+
+func (s *ClusterAdminGRPCServer) WriteKeyValue(key []byte, val []byte, clusterID string) error {
+	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+
+	client := RavelNodePB.NewRavelNodeClient(conn)
+	resp, err := client.Run(context.TODO(), &RavelNodePB.Command{
+		Operation: "set",
+		Key:       key,
+		Value:     val,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	log.Println(resp.Data)
+	return nil
+}
+
+func (s *ClusterAdminGRPCServer) ReadKey(key []byte, clusterID string) ([]byte, error) {
+	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	client := RavelNodePB.NewRavelNodeClient(conn)
+	resp, err := client.Run(context.TODO(), &RavelNodePB.Command{
+		Operation: "get",
+		Key:       key,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(resp.Data)
+	return nil
 }

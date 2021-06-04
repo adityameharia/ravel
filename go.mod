@@ -3,7 +3,9 @@ module github.com/adityameharia/ravel
 go 1.13
 
 require (
+	github.com/buraksezer/consistent v0.9.0 // indirect
 	github.com/dgraph-io/badger/v3 v3.2011.1
+	github.com/gin-gonic/gin v1.7.2 // indirect
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/raft v1.3.1
 	github.com/joho/godotenv v1.3.0
