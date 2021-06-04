@@ -33,4 +33,4 @@ Reach out to the authors with questions, concerns or ideas about improvement.
 
 ## License
 
-Copyright (c) **Aditya Meharia**. All rights reserved. Released under the [MIT](LICENSE) License
+Copyright (c) **Aditya Meharia** and **Junaid Rahim**. All rights reserved. Released under the [MIT](LICENSE) License
