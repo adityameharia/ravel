@@ -24,6 +24,11 @@ and [hashicorp/raft](https://github.com/hashicorp/raft).
 
 ## Contact
 
+Reach out to the authors with questions, concerns or ideas about improvement.
+
+* adityameharia14@gmail.com
+* junaidrahim5a@gmail.com
+
 ## License
 
 Copyright (c) **Aditya Meharia**. All rights reserved. Released under the [MIT](LICENSE) License
