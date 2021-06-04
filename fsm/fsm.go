@@ -88,31 +88,6 @@ func (f *RavelFSM) Restore(r io.ReadCloser) error {
 		return err
 	}
 	return nil
-
-	// log.Println("Restoring from Snapshot")
-	// kvBuffer, err := ioutil.ReadAll(r)
-	// if err != nil {
-	// 	log.Fatal("Unable to read Snapshot")
-	// 	return err
-	// }
-
-	// var KV []KeyValue
-
-	// err = msgpack.Unmarshal(kvBuffer, KV)
-	// if err != nil {
-	// 	log.Fatal(("Unable to unmarshal Snapshot"))
-	// 	return err
-	// }
-
-	// for _, kv := range KV {
-	// 	err = f.db.Write([]byte(kv.Key), []byte(kv.Value))
-	// 	if err != nil {
-	// 		log.Fatal(("Unable to write key"))
-	// 		return err
-	// 	}
-	// }
-
-	// log.Println("Snapshot restored")
 }
 
 // Close will close the connection to the internal db.RavelDatabase instance
