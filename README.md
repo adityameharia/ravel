@@ -22,6 +22,8 @@ and [hashicorp/raft](https://github.com/hashicorp/raft).
 
 ## Contributing
 
+If you're interested in contributing to Ravel, check out [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## Contact
 
 Reach out to the authors with questions, concerns or ideas about improvement.
