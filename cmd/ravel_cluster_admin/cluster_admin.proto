@@ -8,12 +8,14 @@ service RavelClusterAdmin {
     rpc JoinExistingCluster(Node) returns (Cluster);
     rpc JoinAsClusterLeader(Node) returns (Cluster);
     rpc UpdateClusterLeader(Node) returns (Response);
+    rpc LeaveCluster(Node) returns (Response);
     rpc GetClusterLeader(Cluster) returns (Node);
 }
 
 message Cluster {
     string cluster_id = 1;
     string leader_grpc_address = 2;
+    string leader_raft_address = 3;
 }
 
 message Response {
@@ -23,5 +25,6 @@ message Response {
 message Node {
     string node_id = 1;
     string grpc_address = 2;
-    string cluster_id = 3;
+    string raft_address = 3;
+    string cluster_id = 4;
 }

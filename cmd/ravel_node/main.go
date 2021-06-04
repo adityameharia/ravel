@@ -43,52 +43,6 @@ func init() {
 	flag.BoolVar(&nodeConfig.isLeader, "leader", false, "Register this node as a new leader or not")
 }
 
-//func main() {
-//	flag.Parse()
-//
-//	//setup gRPC client for admin cluster
-//	connAdmin, err := grpc.Dial(nodeConfig.admingRPCAddr, grpc.WithInsecure())
-//	if err != nil {
-//		log.Fatalf("can not connect with server %v", err)
-//	}
-//
-//	adminClient = RavelClusterAdminPB.NewRavelClusterAdminClient(connAdmin)
-//
-//	replica := &RavelClusterAdminPB.Cluster{ClusterID: int32(nodeConfig.clusterID)}
-//
-//	//get address of leader node from admin cluster
-//	leader, err := adminClient.GetLeader(context.Background(), replica)
-//	if err != nil {
-//		log.Fatal("Unable to get the leader node from the server")
-//	}
-//
-//	var newNode node.RavelNode
-//
-//	newNode.Raft, newNode.Fsm, err = newNode.Open(leader.Data == "", nodeConfig.nodeID, nodeConfig.storageDir, nodeConfig.raftInternalAddr)
-//	if err != nil {
-//		log.Println(err)
-//	}
-//
-//	if leader.Data != "" {
-//		if err := server.RequestJoinToLeader(nodeConfig.nodeID, leader.Data, nodeConfig.raftInternalAddr); err != nil {
-//			log.Fatalf("failed to join node at %s: %s", nodeConfig.joinAddr, err.Error())
-//		}
-//	}
-//
-//	onSignalInterrupt()
-//
-//	listener, err := net.Listen("tcp", nodeConfig.gRPCAddr)
-//	if err != nil {
-//		log.Fatalf("Error %v", err)
-//	}
-//	log.Printf("Starting TCP Server on %v for gRPC\n", nodeConfig.gRPCAddr)
-//
-//	grpcServer := grpc.NewServer()
-//	RavelClusterPB.RegisterRavelClusterServer(grpcServer, &server.Server{Node: &newNode})
-//	err = grpcServer.Serve(listener)
-//}
-
-
 func main() {
 	flag.Parse()
 
@@ -104,6 +58,7 @@ func main() {
 		ravelCluster, err := adminClient.JoinAsClusterLeader(context.TODO(), &RavelClusterAdminPB.Node{
 			NodeId: nodeConfig.nodeID, // id of this node
 			GrpcAddress: nodeConfig.gRPCAddr, // grpc address of this node
+			RaftAddress: nodeConfig.raftInternalAddr,
 			ClusterId: "", // cluster id is unknown thus empty
 		})
 
@@ -122,8 +77,10 @@ func main() {
 		ravelCluster, err := adminClient.JoinExistingCluster(context.TODO(), &RavelClusterAdminPB.Node{
 			NodeId: nodeConfig.nodeID,
 			GrpcAddress: nodeConfig.gRPCAddr,
+			RaftAddress: nodeConfig.raftInternalAddr,
 			ClusterId: "",
 		})
+
 		if err != nil {
 			log.Fatal("Error in JoinExistingCluster: ", err)
 		} else {
@@ -139,12 +96,30 @@ func main() {
 				NodeId: nodeConfig.nodeID,
 				ClusterId: nodeConfig.clusterID,
 				GrpcAddress: nodeConfig.gRPCAddr,
+				RaftAddress: nodeConfig.raftInternalAddr,
 			})
 			if err != nil {
 				log.Println(err)
 			}
 		}
 	}
+
+	go func() {
+		leaderChange := <- ravelNode.Raft.LeaderCh()
+		log.Println("Sending leader change req")
+		if leaderChange {
+			err := RequestLeaderUpdateToCluster(nodeConfig.adminGRPCAddr, &RavelClusterAdminPB.Node{
+				NodeId: nodeConfig.nodeID,
+				GrpcAddress: nodeConfig.gRPCAddr,
+				RaftAddress: nodeConfig.raftInternalAddr,
+				ClusterId: nodeConfig.clusterID,
+			})
+
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}()
 
 	onSignalInterrupt()
 	listener, err := net.Listen("tcp", nodeConfig.gRPCAddr)
@@ -182,6 +157,18 @@ func onSignalInterrupt() {
 			log.Println(err)
 		}
 
+		resp, err := adminClient.LeaveCluster(context.TODO(), &RavelClusterAdminPB.Node{
+			NodeId: nodeConfig.nodeID,
+			ClusterId: nodeConfig.clusterID,
+			GrpcAddress: nodeConfig.gRPCAddr,
+			RaftAddress: nodeConfig.raftInternalAddr,
+		})
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		log.Println(resp)
 		os.Exit(1)
 	}()
 }

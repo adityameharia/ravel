@@ -14,7 +14,7 @@ type Server struct {
 }
 
 func (s *Server) Join(ctx context.Context, req *RavelNodePB.Node) (*RavelNodePB.Void, error) {
-	err := s.Node.Join(req.NodeId, req.GrpcAddress)
+	err := s.Node.Join(req.NodeId, req.RaftAddress)
 	if err != nil {
 		return nil, err
 	}

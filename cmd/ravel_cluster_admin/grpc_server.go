@@ -30,6 +30,9 @@ func NewClusterAdminGRPCServer() *ClusterAdminGRPCServer {
 }
 
 func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Cluster, error) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
 	log.Println("Join Existing Cluster: Request from", node.GrpcAddress)
 	var minReplicaClusterID string = ""
 	var minReplicaCount uint64 = math.MaxUint64
@@ -44,12 +47,16 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 		return nil, errors.New("no clusters found")
 	}
 
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+	cInfo := s.ClusterLeaderMap[minReplicaClusterID]
+	cInfo.ReplicaCount += 1
+	s.ClusterLeaderMap[minReplicaClusterID] = cInfo
+
+	log.Println(s.ClusterLeaderMap)
 
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: minReplicaClusterID,
 		LeaderGrpcAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.GrpcAddress,
+		LeaderRaftAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.RaftAddress,
 	}, nil
 }
 
@@ -64,27 +71,50 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 	return &RavelClusterAdminPB.Cluster{
 		ClusterId: newClusterID,
 		LeaderGrpcAddress: node.GrpcAddress, // same as the node that sent the request
+		LeaderRaftAddress: node.RaftAddress,
 	}, nil
 }
 
 func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
 	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	if cInfo, exists := s.ClusterLeaderMap[node.ClusterId]; exists {
-		s.ClusterLeaderMap[node.ClusterId] = cInfo
+		s.ClusterLeaderMap[node.ClusterId] = clusterInfo{node, cInfo.ReplicaCount}
 	} else {
-		s.mutex.Unlock()
 		return nil, errors.New("invalid cluster id")
 	}
 
-	s.mutex.Unlock()
+	log.Println(s.ClusterLeaderMap)
+
 	return &RavelClusterAdminPB.Response{
 		Data: "leader updated successfully",
 	}, nil
 }
 
+func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	cInfo, exists := s.ClusterLeaderMap[node.ClusterId]
+	if !exists {
+		return nil, errors.New("invalid cluster id")
+	}
+
+	cInfo.ReplicaCount -= 1
+	s.ClusterLeaderMap[node.ClusterId] = cInfo
+
+	log.Println(s.ClusterLeaderMap)
+	return &RavelClusterAdminPB.Response{
+		Data: "replica count reduced",
+	}, nil
+}
+
+
 func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Node, error) {
 	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
 	cInfo, exists := s.ClusterLeaderMap[cluster.ClusterId]
 	if !exists {
 		return nil, errors.New("invalid cluster id")

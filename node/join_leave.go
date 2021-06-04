@@ -12,8 +12,8 @@ type Response struct {
 	Leader string `json:"leader"`
 }
 
-func (n *RavelNode) Join(nodeID, addr string) error {
-	log.Printf("received join request for remote node %s, addr %s\n", nodeID, addr)
+func (n *RavelNode) Join(nodeID, raftAddr string) error {
+	log.Printf("received join request for remote node %s, raftAddr %s\n", nodeID, raftAddr)
 	if n.Raft.State() != raft.Leader {
 		return errors.New("node is not leader")
 	}
@@ -29,11 +29,11 @@ func (n *RavelNode) Join(nodeID, addr string) error {
 		}
 	}
 
-	f := n.Raft.AddVoter(raft.ServerID(nodeID), raft.ServerAddress(addr), 0, 0)
+	f := n.Raft.AddVoter(raft.ServerID(nodeID), raft.ServerAddress(raftAddr), 0, 0)
 	if err := f.Error(); err != nil {
 		return err
 	}
-	log.Printf("node %s at %s joined successfully\n", nodeID, addr)
+	log.Printf("node %s at %s joined successfully\n", nodeID, raftAddr)
 	return nil
 }
 

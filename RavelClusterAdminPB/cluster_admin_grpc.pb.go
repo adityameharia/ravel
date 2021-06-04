@@ -21,6 +21,7 @@ type RavelClusterAdminClient interface {
 	JoinExistingCluster(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Cluster, error)
 	JoinAsClusterLeader(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Cluster, error)
 	UpdateClusterLeader(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
+	LeaveCluster(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
 	GetClusterLeader(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Node, error)
 }
 
@@ -59,6 +60,15 @@ func (c *ravelClusterAdminClient) UpdateClusterLeader(ctx context.Context, in *N
 	return out, nil
 }
 
+func (c *ravelClusterAdminClient) LeaveCluster(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/RavelClusterAdminPB.RavelClusterAdmin/LeaveCluster", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *ravelClusterAdminClient) GetClusterLeader(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Node, error) {
 	out := new(Node)
 	err := c.cc.Invoke(ctx, "/RavelClusterAdminPB.RavelClusterAdmin/GetClusterLeader", in, out, opts...)
@@ -75,6 +85,7 @@ type RavelClusterAdminServer interface {
 	JoinExistingCluster(context.Context, *Node) (*Cluster, error)
 	JoinAsClusterLeader(context.Context, *Node) (*Cluster, error)
 	UpdateClusterLeader(context.Context, *Node) (*Response, error)
+	LeaveCluster(context.Context, *Node) (*Response, error)
 	GetClusterLeader(context.Context, *Cluster) (*Node, error)
 }
 
@@ -90,6 +101,9 @@ func (UnimplementedRavelClusterAdminServer) JoinAsClusterLeader(context.Context,
 }
 func (UnimplementedRavelClusterAdminServer) UpdateClusterLeader(context.Context, *Node) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateClusterLeader not implemented")
+}
+func (UnimplementedRavelClusterAdminServer) LeaveCluster(context.Context, *Node) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LeaveCluster not implemented")
 }
 func (UnimplementedRavelClusterAdminServer) GetClusterLeader(context.Context, *Cluster) (*Node, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClusterLeader not implemented")
@@ -160,6 +174,24 @@ func _RavelClusterAdmin_UpdateClusterLeader_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RavelClusterAdmin_LeaveCluster_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Node)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RavelClusterAdminServer).LeaveCluster(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RavelClusterAdminPB.RavelClusterAdmin/LeaveCluster",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RavelClusterAdminServer).LeaveCluster(ctx, req.(*Node))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RavelClusterAdmin_GetClusterLeader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Cluster)
 	if err := dec(in); err != nil {
@@ -196,6 +228,10 @@ var RavelClusterAdmin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateClusterLeader",
 			Handler:    _RavelClusterAdmin_UpdateClusterLeader_Handler,
+		},
+		{
+			MethodName: "LeaveCluster",
+			Handler:    _RavelClusterAdmin_LeaveCluster_Handler,
 		},
 		{
 			MethodName: "GetClusterLeader",
