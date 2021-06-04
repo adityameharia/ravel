@@ -6,7 +6,7 @@ with multiple replicas, the data is persisted on disk using BadgerDB for high th
 Replication and fault-tolerance is done using [Raft](https://raft.github.io/). 
 
 Ravel exposes a simple HTTP API for the user to read and write data and Ravel handles the sharding
-and the replication of data across replicas in clusters.
+and the replication of data across clusters.
 
 ## Table of Contents
 
