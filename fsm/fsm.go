@@ -51,7 +51,7 @@ func (f *RavelFSM) Get(key []byte) ([]byte, error) {
 // Snapshot returns an raft.FSMSnapshot which captures a snapshot of the data at that moment in time
 func (f *RavelFSM) Snapshot() (raft.FSMSnapshot, error) {
 	log.Println("FSM: Snapshot")
-	return &FSMSnapshot{
+	return &Snapshot{
 		Db: f.Db,
 	}, nil
 }
