@@ -1,6 +1,6 @@
 # fsm
 
-> NOTE: FSM stands for Finite State Machine
+> FSM stands for Finite State Machine
 
 The fsm package contains the `RavelFSM` and `Snapshot` structs that implements
 the [FSM](https://pkg.go.dev/github.com/hashicorp/raft#FSM) interface and
