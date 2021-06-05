@@ -4,7 +4,6 @@ The fsm package implements the [FSM interface](https://pkg.go.dev/github.com/soc
 
 ## FSM Interface 
 
-<br/>
 This interface makes use of the replicated log to "apply" logs,take snapshots and "restore" from snapshots.
 
 <br/>
@@ -16,9 +15,10 @@ This interface makes use of the replicated log to "apply" logs,take snapshots an
 
 - The Restore function is used to restore an FSM from a snapshot i.e. restore the state of the DB to when the snapshot was taken thereby discarding all previous state.
 
+<br/>
+
 ## FSMSnapshot Interface
 
-<br/>
 FSMSnapshot is returned by an FSM in response to a Snapshot.This interface is responsible for dumping the current state of the DB i.e. snapshot of the FSM to the WriteCloser 'sink' which stored by the raft lib.
 
 <br/>
