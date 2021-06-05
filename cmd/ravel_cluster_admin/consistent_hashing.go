@@ -9,16 +9,19 @@ import (
 	"time"
 )
 
+// clusterID is a string that is used to communicate the ID of a cluster. It implements the consistent.Member interface
 type clusterID string
 func (c clusterID) String() string {
 	return string(c)
 }
 
+// hash implements the consistent.Hasher interface
 type hash struct {}
 func (h hash) Sum64(data []byte) uint64 {
 	return xxhash.Sum64(data)
 }
 
+// ketSet implements a simple Set to store unique values of the keys
 type keySet struct {
 	m map[string]struct{}
 }
@@ -46,6 +49,7 @@ func (k keySet) All() [][]byte {
 	return all
 }
 
+// RavelConsistentHash is the main entity that implements the logic for sharding and data relocation
 type RavelConsistentHash struct {
 	mutex sync.Mutex
 	config consistent.Config
@@ -54,6 +58,7 @@ type RavelConsistentHash struct {
 	HashRing *consistent.Consistent
 }
 
+// Init initialises a RavelConsistentHash object
 func (rch *RavelConsistentHash) Init(partitionCount int, replicationFactor int, load float64) {
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
@@ -77,8 +82,10 @@ func (rch *RavelConsistentHash) Init(partitionCount int, replicationFactor int, 
 	rch.HashRing = consistent.New(nil, rch.config)
 }
 
+// AddCluster adds a new cluster to the ring, as a result some partitions are relocated to this new cluster,
+// the keys in the relocated partition are looked up in the RavelConsistentHash.PartitionKeyMap and are moved
+// to the new cluster
 func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
-	log.Println("AddCluster: ")
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
 
@@ -111,8 +118,8 @@ func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
 	}
 }
 
+// LocateKey returns the cluster for a given key
 func (rch *RavelConsistentHash) LocateKey(key []byte) consistent.Member {
-	log.Println("LocateKey: ")
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
 

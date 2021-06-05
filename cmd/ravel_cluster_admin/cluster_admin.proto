@@ -4,6 +4,7 @@ package RavelClusterAdminPB;
 
 option go_package = "./RavelClusterAdminPB";
 
+// RavelClusterAdmin is the main service that is exposed to the nodes in a Ravel cluster
 service RavelClusterAdmin {
     rpc JoinExistingCluster(Node) returns (Cluster);
     rpc JoinAsClusterLeader(Node) returns (Cluster);
@@ -12,6 +13,7 @@ service RavelClusterAdmin {
     rpc GetClusterLeader(Cluster) returns (Node);
 }
 
+// Cluster represents the information to represent a cluster leader in Ravel
 message Cluster {
     string cluster_id = 1;
     string leader_grpc_address = 2;
@@ -22,6 +24,7 @@ message Response {
     string data = 1;
 }
 
+// Node represents the information to represent a node in Ravel
 message Node {
     string node_id = 1;
     string grpc_address = 2;
