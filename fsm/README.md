@@ -24,7 +24,7 @@ FSMSnapshot is returned by an FSM in response to a Snapshot.This interface is re
 <br/>
 <br/>
 
-- The Persist functions is the main function in this package which dumps the snapshot to the sink.
+- The Persist function is the main function in this package which dumps the snapshot to the sink.
 
 - The Release function is called when we are finished with the snapshot and all the data has been safely dumped.
 
