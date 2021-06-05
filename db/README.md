@@ -1,4 +1,4 @@
-## db
+# db
 
 The `db` package contains the implementation of the `RavelDatabase` struct and its functions. This is just a simple
 overlay on top of [BadgerDB](https://github.com/dgraph-io/badger) exposing common functions like `Init`, `Close`, `Read`
