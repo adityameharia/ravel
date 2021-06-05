@@ -7,10 +7,11 @@ import (
 	"github.com/hashicorp/raft"
 )
 
-type Response struct {
-	Error  string `json:"error"`
-	Leader string `json:"leader"`
-}
+// Response is the custom response type
+// type Response struct {
+// 	Error  string `json:"error"`
+// 	Leader string `json:"leader"`
+// }
 
 func (n *RavelNode) Join(nodeID, raftAddr string) error {
 	log.Printf("received join request for remote node %s, raftAddr %s\n", nodeID, raftAddr)

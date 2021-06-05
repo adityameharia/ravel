@@ -113,6 +113,7 @@ func main() {
 		}
 	}
 
+	//updates the admin in case there is a change in leader
 	go func() {
 		leaderChange := <-ravelNode.Raft.LeaderCh()
 		log.Println("Sending leader change req")
@@ -130,7 +131,10 @@ func main() {
 		}
 	}()
 
+	//sends leave request to leader and admin on signal interrupt
 	onSignalInterrupt()
+
+	//starts the gRPC server
 	listener, err := net.Listen("tcp", nodeConfig.gRPCAddr)
 	if err != nil {
 		log.Fatal("Error in starting TCP server: ", err)
