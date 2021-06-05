@@ -1,5 +1,7 @@
 # fsm
 
+> NOTE: FSM stands for Finite State Machine
+
 The fsm package contains the `RavelFSM` and `Snapshot` structs that implements
 the [FSM](https://pkg.go.dev/github.com/hashicorp/raft#FSM) interface and
 the [FSMSnapshot](https://pkg.go.dev/github.com/hashicorp/raft#FSMSnapshot) interface respectively which are required
@@ -38,9 +40,6 @@ sink which stored by the raft lib.
   and writing it into the sink.
 
 - `Release` is called when we are finished with the snapshot and all the data has been safely dumped.
-
-
-NOTE: FSM stands for Finite State Machine
 
 
 
