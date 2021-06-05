@@ -10,7 +10,7 @@ This interface makes use of the replicated log to "apply" logs,take snapshots an
 
 - The Snapshot function is used for log compaction.Its returns and FSMSnapshot(a struct which implementsthe FSMSnapshot interface) which is used to save a snapshot of the FSM at that point in time i.e. its takes the state of the DB and creates a copy of the state so that previous logs can be deleted.
 
-- The Restore function is used to restore an FSM from a snapshot i.e. restore the state of the DB to when the snapshot was taken thereby discarding all previous state.This can be done very easily using BadgerDB's inbuilt function.First we drop all the current keys using the DropAll function and then calling the Load function to restore the snapshot from backup.
+- The Restore function is used to restore an FSM from a snapshot i.e. restore the state of the DB to when the snapshot was taken thereby discarding all previous state.This can be done very easily using BadgerDB's inbuilt functions,first we drop all the current keys using the DropAll function and then call the Load function to restore the snapshot from backup.
 
 <br/>
 
