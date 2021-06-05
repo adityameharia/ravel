@@ -40,5 +40,7 @@ sink which stored by the raft lib.
 - `Release` is called when we are finished with the snapshot and all the data has been safely dumped.
 
 
+NOTE: FSM stands for Finite State Machine
+
 
 
