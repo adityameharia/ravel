@@ -1,3 +1,5 @@
+# Db
+
 The db package implements functions related to [BadgerDB](https://github.com/dgraph-io/badger)
 
 - The Init functions initialises a new BadgerDb instance on the path provided

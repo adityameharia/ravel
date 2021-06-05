@@ -1,3 +1,5 @@
+# FSM
+
 The fsm package implements the [FSM interface](https://pkg.go.dev/github.com/socketplane/socketplane/Godeps/_workspace/src/github.com/hashicorp/raft?utm_source=godoc#FSM) and the [FSMSnapshot interface](https://pkg.go.dev/github.com/socketplane/socketplane/Godeps/_workspace/src/github.com/hashicorp/raft?utm_source=godoc#FSMSnapshot) which are required for constructing a [new raft node](https://pkg.go.dev/github.com/socketplane/socketplane/Godeps/_workspace/src/github.com/hashicorp/raft?utm_source=godoc#NewRaft).These interfaces are responsible for actually "applying" the log entries to our BadgerDB instance in a persistance manner.
 
 <br/>

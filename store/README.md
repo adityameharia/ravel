@@ -1,0 +1,1 @@
+The store package implements the [StableStore interface]() and the [LogStore interface]() which are required for constructing a [new raft node](https://pkg.go.dev/github.com/socketplane/socketplane/Godeps/_workspace/src/github.com/hashicorp/raft?utm_source=godoc#NewRaft).
