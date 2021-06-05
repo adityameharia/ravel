@@ -6,7 +6,7 @@ The ravel_cluster_admin package implements the admin server which is responsible
 
 - It has a http server to talk to the client and can take string,int,float,bool and json as values.
 
--It has the logic to decide which cluster a new replica will join.
+- It has the logic to decide which cluster a new replica will join.
 
 - It has the logic to shard the keys and values coming from the client
   -It keeps a track of partition id's assigned to the various members
