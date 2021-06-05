@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 	"github.com/adityameharia/ravel/RavelNodePB"
 	"google.golang.org/grpc"
-	"log"
 )
 
+// RequestJoinToClusterLeader makes a new gRPC client and sends a join request to the leading replica in the cluster
 func RequestJoinToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) error {
 	conn, err := grpc.Dial(leaderGRPCAddr, grpc.WithInsecure())
 	if err != nil {
@@ -29,6 +31,7 @@ func RequestJoinToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) e
 	return nil
 }
 
+// RequestLeaveToClusterLeader makes a new gRPC client and sends a leave request to the leading replica in the cluster
 func RequestLeaveToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) error {
 	conn, err := grpc.Dial(leaderGRPCAddr, grpc.WithInsecure())
 	if err != nil {
@@ -46,6 +49,8 @@ func RequestLeaveToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) 
 	return nil
 }
 
+// RequestLeaderUpdateToCluster makes a new gRPC client and
+// updates the admin server in case there is a change in leader in its cluster
 func RequestLeaderUpdateToCluster(clusterAdminGRPCAddr string, node *RavelClusterAdminPB.Node) error {
 	conn, err := grpc.Dial(clusterAdminGRPCAddr, grpc.WithInsecure())
 	if err != nil {
