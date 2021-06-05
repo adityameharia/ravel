@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/adityameharia/ravel/RavelNodePB"
 	"github.com/adityameharia/ravel/node"
@@ -145,7 +146,24 @@ func main() {
 	RavelNodePB.RegisterRavelNodeServer(grpcServer, &node_server.Server{
 		Node: &ravelNode,
 	})
+
+	if nodeConfig.isLeader {
+		go initiateDataRelocation()
+	}
+
 	err = grpcServer.Serve(listener)
+}
+
+func initiateDataRelocation() {
+	time.Sleep(5 * time.Second)
+	resp, err := adminClient.InitiateDataRelocation(context.TODO(), &RavelClusterAdminPB.Cluster{
+		ClusterId: nodeConfig.clusterID,
+	})
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	log.Println(resp.Data)
 }
 
 func onSignalInterrupt() {

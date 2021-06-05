@@ -23,6 +23,7 @@ type RavelClusterAdminClient interface {
 	UpdateClusterLeader(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
 	LeaveCluster(ctx context.Context, in *Node, opts ...grpc.CallOption) (*Response, error)
 	GetClusterLeader(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Node, error)
+	InitiateDataRelocation(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Response, error)
 }
 
 type ravelClusterAdminClient struct {
@@ -78,6 +79,15 @@ func (c *ravelClusterAdminClient) GetClusterLeader(ctx context.Context, in *Clus
 	return out, nil
 }
 
+func (c *ravelClusterAdminClient) InitiateDataRelocation(ctx context.Context, in *Cluster, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/RavelClusterAdminPB.RavelClusterAdmin/InitiateDataRelocation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RavelClusterAdminServer is the server API for RavelClusterAdmin service.
 // All implementations should embed UnimplementedRavelClusterAdminServer
 // for forward compatibility
@@ -87,6 +97,7 @@ type RavelClusterAdminServer interface {
 	UpdateClusterLeader(context.Context, *Node) (*Response, error)
 	LeaveCluster(context.Context, *Node) (*Response, error)
 	GetClusterLeader(context.Context, *Cluster) (*Node, error)
+	InitiateDataRelocation(context.Context, *Cluster) (*Response, error)
 }
 
 // UnimplementedRavelClusterAdminServer should be embedded to have forward compatible implementations.
@@ -107,6 +118,9 @@ func (UnimplementedRavelClusterAdminServer) LeaveCluster(context.Context, *Node)
 }
 func (UnimplementedRavelClusterAdminServer) GetClusterLeader(context.Context, *Cluster) (*Node, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClusterLeader not implemented")
+}
+func (UnimplementedRavelClusterAdminServer) InitiateDataRelocation(context.Context, *Cluster) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitiateDataRelocation not implemented")
 }
 
 // UnsafeRavelClusterAdminServer may be embedded to opt out of forward compatibility for this service.
@@ -210,6 +224,24 @@ func _RavelClusterAdmin_GetClusterLeader_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RavelClusterAdmin_InitiateDataRelocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Cluster)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RavelClusterAdminServer).InitiateDataRelocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RavelClusterAdminPB.RavelClusterAdmin/InitiateDataRelocation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RavelClusterAdminServer).InitiateDataRelocation(ctx, req.(*Cluster))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RavelClusterAdmin_ServiceDesc is the grpc.ServiceDesc for RavelClusterAdmin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -236,6 +268,10 @@ var RavelClusterAdmin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetClusterLeader",
 			Handler:    _RavelClusterAdmin_GetClusterLeader_Handler,
+		},
+		{
+			MethodName: "InitiateDataRelocation",
+			Handler:    _RavelClusterAdmin_InitiateDataRelocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -147,6 +147,7 @@ func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 // the keys in the relocated partition are looked up in the RavelConsistentHash.PartitionKeyMap and are moved
 // to the new cluster
 func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
+	log.Println("adding cluster")
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
 
@@ -158,6 +159,7 @@ func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
 			keys := rch.PartitionKeyMap[partID].All()
 
 			for i:=0; i<len(keys); i++ {
+				log.Printf("Relocating key: %v from cluster: %v to cluster: %v\n", string(keys[i]), owner.String(), newOwner.String())
 				val, err := clusterAdminGRPCServer.ReadKey(keys[i], owner.String())
 				if err != nil {
 					log.Println(err)
@@ -170,7 +172,7 @@ func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
 
 				err = clusterAdminGRPCServer.WriteKeyValue(keys[i], val, newOwner.String())
 				if err != nil {
-					log.Println(err)
+					log.Println("Yo:", err)
 				}
 			}
 

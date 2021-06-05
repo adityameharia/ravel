@@ -57,7 +57,7 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 	s.ClusterLeaderMap[minReplicaClusterID] = cInfo
 
 	return &RavelClusterAdminPB.Cluster{
-		ClusterId: minReplicaClusterID,
+		ClusterId:         minReplicaClusterID,
 		LeaderGrpcAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.GrpcAddress,
 		LeaderRaftAddress: s.ClusterLeaderMap[minReplicaClusterID].LeaderNode.RaftAddress,
 	}, nil
@@ -74,10 +74,9 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 	s.mutex.Unlock()
 
 	log.Println("Adding", node.GrpcAddress, "as a new clusterID with ID:", newClusterID)
-	consistentHash.AddCluster(clusterID(newClusterID))
 
 	return &RavelClusterAdminPB.Cluster{
-		ClusterId: newClusterID,
+		ClusterId:         newClusterID,
 		LeaderGrpcAddress: node.GrpcAddress, // same as the node that sent the request
 		LeaderRaftAddress: node.RaftAddress,
 	}, nil
@@ -132,6 +131,13 @@ func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *
 	}
 
 	return cInfo.LeaderNode, nil
+}
+
+func (s *ClusterAdminGRPCServer) InitiateDataRelocation(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
+	consistentHash.AddCluster(clusterID(cluster.ClusterId))
+	return &RavelClusterAdminPB.Response{
+		Data: "data relocation completed",
+	}, nil
 }
 
 // WriteKeyValue writes the given key and value to the leader of the provided cluster.
