@@ -12,17 +12,20 @@ import (
 	"sync"
 )
 
+// clusterInfo holds the information to represent a cluster
 type clusterInfo struct {
 	LeaderNode   *RavelClusterAdminPB.Node
 	ReplicaCount uint64
 }
 
+// ClusterAdminGRPCServer is the entity that implements the gRPC server for the Cluster Admin
 type ClusterAdminGRPCServer struct {
 	mutex            sync.Mutex
 	ClusterLeaderMap map[string]clusterInfo
 	Server           *grpc.Server
 }
 
+// NewClusterAdminGRPCServer constructs and returns a ClusterAdminGRPCServer object
 func NewClusterAdminGRPCServer() *ClusterAdminGRPCServer {
 	var newServer ClusterAdminGRPCServer
 	newServer.ClusterLeaderMap = make(map[string]clusterInfo)
@@ -30,6 +33,7 @@ func NewClusterAdminGRPCServer() *ClusterAdminGRPCServer {
 	return &newServer
 }
 
+// JoinExistingCluster picks the cluster with the least number of replicas and returns information about that cluster
 func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Cluster, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -59,6 +63,8 @@ func (s *ClusterAdminGRPCServer) JoinExistingCluster(ctx context.Context, node *
 	}, nil
 }
 
+// JoinAsClusterLeader creates a new cluster adds "node" as the cluster leader,
+// this also adds a member in the RavelConsistentHash entity
 func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Cluster, error) {
 	log.Println("JoinAsClusterLeader: Request from", node.GrpcAddress)
 	newClusterID := uuid.New().String()
@@ -77,6 +83,8 @@ func (s *ClusterAdminGRPCServer) JoinAsClusterLeader(ctx context.Context, node *
 	}, nil
 }
 
+// UpdateClusterLeader updates "node" as the leader of it's cluster. This is called when a leader crashes and another
+// leader is picked via the Leader Election in Raft.
 func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -94,6 +102,7 @@ func (s *ClusterAdminGRPCServer) UpdateClusterLeader(ctx context.Context, node *
 	}, nil
 }
 
+// LeaveCluster decrements the replica count of the node's cluster
 func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelClusterAdminPB.Node) (*RavelClusterAdminPB.Response, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -112,7 +121,7 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 	}, nil
 }
 
-
+// GetClusterLeader returns information about the leader node of the provided cluster
 func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Node, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
@@ -125,6 +134,8 @@ func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *
 	return cInfo.LeaderNode, nil
 }
 
+// WriteKeyValue writes the given key and value to the leader of the provided cluster.
+// NOTE: this function is not exposed via gRPC
 func (s *ClusterAdminGRPCServer) WriteKeyValue(key []byte, val []byte, clusterID string) error {
 	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
 	if err != nil {
@@ -146,6 +157,8 @@ func (s *ClusterAdminGRPCServer) WriteKeyValue(key []byte, val []byte, clusterID
 	return nil
 }
 
+// ReadKey reads the value for the given key from the leader of the provided cluster.
+// NOTE: this function is not exposed via gRPC
 func (s *ClusterAdminGRPCServer) ReadKey(key []byte, clusterID string) ([]byte, error) {
 	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
 	if err != nil {
