@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// ReadPartitionOwnersFromDisk reads the RavelConsistentHash.PartitionOwners map from the disk
 func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error) {
 	log.Println("Reading PartitionOwners")
 	var backupDB db.RavelDatabase
@@ -16,7 +17,7 @@ func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error
 		return nil, err
 	}
 
-	partitionClusterMap := make(map[uint64]clusterID)
+	partitionOwnerMap := make(map[uint64]clusterID)
 	err = backupDB.Conn.View(func(txn *badger.Txn) error {
 		it := txn.NewIterator(badger.DefaultIteratorOptions)
 		defer it.Close()
@@ -25,7 +26,7 @@ func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error
 			item := it.Item()
 
 			err = item.Value(func(val []byte) error {
-				partitionClusterMap[bytesToUint64(item.Key())] = clusterID(string(val))
+				partitionOwnerMap[bytesToUint64(item.Key())] = clusterID(string(val))
 				return nil
 			})
 
@@ -40,10 +41,10 @@ func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error
 	if err != nil {
 		return nil, err
 	}
-
-	return partitionClusterMap, nil
+	return partitionOwnerMap, nil
 }
 
+// ReadPartitionKeyMapFromDisk reads the RavelConsistentHash.PartitionKeyMap from disk
 func ReadPartitionKeyMapFromDisk(badgerPath string) (map[uint64]keySet, error) {
 	log.Println("Reading PartitionKey")
 	var backupDB db.RavelDatabase
@@ -91,6 +92,5 @@ func ReadPartitionKeyMapFromDisk(badgerPath string) (map[uint64]keySet, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return partitionKeyMap, nil
 }

@@ -15,10 +15,6 @@ type RavelStableStore struct {
 // NewRavelStableStore creates a new instance of RavelStableStore
 func NewRavelStableStore(stableStoreDBPath string) (*RavelStableStore, error) {
 	var ravelDB db.RavelDatabase
-	// err := os.Mkdir(stableStoreDBPath, 0777)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	err := ravelDB.Init(stableStoreDBPath)
 	if err != nil {
 		log.Fatal("StableStore: Unable to setup new Stable Store")

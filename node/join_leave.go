@@ -7,12 +7,8 @@ import (
 	"github.com/hashicorp/raft"
 )
 
-// Response is the custom response type
-// type Response struct {
-// 	Error  string `json:"error"`
-// 	Leader string `json:"leader"`
-// }
 
+// Join will join the node available on raftAddr with ID nodeID to this node if its a leader
 func (n *RavelNode) Join(nodeID, raftAddr string) error {
 	log.Printf("received join request for remote node %s, raftAddr %s\n", nodeID, raftAddr)
 	if n.Raft.State() != raft.Leader {
@@ -38,6 +34,7 @@ func (n *RavelNode) Join(nodeID, raftAddr string) error {
 	return nil
 }
 
+// Leave removes the node with nodeID from this leader
 func (n *RavelNode) Leave(nodeID string) error {
 	log.Printf("received leave request for remote node %s", nodeID)
 	if n.Raft.State() != raft.Leader {

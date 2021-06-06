@@ -13,12 +13,14 @@ import (
 
 // clusterID is a string that is used to communicate the ID of a cluster. It implements the consistent.Member interface
 type clusterID string
+
 func (c clusterID) String() string {
 	return string(c)
 }
 
 // hash implements the consistent.Hasher interface
-type hash struct {}
+type hash struct{}
+
 func (h hash) Sum64(data []byte) uint64 {
 	return xxhash.Sum64(data)
 }
@@ -59,13 +61,14 @@ func (k keySet) AllStrings() []string {
 
 	return all
 }
+
 // RavelConsistentHash is the main entity that implements the logic for sharding and data relocation
 type RavelConsistentHash struct {
-	mutex sync.Mutex
-	config consistent.Config
+	mutex           sync.Mutex
+	config          consistent.Config
 	PartitionKeyMap map[uint64]keySet    // PartitionID -> []keySet
 	PartitionOwners map[uint64]clusterID // PartitionID -> clusterID
-	HashRing *consistent.Consistent
+	HashRing        *consistent.Consistent
 }
 
 // Init initialises a RavelConsistentHash object
@@ -87,23 +90,24 @@ func (rch *RavelConsistentHash) Init(partitionCount int, replicationFactor int, 
 	rch.PartitionKeyMap = diskPartitionKeyMap
 	rch.PartitionOwners = diskPartitionOwnersMap
 
-	if len(rch.PartitionOwners) == 0 && len(rch.PartitionKeyMap) == 0{
-		for i := 0; i<partitionCount; i++ {
+	if len(rch.PartitionOwners) == 0 && len(rch.PartitionKeyMap) == 0 {
+		for i := 0; i < partitionCount; i++ {
 			rch.PartitionOwners[uint64(i)] = ""
 			rch.PartitionKeyMap[uint64(i)] = newKeySet()
 		}
 	}
 
 	rch.config = consistent.Config{
-		PartitionCount: partitionCount,
+		PartitionCount:    partitionCount,
 		ReplicationFactor: replicationFactor,
-		Load: load,
-		Hasher: hash{},
+		Load:              load,
+		Hasher:            hash{},
 	}
 
 	rch.HashRing = consistent.New(nil, rch.config)
 }
 
+// BackupToDisk writes the RavelConsistentHash.PartitionKeyMap and RavelConsistentHash.PartitionOwners maps to disk using BadgerDB
 func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 	log.Println("Running Backup")
 	var backupDB db.RavelDatabase
@@ -139,7 +143,6 @@ func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 	}
 
 	backupDB.Close()
-
 	return nil
 }
 
@@ -158,7 +161,7 @@ func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
 			// relocate this partID to currentOwner
 			keys := rch.PartitionKeyMap[partID].All()
 
-			for i:=0; i<len(keys); i++ {
+			for i := 0; i < len(keys); i++ {
 				log.Printf("Relocating key: %v from cluster: %v to cluster: %v\n", string(keys[i]), owner.String(), newOwner.String())
 				val, err := clusterAdminGRPCServer.ReadKey(keys[i], owner.String())
 				if err != nil {
@@ -201,4 +204,3 @@ func (rch *RavelConsistentHash) LocateKey(key []byte) consistent.Member {
 
 	return rch.HashRing.LocateKey(key)
 }
-

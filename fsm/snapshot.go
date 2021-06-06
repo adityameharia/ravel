@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/raft"
 )
 
-// Snapshot implements the Snapshot interface
+// Snapshot implements the raft.Snapshot interface
 type Snapshot struct {
 	Db *db.RavelDatabase
 }
@@ -17,8 +17,8 @@ type KeyValue struct {
 	Value []byte `json:"value"`
 }
 
+// Persist writes a backup of the db to the sink
 func (f *Snapshot) Persist(sink raft.SnapshotSink) error {
-
 	log.Println("Snapshot: Starting Snapshot")
 
 	_, err := f.Db.Conn.Backup(sink, 0)
@@ -36,6 +36,7 @@ func (f *Snapshot) Persist(sink raft.SnapshotSink) error {
 	return nil
 }
 
+// Release releases the snapshot
 func (f *Snapshot) Release() {
 	log.Println("Snapshot: Snapshot finished")
 }
