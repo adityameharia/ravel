@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/raft v1.3.1
 	github.com/joho/godotenv v1.3.0
+	github.com/urfave/cli v1.22.5
 	github.com/vmihailenco/msgpack/v5 v5.3.2
 	google.golang.org/grpc v1.38.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect

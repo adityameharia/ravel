@@ -2,14 +2,20 @@ package main
 
 import (
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
+	"github.com/urfave/cli"
 	"log"
 	"net"
+	"os"
 	"sync"
 )
 
-const RavelClusterAdminGRPCAddr = "localhost:42000"
-const RavelClusterAdminHTTPAddr = "localhost:3142"
-const RavelClusterAdminBackupPath = "/tmp/badger/cluster_admin"
+//const RavelClusterAdminGRPCAddr = "localhost:42000"
+//const RavelClusterAdminHTTPAddr = "localhost:3142"
+//const RavelClusterAdminBackupPath = "/tmp/badger/cluster_admin"
+
+var RavelClusterAdminGRPCAddr string
+var RavelClusterAdminHTTPAddr string
+var RavelClusterAdminBackupPath string
 
 var consistentHash RavelConsistentHash
 var clusterAdminGRPCServer *ClusterAdminGRPCServer
@@ -34,11 +40,42 @@ func startAdminHTTPServer() {
 }
 
 func main() {
-	consistentHash.Init(271, 40, 1.2)
-	go startAdminGRPCServer()
-	go startAdminHTTPServer()
+	app := cli.NewApp()
+	app.Name = "Ravel Cluster Admin"
+	app.Usage = "Start a Ravel Cluster Admin server"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name: "http",
+			Required: true,
+			Usage: "Address (with port) on which the HTTP server should listen",
+			Destination: &RavelClusterAdminHTTPAddr,
+		},
+		cli.StringFlag{
+			Name: "grpc",
+			Required: true,
+			Usage: "Address (with port) on which the gRPC server should listen",
+			Destination: &RavelClusterAdminGRPCAddr,
+		},
+		cli.StringFlag{
+			Name: "backupPath",
+			Required: true,
+			Usage: "Path where the Cluster Admin should persist its state on disk",
+			Destination: &RavelClusterAdminBackupPath,
+		},
+	}
 
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	wg.Wait()
+	app.Action = func(c *cli.Context) {
+		consistentHash.Init(271, 40, 1.2)
+		go startAdminGRPCServer()
+		go startAdminHTTPServer()
+
+		wg := sync.WaitGroup{}
+		wg.Add(1)
+		wg.Wait()
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }
