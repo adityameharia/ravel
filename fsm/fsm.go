@@ -50,6 +50,16 @@ func (f *RavelFSM) Get(key []byte) ([]byte, error) {
 	return v, nil
 }
 
+// Get returns the value for the provided key
+func (f *RavelFSM) GetAndDelete(key []byte) ([]byte, error) {
+	log.Println("FSM: Get")
+	v, err := f.Db.ReadAndDelete(key)
+	if err != nil {
+		return []byte{}, err
+	}
+	return v, nil
+}
+
 // Snapshot returns an raft.FSMSnapshot which captures a snapshot of the data at that moment in time
 func (f *RavelFSM) Snapshot() (raft.FSMSnapshot, error) {
 	log.Println("FSM: Snapshot")
