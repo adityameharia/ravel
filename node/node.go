@@ -107,6 +107,15 @@ func (n *RavelNode) Get(key []byte) ([]byte, error) {
 	return n.Fsm.Get(key)
 }
 
+// Get returns the value for the given key
+func (n *RavelNode) GetAndDelete(key []byte) ([]byte, error) {
+	if n.Raft.State() != raft.Leader {
+		log.Println("RavelNode: Request sent to non leading replica")
+		return []byte{}, raft.ErrNotLeader
+	}
+	return n.Fsm.GetAndDelete(key)
+}
+
 // Set sets the key with the value
 func (n *RavelNode) Set(key []byte, value []byte) error {
 	if n.Raft.State() != raft.Leader {

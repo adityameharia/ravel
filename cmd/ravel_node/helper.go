@@ -17,6 +17,8 @@ func RequestJoinToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) e
 		return err
 	}
 
+	defer conn.Close()
+
 	client := RavelNodePB.NewRavelNodeClient(conn)
 	_, err = client.Join(context.Background(), node)
 
@@ -38,6 +40,7 @@ func RequestLeaveToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) 
 		log.Fatalf("Error in RequestLeaveToClusterLeader: %v", err)
 		return err
 	}
+	defer conn.Close()
 	client := RavelNodePB.NewRavelNodeClient(conn)
 
 	_, err = client.Leave(context.Background(), node)
@@ -57,7 +60,7 @@ func RequestLeaderUpdateToCluster(clusterAdminGRPCAddr string, node *RavelCluste
 		log.Fatalf("Error in RequestLeaderUpdateToCluster: %v", err)
 		return err
 	}
-
+	defer conn.Close()
 	client := RavelClusterAdminPB.NewRavelClusterAdminClient(conn)
 	resp, err := client.UpdateClusterLeader(context.TODO(), node)
 	if err != nil {

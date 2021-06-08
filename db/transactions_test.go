@@ -67,3 +67,20 @@ func TestDelete(t *testing.T) {
 		t.Error("Error in deleting from Badger", err)
 	}
 }
+
+func TestReadAndDelete(t *testing.T) {
+	Setup()
+	defer r.Close()
+	err := r.Write([]byte("k2"), []byte("v2"))
+	if err != nil {
+		t.Error("Error in writing to Badger", err)
+	}
+	_, err = r.ReadAndDelete([]byte("k1"))
+	if err != nil {
+		t.Error("Error in deleting from Badger", err)
+	}
+	_, err = r.Read([]byte("k1"))
+	if err != nil {
+		t.Error("Error in deleting from Badger sfsdf", err)
+	}
+}

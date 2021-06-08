@@ -60,6 +60,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Error in connecting to the Admin gRPC Server: ", err)
 	}
+	defer adminConn.Close()
 
 	var ravelNode node.RavelNode
 	adminClient = RavelClusterAdminPB.NewRavelClusterAdminClient(adminConn)
