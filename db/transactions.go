@@ -57,3 +57,33 @@ func (r *RavelDatabase) Delete(key []byte) error {
 
 	return err
 }
+
+func (r *RavelDatabase) ReadAndDelete(key []byte) ([]byte, error) {
+
+	var value []byte
+
+	err := r.Conn.Update(func(txn *badger.Txn) error {
+		item, err := txn.Get(key)
+		if err != nil {
+			return err
+		}
+		err = item.Value(func(val []byte) error {
+			value = append([]byte{}, val...)
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = txn.Delete(key)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
+}

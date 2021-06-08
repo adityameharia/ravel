@@ -1,0 +1,7 @@
+---
+  storagedir: "/tmp/badger/run"
+  grpcaddr: "localhost:50000"
+  raftaddr: "localhost:60000"
+  adminrpcaddr: "localhost:42000"
+  leader: true
+

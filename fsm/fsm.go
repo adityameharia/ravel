@@ -31,6 +31,8 @@ func NewFSM(path string) (*RavelFSM, error) {
 		return nil, err
 	}
 
+	r.Conn.DropAll()
+
 	log.Println("FSM: Initialised FSM")
 
 	return &RavelFSM{
@@ -42,6 +44,16 @@ func NewFSM(path string) (*RavelFSM, error) {
 func (f *RavelFSM) Get(key []byte) ([]byte, error) {
 	log.Println("FSM: Get")
 	v, err := f.Db.Read(key)
+	if err != nil {
+		return []byte{}, err
+	}
+	return v, nil
+}
+
+// Get returns the value for the provided key
+func (f *RavelFSM) GetAndDelete(key []byte) ([]byte, error) {
+	log.Println("FSM: Get")
+	v, err := f.Db.ReadAndDelete(key)
 	if err != nil {
 		return []byte{}, err
 	}

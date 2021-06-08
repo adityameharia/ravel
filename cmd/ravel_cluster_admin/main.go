@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/adityameharia/ravel/RavelClusterAdminPB"
-	"github.com/urfave/cli"
 	"log"
 	"net"
 	"os"
 	"sync"
+
+	"github.com/adityameharia/ravel/RavelClusterAdminPB"
+	"github.com/urfave/cli"
 )
 
 var RavelClusterAdminGRPCAddr string
@@ -41,21 +42,21 @@ func main() {
 	app.Usage = "Start a Ravel Cluster Admin server"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name: "http",
-			Required: true,
-			Usage: "Address (with port) on which the HTTP server should listen",
+			Name:        "http",
+			Required:    true,
+			Usage:       "Address (with port) on which the HTTP server should listen",
 			Destination: &RavelClusterAdminHTTPAddr,
 		},
 		cli.StringFlag{
-			Name: "grpc",
-			Required: true,
-			Usage: "Address (with port) on which the gRPC server should listen",
+			Name:        "grpc",
+			Required:    true,
+			Usage:       "Address (with port) on which the gRPC server should listen",
 			Destination: &RavelClusterAdminGRPCAddr,
 		},
 		cli.StringFlag{
-			Name: "backupPath",
-			Required: true,
-			Usage: "Path where the Cluster Admin should persist its state on disk",
+			Name:        "backupPath",
+			Required:    true,
+			Usage:       "Path where the Cluster Admin should persist its state on disk",
 			Destination: &RavelClusterAdminBackupPath,
 		},
 	}
