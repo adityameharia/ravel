@@ -9,10 +9,6 @@ import (
 	"sync"
 )
 
-//const RavelClusterAdminGRPCAddr = "localhost:42000"
-//const RavelClusterAdminHTTPAddr = "localhost:3142"
-//const RavelClusterAdminBackupPath = "/tmp/badger/cluster_admin"
-
 var RavelClusterAdminGRPCAddr string
 var RavelClusterAdminHTTPAddr string
 var RavelClusterAdminBackupPath string

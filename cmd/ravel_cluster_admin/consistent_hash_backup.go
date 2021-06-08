@@ -9,7 +9,7 @@ import (
 
 // ReadPartitionOwnersFromDisk reads the RavelConsistentHash.PartitionOwners map from the disk
 func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error) {
-	log.Println("Reading PartitionOwners")
+	log.Printf("Reading PartitionOwners from path: %v\n", badgerPath)
 	var backupDB db.RavelDatabase
 	defer backupDB.Close()
 	err := backupDB.Init(badgerPath + "/partition_owners")
@@ -46,7 +46,7 @@ func ReadPartitionOwnersFromDisk(badgerPath string) (map[uint64]clusterID, error
 
 // ReadPartitionKeyMapFromDisk reads the RavelConsistentHash.PartitionKeyMap from disk
 func ReadPartitionKeyMapFromDisk(badgerPath string) (map[uint64]keySet, error) {
-	log.Println("Reading PartitionKey")
+	log.Printf("Reading PartitionKeyMap from path: %v\n", badgerPath)
 	var backupDB db.RavelDatabase
 	defer backupDB.Close()
 	err := backupDB.Init(badgerPath + "/partition_keymap")
