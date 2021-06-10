@@ -9,6 +9,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/adityameharia/ravel/RavelNodePB"
@@ -193,8 +194,7 @@ func initiateDataRelocation() {
 
 func onSignalInterrupt() {
 	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt)
-
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-ch
 		cluster := &RavelClusterAdminPB.Cluster{ClusterId: nodeConfig.ClusterID}
@@ -225,6 +225,12 @@ func onSignalInterrupt() {
 		}
 
 		log.Println(resp)
+
+		err = os.Remove(nodeConfig.StorageDir)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		os.Exit(1)
 	}()
 }

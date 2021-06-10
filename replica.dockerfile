@@ -2,7 +2,7 @@
 FROM golang:1.15.6-alpine3.12
 
 # workspace directory
-WORKDIR /home/adi/golang/src/github.com/adityameharia/ravel
+WORKDIR ~/golang/src/github.com/adityameharia/ravel
 
 # copy `go.mod` and `go.sum`
 ADD ./go.mod ./go.sum ./
@@ -16,10 +16,10 @@ RUN apk add build-base
 COPY . .
 
 # build executable
-RUN go build ./cmd/ravel_cluster_admin 
+RUN go build ./cmd/ravel_node 
 
 # expose ports
-EXPOSE 42000
+EXPOSE 50000 60000
 
 # set entrypoint
-ENTRYPOINT [ "./ravel_cluster_admin" ]
+ENTRYPOINT [ "./ravel_node" ]

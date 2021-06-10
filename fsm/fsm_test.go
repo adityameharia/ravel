@@ -56,13 +56,3 @@ func TestApplyAndGet(t *testing.T) {
 		t.Error("Error in getting key which has been set")
 	}
 }
-
-//not sure how to implement the restore test
-// func TestRestore(t *testing.T){
-// 	f, err := NewFSM("/tmp/badger/test/fsm")
-// 	if err != nil {
-// 		t.Error("Error in newFSM")
-// 	}
-
-// 	err=f.Restore()
-// }
