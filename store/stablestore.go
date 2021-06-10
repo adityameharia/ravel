@@ -21,8 +21,6 @@ func NewRavelStableStore(stableStoreDBPath string) (*RavelStableStore, error) {
 		return nil, err
 	}
 
-	ravelDB.Conn.DropAll()
-
 	log.Println("StableStore: Initialised Stable Store")
 
 	return &RavelStableStore{

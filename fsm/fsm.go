@@ -31,8 +31,6 @@ func NewFSM(path string) (*RavelFSM, error) {
 		return nil, err
 	}
 
-	r.Conn.DropAll()
-
 	log.Println("FSM: Initialised FSM")
 
 	return &RavelFSM{

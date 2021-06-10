@@ -19,7 +19,7 @@ COPY . .
 RUN go build ./cmd/ravel_cluster_admin 
 
 # expose ports
-EXPOSE 42000
+EXPOSE 5000 42000
 
 # set entrypoint
 ENTRYPOINT [ "./ravel_cluster_admin" ]

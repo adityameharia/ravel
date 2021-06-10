@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/binary"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"math"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 // float64ToByte converts a float64 to a []byte

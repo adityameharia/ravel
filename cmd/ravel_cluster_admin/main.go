@@ -3,11 +3,9 @@ package main
 import (
 	"log"
 	"net"
-	"os"
 	"sync"
 
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
-	"github.com/urfave/cli"
 )
 
 var RavelClusterAdminGRPCAddr string
@@ -36,43 +34,28 @@ func startAdminHTTPServer() {
 	clusterAdminHTTPServer.Router.Run(RavelClusterAdminHTTPAddr)
 }
 
+func init() {
+	// dirname, err := os.UserHomeDir()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	RavelClusterAdminHTTPAddr = "localhost:5000"
+	RavelClusterAdminGRPCAddr = "localhost:42000"
+	RavelClusterAdminBackupPath = "/ravel_admin"
+
+	// flag.StringVar(&RavelClusterAdminBackupPath, "backupPath", dirname, "Path where the Cluster Admin should persist its state on disk")
+	// flag.StringVar(&RavelClusterAdminHTTPAddr, "http", "", "Address (with port) on which the HTTP server should listen")
+	// flag.StringVar(&RavelClusterAdminGRPCAddr, "grpc", "", "Address (with port) on which the gRPC server should listen")
+}
+
 func main() {
-	app := cli.NewApp()
-	app.Name = "Ravel Cluster Admin"
-	app.Usage = "Start a Ravel Cluster Admin server"
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:        "http",
-			Required:    true,
-			Usage:       "Address (with port) on which the HTTP server should listen",
-			Destination: &RavelClusterAdminHTTPAddr,
-		},
-		cli.StringFlag{
-			Name:        "grpc",
-			Required:    true,
-			Usage:       "Address (with port) on which the gRPC server should listen",
-			Destination: &RavelClusterAdminGRPCAddr,
-		},
-		cli.StringFlag{
-			Name:        "backupPath",
-			Required:    true,
-			Usage:       "Path where the Cluster Admin should persist its state on disk",
-			Destination: &RavelClusterAdminBackupPath,
-		},
-	}
+	log.Println("hopelly")
+	consistentHash.Init(271, 40, 1.2)
+	go startAdminGRPCServer()
+	go startAdminHTTPServer()
 
-	app.Action = func(c *cli.Context) {
-		consistentHash.Init(271, 40, 1.2)
-		go startAdminGRPCServer()
-		go startAdminHTTPServer()
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	wg.Wait()
 
-		wg := sync.WaitGroup{}
-		wg.Add(1)
-		wg.Wait()
-	}
-
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
 }

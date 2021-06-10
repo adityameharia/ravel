@@ -24,8 +24,6 @@ func NewRavelLogStore(logDBPath string) (*RavelLogStore, error) {
 		return nil, err
 	}
 
-	ravelDB.Conn.DropAll()
-
 	log.Println("LogStore: Initialised Log Store")
 	return &RavelLogStore{
 		Db: &ravelDB,
