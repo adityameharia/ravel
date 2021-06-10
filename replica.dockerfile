@@ -2,7 +2,7 @@
 FROM golang:1.15.6-alpine3.12
 
 # workspace directory
-WORKDIR ~/golang/src/github.com/adityameharia/ravel
+WORKDIR /ravel/ravel_node
 
 # copy `go.mod` and `go.sum`
 ADD ./go.mod ./go.sum ./

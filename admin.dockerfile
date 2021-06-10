@@ -2,7 +2,7 @@
 FROM golang:1.15.6-alpine3.12
 
 # workspace directory
-WORKDIR .
+WORKDIR /ravel/ravel_cluster_admin
 
 # copy `go.mod` and `go.sum`
 ADD ./go.mod ./go.sum ./
