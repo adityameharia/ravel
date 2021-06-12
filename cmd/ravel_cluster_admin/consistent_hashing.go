@@ -150,38 +150,27 @@ func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 // the keys in the relocated partition are looked up in the RavelConsistentHash.PartitionKeyMap and are moved
 // to the new cluster
 func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
-	log.Println("adding cluster")
+	log.Println("Adding Cluster:", clusterName)
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
 
 	rch.HashRing.Add(clusterName)
-	for partID, owner := range rch.PartitionOwners {
-		newOwner := rch.HashRing.GetPartitionOwner(int(partID))
-		if newOwner != owner {
-			// relocate this partID to currentOwner
-			keys := rch.PartitionKeyMap[partID].All()
+	rch.relocatePartitions()
 
-			for i := 0; i < len(keys); i++ {
-				log.Printf("Relocating key: %v from cluster: %v to cluster: %v\n", string(keys[i]), owner.String(), newOwner.String())
-				val, err := clusterAdminGRPCServer.ReadKey(keys[i], owner.String())
-				if err != nil {
-					log.Println(err)
-				}
-
-				err = clusterAdminGRPCServer.DeleteKey(keys[i], owner.String())
-				if err != nil {
-					log.Println(err)
-				}
-
-				err = clusterAdminGRPCServer.WriteKeyValue(keys[i], val, newOwner.String())
-				if err != nil {
-					log.Println("Yo:", err)
-				}
-			}
-
-			rch.PartitionOwners[partID] = clusterID(newOwner.String())
-		}
+	err := rch.BackupToDisk(RavelClusterAdminBackupPath)
+	if err != nil {
+		log.Println("Error in Backing Up to Disk:", err.Error())
 	}
+}
+
+// DeleteCluster deletes a cluster from the owners map
+func (rch *RavelConsistentHash) DeleteCluster(clusterName clusterID) {
+	log.Println("Removing Cluster:", clusterName)
+	rch.mutex.Lock()
+	defer rch.mutex.Unlock()
+
+	rch.HashRing.Remove(clusterName.String())
+	rch.relocatePartitions()
 
 	err := rch.BackupToDisk(RavelClusterAdminBackupPath)
 	if err != nil {
@@ -203,4 +192,31 @@ func (rch *RavelConsistentHash) LocateKey(key []byte) consistent.Member {
 	}
 
 	return rch.HashRing.LocateKey(key)
+}
+
+// relocatePartitions checks for owner changes and then relocates the keys in that partition to the new owner
+func (rch *RavelConsistentHash) relocatePartitions() {
+	log.Println("Relocating Partitions")
+	for partID, owner := range rch.PartitionOwners {
+		newOwner := rch.HashRing.GetPartitionOwner(int(partID))
+		if newOwner != owner {
+			// relocate this partID to newOwner
+			keys := rch.PartitionKeyMap[partID].All()
+
+			for i := 0; i < len(keys); i++ {
+				log.Printf("Relocating key: %v from cluster: %v to cluster: %v\n", string(keys[i]), owner.String(), newOwner.String())
+				val, err := clusterAdminGRPCServer.ReadKeyAndDelete(keys[i], owner.String())
+				if err != nil {
+					log.Println(err)
+				}
+
+				err = clusterAdminGRPCServer.WriteKeyValue(keys[i], val, newOwner.String())
+				if err != nil {
+					log.Println("Yo:", err)
+				}
+			}
+
+			rch.PartitionOwners[partID] = clusterID(newOwner.String())
+		}
+	}
 }

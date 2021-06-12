@@ -27,7 +27,6 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	//setting up Raft Config
 	config := raft.DefaultConfig()
 	config.LocalID = raft.ServerID(localID)
-	config.SnapshotThreshold = 5000
 
 	log.Println(config)
 
@@ -107,7 +106,7 @@ func (n *RavelNode) Get(key []byte) ([]byte, error) {
 	return n.Fsm.Get(key)
 }
 
-// Get returns the value for the given key
+// GetAndDelete returns the value for the given key
 func (n *RavelNode) GetAndDelete(key []byte) ([]byte, error) {
 	if n.Raft.State() != raft.Leader {
 		log.Println("RavelNode: Request sent to non leading replica")

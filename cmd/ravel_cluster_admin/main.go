@@ -41,7 +41,7 @@ func init() {
 	// }
 	RavelClusterAdminHTTPAddr = "localhost:5000"
 	RavelClusterAdminGRPCAddr = "localhost:42000"
-	RavelClusterAdminBackupPath = "/ravel_admin"
+	RavelClusterAdminBackupPath = "/tmp/ravel_admin"
 
 	// flag.StringVar(&RavelClusterAdminBackupPath, "backupPath", dirname, "Path where the Cluster Admin should persist its state on disk")
 	// flag.StringVar(&RavelClusterAdminHTTPAddr, "http", "", "Address (with port) on which the HTTP server should listen")
@@ -49,7 +49,6 @@ func init() {
 }
 
 func main() {
-	log.Println("hopelly")
 	consistentHash.Init(271, 40, 1.2)
 	go startAdminGRPCServer()
 	go startAdminHTTPServer()

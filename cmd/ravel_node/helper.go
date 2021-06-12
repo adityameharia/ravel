@@ -45,7 +45,7 @@ func RequestLeaveToClusterLeader(leaderGRPCAddr string, node *RavelNodePB.Node) 
 
 	_, err = client.Leave(context.Background(), node)
 	if err != nil {
-		log.Fatalf("join request falied with server %v", err)
+		log.Printf("leave request failed: %v", err)
 		return err
 	}
 

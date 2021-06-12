@@ -108,16 +108,39 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 
 	cInfo, exists := s.ClusterLeaderMap[node.ClusterId]
 	if !exists {
-		return nil, errors.New("invalid clusterID id")
+		return nil, errors.New("invalid clusterID")
 	}
 
-	cInfo.ReplicaCount -= 1
-	s.ClusterLeaderMap[node.ClusterId] = cInfo
+	if len(s.ClusterLeaderMap) == 1 {
+		// last remaining cluster in the system -> reset consistentHash -> delete info from ClusterLeaderMap
+		log.Printf("Node: %v from Cluster: %v is the last standing Cluster Leader in the system\n", node.NodeId, node.ClusterId)
+		log.Println("Resetting consistentHash, Removing", node.ClusterId, "from ClusterLeaderMap")
 
-	log.Println(s.ClusterLeaderMap)
-	return &RavelClusterAdminPB.Response{
-		Data: "replica count reduced",
-	}, nil
+		consistentHash.Init(271, 40, 1.2)
+		delete(s.ClusterLeaderMap, node.ClusterId)
+
+		return &RavelClusterAdminPB.Response{
+			Data: "Removing last standing cluster in the system",
+		}, nil
+	} else {
+		if cInfo.ReplicaCount == 1 {
+			// last remaining replica in the cluster -> remove cluster from ClusterLeaderMap -> remove cluster from consistentHash
+			delete(s.ClusterLeaderMap, node.ClusterId)
+			consistentHash.DeleteCluster(clusterID(node.ClusterId))
+
+			return &RavelClusterAdminPB.Response{
+				Data: "Deleting Cluster: " + node.ClusterId,
+			}, nil
+		} else {
+			cInfo.ReplicaCount -= 1
+			s.ClusterLeaderMap[node.ClusterId] = cInfo
+
+			log.Println(s.ClusterLeaderMap)
+			return &RavelClusterAdminPB.Response{
+				Data: "replica count reduced",
+			}, nil
+		}
+	}
 }
 
 // GetClusterLeader returns information about the leader node of the provided cluster
@@ -133,6 +156,8 @@ func (s *ClusterAdminGRPCServer) GetClusterLeader(ctx context.Context, cluster *
 	return cInfo.LeaderNode, nil
 }
 
+// InitiateDataRelocation adds the provided cluster as an owner to the consistent hashing setup,
+// which in turns takes care of the movement of data
 func (s *ClusterAdminGRPCServer) InitiateDataRelocation(ctx context.Context, cluster *RavelClusterAdminPB.Cluster) (*RavelClusterAdminPB.Response, error) {
 	consistentHash.AddCluster(clusterID(cluster.ClusterId))
 	return &RavelClusterAdminPB.Response{
@@ -184,6 +209,8 @@ func (s *ClusterAdminGRPCServer) ReadKey(key []byte, clusterID string) ([]byte, 
 	return resp.Data, nil
 }
 
+// DeleteKey deletes the key and value on the server
+// NOTE: this function is not exposed via gRPC
 func (s *ClusterAdminGRPCServer) DeleteKey(key []byte, clusterID string) error {
 	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
 	if err != nil {
@@ -201,4 +228,26 @@ func (s *ClusterAdminGRPCServer) DeleteKey(key []byte, clusterID string) error {
 	}
 	log.Println(resp.Msg)
 	return nil
+}
+
+// ReadKeyAndDelete reads the key, value and then deletes it on the server
+// NOTE: this function is not exposed via gRPC
+func (s *ClusterAdminGRPCServer) ReadKeyAndDelete(key []byte, clusterID string) ([]byte, error) {
+	conn, err := grpc.Dial(s.ClusterLeaderMap[clusterID].LeaderNode.GrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	client := RavelNodePB.NewRavelNodeClient(conn)
+	resp, err := client.Run(context.TODO(), &RavelNodePB.Command{
+		Operation: "getAndDelete",
+		Key:       key,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(resp.Msg)
+	return resp.Data, nil
 }
