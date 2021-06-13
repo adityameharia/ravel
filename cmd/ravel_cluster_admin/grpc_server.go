@@ -116,7 +116,11 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 		log.Printf("Node: %v from Cluster: %v is the last standing Cluster Leader in the system\n", node.NodeId, node.ClusterId)
 		log.Println("Resetting consistentHash, Removing", node.ClusterId, "from ClusterLeaderMap")
 
-		consistentHash.Init(271, 40, 1.2)
+		consistentHash.Reset(271, 40, 1.2)
+		err := consistentHash.BackupToDisk(RavelClusterAdminBackupPath)
+		if err != nil {
+			return nil, err
+		}
 		delete(s.ClusterLeaderMap, node.ClusterId)
 
 		return &RavelClusterAdminPB.Response{
@@ -125,8 +129,10 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 	} else {
 		if cInfo.ReplicaCount == 1 {
 			// last remaining replica in the cluster -> remove cluster from ClusterLeaderMap -> remove cluster from consistentHash
-			delete(s.ClusterLeaderMap, node.ClusterId)
+			log.Printf("Node: %v from Cluster: %v is the last standing replica in the cluster\n", node.NodeId, node.ClusterId)
+			log.Println("Deleting cluster from consistent hash and removing", node.ClusterId, "from ClusterLeaderMap")
 			consistentHash.DeleteCluster(clusterID(node.ClusterId))
+			delete(s.ClusterLeaderMap, node.ClusterId)
 
 			return &RavelClusterAdminPB.Response{
 				Data: "Deleting Cluster: " + node.ClusterId,

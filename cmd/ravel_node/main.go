@@ -21,42 +21,27 @@ import (
 
 // Config is the struct containing the configuration details of the node
 type Config struct {
-	// clusterID is ID of th cluster the node is a part of
-	ClusterID string `yaml:"clusterid"`
-	// nodeID is the nodes unique ID
-	NodeID string `yaml:"nodeid"`
-	// storageDir is the Data Directory for Raft
-	StorageDir string `yaml:"storagedir"`
-	// gRPCAddr is the Address (with port) at which gRPC server is started
-	GRPCAddr string `yaml:"grpcaddr"`
-	// raftInternalAddr is the Raft internal communication address with port
-	RaftInternalAddr string `yaml:"raftaddr"`
-	// adminGRPCAddr is the GRPC address of the cluster admin
-	AdminGRPCAddr string `yaml:"adminrpcaddr"`
-	// isLeader is a bool defining whether the node is a leader or not
-	IsLeader bool `yaml:"leader"`
+	ClusterID        string // ClusterID is ID of th cluster the node is a part of
+	NodeID           string // NodeID is the nodes unique ID
+	StorageDir       string // StorageDir is the Data Directory for Raft
+	GRPCAddr         string // GRPCAddr is the Address (with port) at which gRPC server is started
+	RaftInternalAddr string // RaftInternalAddr is the Raft internal communication address with port
+	AdminGRPCAddr    string // AdminGRPCAddr is the address at which the cluster admin gRPC server is hosted
+	IsLeader         bool   // IsLeader is a bool defining whether the node is a leader or not
 }
 
-var yamlFile string
 var nodeConfig Config
 var adminClient RavelClusterAdminPB.RavelClusterAdminClient
 
 func init() {
-	// dirname, err := os.UserHomeDir()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-
-	//Address (with port) at which gRPC server is started
+	nodeConfig.NodeID = uuid.New().String()
 	nodeConfig.GRPCAddr = "localhost:50000"
-	//GRPC address of the cluster admin
 	nodeConfig.RaftInternalAddr = "localhost:60000"
-	//Data Directory for Raft
 	nodeConfig.StorageDir = "/ravel_node"
 
-	nodeConfig.NodeID = uuid.New().String()
-	// flag.StringVar(&yamlFile, "yaml", "", "Argument as yaml file or command line arguments")
-
+	//flag.StringVar(&nodeConfig.StorageDir, "storageDir", "", "Storage Dir")
+	//flag.StringVar(&nodeConfig.GRPCAddr, "gRPCAddr", "", "GRPC Addr of this node")
+	//flag.StringVar(&nodeConfig.RaftInternalAddr, "raftAddr", "", "Raft Internal address for this node")
 	flag.StringVar(&nodeConfig.AdminGRPCAddr, "adminRPCAddr", "", "GRPC address of the cluster admin")
 	flag.BoolVar(&nodeConfig.IsLeader, "leader", false, "Register this node as a new leader or not")
 }
@@ -64,19 +49,11 @@ func init() {
 func main() {
 	flag.Parse()
 
-	log.Println("hopelly")
 	var conf db.RavelDatabase
 	err := conf.Init(nodeConfig.StorageDir + "/config")
 	if err != nil {
 		log.Fatal("FSM: Unable to Setup Database")
 	}
-
-	// if yamlFile != "" {
-	// 	err := readConf(yamlFile)
-	// 	if err != nil {
-	// 		log.Fatal("Unable to get the yaml file")
-	// 	}
-	// }
 
 	if nodeConfig.AdminGRPCAddr == "" {
 		log.Fatal("adminRPCAddr has not been initialized")
@@ -213,18 +190,6 @@ func main() {
 
 	err = grpcServer.Serve(listener)
 }
-
-// func readConf(path string) error {
-// 	buf, err := ioutil.ReadFile(path)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	err = yaml.Unmarshal(buf, &nodeConfig)
-// 	if err != nil {
-// 		return fmt.Errorf("in file %q: %v", path, err)
-// 	}
-// 	return nil
-// }
 
 func initiateDataRelocation() {
 	time.Sleep(5 * time.Second)

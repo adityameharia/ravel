@@ -107,6 +107,30 @@ func (rch *RavelConsistentHash) Init(partitionCount int, replicationFactor int, 
 	rch.HashRing = consistent.New(nil, rch.config)
 }
 
+// Reset resets the RavelConsistentHash object to its initial state
+func (rch *RavelConsistentHash) Reset(partitionCount int, replicationFactor int, load float64) {
+	rch.mutex.Lock()
+	defer rch.mutex.Unlock()
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	rch.PartitionKeyMap = make(map[uint64]keySet)
+	rch.PartitionOwners = make(map[uint64]clusterID)
+
+	for i := 0; i < partitionCount; i++ {
+		rch.PartitionOwners[uint64(i)] = ""
+		rch.PartitionKeyMap[uint64(i)] = newKeySet()
+	}
+
+	rch.config = consistent.Config{
+		PartitionCount:    partitionCount,
+		ReplicationFactor: replicationFactor,
+		Load:              load,
+		Hasher:            hash{},
+	}
+
+	rch.HashRing = consistent.New(nil, rch.config)
+}
+
 // BackupToDisk writes the RavelConsistentHash.PartitionKeyMap and RavelConsistentHash.PartitionOwners maps to disk using BadgerDB
 func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 	log.Println("Running Backup")
@@ -150,12 +174,13 @@ func (rch *RavelConsistentHash) BackupToDisk(badgerPath string) error {
 // the keys in the relocated partition are looked up in the RavelConsistentHash.PartitionKeyMap and are moved
 // to the new cluster
 func (rch *RavelConsistentHash) AddCluster(clusterName clusterID) {
+	log.Println("Len Partition")
 	log.Println("Adding Cluster:", clusterName)
 	rch.mutex.Lock()
 	defer rch.mutex.Unlock()
 
 	rch.HashRing.Add(clusterName)
-	rch.relocatePartitions()
+	rch.relocatePartitions() // dont do this when this is the very first one
 
 	err := rch.BackupToDisk(RavelClusterAdminBackupPath)
 	if err != nil {
