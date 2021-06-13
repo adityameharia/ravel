@@ -30,13 +30,11 @@ func NewRavelStableStore(stableStoreDBPath string) (*RavelStableStore, error) {
 
 // Set stores Key configuration in a stable manner.
 func (s *RavelStableStore) Set(key []byte, val []byte) error {
-	log.Println("StableStore: Set")
 	return s.Db.Write(key, val)
 }
 
 // Get returns the value for the provided key
 func (s *RavelStableStore) Get(key []byte) ([]byte, error) {
-	log.Println("StableStore: Get")
 	val, err := s.Db.Read(key)
 	if err != nil {
 		if err.Error() == badger.ErrKeyNotFound.Error() {
@@ -52,13 +50,11 @@ func (s *RavelStableStore) Get(key []byte) ([]byte, error) {
 
 // SetUint64 sets val as uint64 for the provided key
 func (s *RavelStableStore) SetUint64(key []byte, val uint64) error {
-	log.Println("StableStore: SetUint64")
 	return s.Db.Write(key, uint64ToBytes(val))
 }
 
 // GetUint64 returns the value for the given key
 func (s *RavelStableStore) GetUint64(key []byte) (uint64, error) {
-	log.Println("StableStore: GetUint64")
 	valBytes, err := s.Db.Read(key)
 
 	var valUInt uint64
