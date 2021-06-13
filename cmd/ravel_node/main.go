@@ -35,8 +35,8 @@ var adminClient RavelClusterAdminPB.RavelClusterAdminClient
 
 func init() {
 	nodeConfig.NodeID = uuid.New().String()
-	nodeConfig.GRPCAddr = "localhost:50000"
-	nodeConfig.RaftInternalAddr = "localhost:60000"
+	nodeConfig.GRPCAddr = "172.17.0.1:50000"
+	nodeConfig.RaftInternalAddr = "172.17.0.1:60000"
 	nodeConfig.StorageDir = "/ravel_node"
 
 	//flag.StringVar(&nodeConfig.StorageDir, "storageDir", "", "Storage Dir")

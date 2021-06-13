@@ -38,6 +38,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 	}
 	transport, err := raft.NewTCPTransport(BindAddr, addr, 5, 2*time.Second, os.Stderr)
 	if err != nil {
+		log.Println(err)
 		log.Fatal("RavelNode: Unable to create NewTCPTransport")
 		return nil, nil, err
 	}
