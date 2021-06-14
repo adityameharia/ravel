@@ -117,7 +117,7 @@ func main() {
 			},
 			Action: func(c *cli.Context) error {
 				setUpConf()
-				killCluster()
+				killCluster(-1)
 				return nil
 			},
 		},

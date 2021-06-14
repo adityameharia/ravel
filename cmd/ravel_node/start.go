@@ -7,12 +7,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 	"github.com/adityameharia/ravel/RavelNodePB"
 	"github.com/adityameharia/ravel/node"
 	"github.com/adityameharia/ravel/node_server"
+	"github.com/hashicorp/raft"
 	"google.golang.org/grpc"
 	"gopkg.in/yaml.v2"
 )
@@ -133,21 +136,26 @@ func startReplica() {
 		}
 	}()
 
+	onSigInterrupt(ravelNode.Raft)
+
+	replicaCount := len(ravelNode.Raft.GetConfiguration().Configuration().Servers)
+
 	byteConfig, err := json.Marshal(nodeConfig)
 	if err != nil {
-		killCluster()
+		killCluster(replicaCount)
 		log.Fatal("cannot write config to file")
 	}
 
 	err = conf.Write([]byte("config"), byteConfig)
 	if err != nil {
-		killCluster()
+		killCluster(replicaCount)
 		log.Fatal("cannot write config to file")
 	}
 
 	//starts the gRPC server
 	listener, err := net.Listen("tcp", nodeConfig.GRPCAddr)
 	if err != nil {
+		killCluster(replicaCount)
 		log.Fatal("Error in starting TCP server: ", err)
 	}
 	log.Printf("Starting TCP Server on %v for gRPC\n", nodeConfig.GRPCAddr)
@@ -186,4 +194,21 @@ func initiateDataRelocation() {
 		log.Fatal(err.Error())
 	}
 	log.Println(resp.Data)
+}
+
+func onSigInterrupt(ra *raft.Raft) {
+
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	go func() {
+		<-ch
+		replicaCount := len(ra.GetConfiguration().Configuration().Servers)
+		log.Println(replicaCount)
+		if replicaCount == 2 {
+			log.Println("Permanently deleting server dince only 2 servers are left")
+			killCluster(replicaCount)
+		} else {
+			os.Exit(1)
+		}
+	}()
 }

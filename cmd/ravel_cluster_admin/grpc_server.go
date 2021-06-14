@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
+	"math"
+	"sync"
+
 	"github.com/adityameharia/ravel/RavelClusterAdminPB"
 	"github.com/adityameharia/ravel/RavelNodePB"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
-	"log"
-	"math"
-	"sync"
 )
 
 // clusterInfo holds the information to represent a cluster
@@ -111,7 +112,7 @@ func (s *ClusterAdminGRPCServer) LeaveCluster(ctx context.Context, node *RavelCl
 		return nil, errors.New("invalid clusterID")
 	}
 
-	if len(s.ClusterLeaderMap) == 1 {
+	if len(s.ClusterLeaderMap) == 1 && cInfo.ReplicaCount == 1 {
 		// last remaining cluster in the system -> reset consistentHash -> delete info from ClusterLeaderMap
 		log.Printf("Node: %v from Cluster: %v is the last standing Cluster Leader in the system\n", node.NodeId, node.ClusterId)
 		log.Println("Resetting consistentHash, Removing", node.ClusterId, "from ClusterLeaderMap")
