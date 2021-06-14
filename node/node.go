@@ -36,6 +36,7 @@ func (n *RavelNode) Open(enableSingle bool, localID string, badgerPath string, B
 		log.Fatal("RavelNode: Unable to resolve TCP Bind Address")
 		return nil, nil, err
 	}
+	log.Println(addr)
 	transport, err := raft.NewTCPTransport(BindAddr, addr, 5, 2*time.Second, os.Stderr)
 	if err != nil {
 		log.Println(err)
