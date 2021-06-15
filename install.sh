@@ -5,5 +5,7 @@ ravel_cluster_admin_url=https://github.com/adityameharia/ravel/releases/download
 
 curl -LJO $ravel_node_url  && sudo mv ./ravel_node /usr/local/bin
 curl -LJO $ravel_cluster_admin_url && sudo mv ./ravel_cluster_admin /usr/local/bin
+chmod +x /usr/local/bin/ravel_node
+chmod +x /usr/local/bin/ravel_cluster_admin
 
 echo "ravel_node and ravel_cluster_admin were downloaded and moved to /usr/local/bin"
