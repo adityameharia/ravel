@@ -27,7 +27,7 @@ of data across clusters.
 Ravel has two functional components. A cluster admin server and a replica node, both of them have their separate binary
 files. To setup Ravel correctly, you'll need to start one cluster admin server and many replica nodes as per requirement.
 
-### Using Curl 
+### Using `curl` 
 
 This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`. Make sure you
 have it in your `$PATH`
@@ -36,8 +36,8 @@ have it in your `$PATH`
 curl https://raw.githubusercontent.com/adityameharia/ravel/main/install.sh | bash
 ```
 
-
 ### From Source
+
 - `cmd/ravel_node` directory has the implementation of `ravel_node` which is the replica node
 - `cmd/ravel_cluster_admin` directory has the implementation of `ravel_cluster_admin` which is the cluster admin server
 
