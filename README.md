@@ -32,7 +32,7 @@ files. To setup Ravel correctly, you'll need to start one cluster admin server a
 This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`. Make sure you
 have it in your `$PATH`
 
-```bash
+```sh
 curl https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 ```
 
