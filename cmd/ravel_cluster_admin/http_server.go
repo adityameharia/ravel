@@ -58,6 +58,24 @@ func (s *ClusterAdminHTTPServer) setupPaths() {
 		c.JSON(200, "HTTP Server for Ravel Cluster Admin")
 	})
 
+	// /delete deletes locates the cluster with the key and deletes the corresponding key-value pair
+	s.Router.POST("/delete", func(c *gin.Context) {
+		var req getRequest
+		if err := c.Bind(&req); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		// get cluster id -> read key and value from that cluster
+		clusterID := consistentHash.LocateKey([]byte(req.Key))
+		err := clusterAdminGRPCServer.DeleteKey([]byte(req.Key), clusterID.String())
+		if err != nil {
+			c.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{"msg": "ok"})
+	})
+
 	// /get reads the key from the request, locates the cluster with that key
 	// reads the data from that cluster, decodes it into the appropriate type and returns it
 	s.Router.POST("/get", func(c *gin.Context) {

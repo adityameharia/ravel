@@ -15,7 +15,7 @@ of data across clusters.
     * [From Source](#from-source)
 * [Setup and Usage](#setup-and-usage)
 * [Examples](#examples)
-* [Killing Ravel Instance](#killing-ravel-instance)
+* [Killing A Ravel Instance](#killing-a-ravel-instance)
 * [Uninstalling Ravel](#unistalling-ravel)
 * [Documentation and Further Reading](#documentation-and-further-reading)
 * [Contributing](#contributing)
@@ -31,12 +31,12 @@ files.
 
 Installing the ravel components are very easy with curl
 
-1. Ravel Node, which is the replica node
+1. `ravel_node`, which is the replica node
 
 ```shell
 curl -LJO https://github.com/adityameharia/ravel/releases/download/0.1/ravel_node && sudo mv ./ravel_node /usr/local/bin
 ```
-2. Ravel Cluster Admin, which is the cluster admin server
+2. `ravel_cluster_admin`, which is the cluster admin server
 
 ```shell
 curl -LJO https://github.com/adityameharia/ravel/releases/download/0.1/ravel_cluster_admin && sudo mv ./ravel_cluster_admin /usr/local/bin
@@ -66,7 +66,7 @@ sudo mv ./ravel_cluster_admin /usr/local/bin
 ```
 
 This will build the `ravel_node` and `ravel_cluster_admin` binaries in `cmd/ravel_node`
-and `cmd/ravel_cluster_admin` respectively. 
+and `cmd/ravel_cluster_admin` respectively and move them to /usr/local/bin
 
 You can copy them to your `$PATH` or run them from those directories
 
@@ -114,7 +114,7 @@ The admin exposes 3 routes for us to use:
 
 ## Examples
 
-## Killing Ravel Instance
+## Killing A Ravel Instance
 
 Stopping a ravel instance niethers delete the data or configuration nor removes it from the system, it just replicates a crash.
 
