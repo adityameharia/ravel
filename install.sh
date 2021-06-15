@@ -21,10 +21,11 @@ echo "-----------------------------------------"
 echo "Downloading ravel_node and ravel_cluster_admin from github: "
 echo ""
 
-ravel_node_url=https://github.com/adityameharia/ravel/releases/download/0.1/ravel_node
-ravel_cluster_admin_url=https://github.com/adityameharia/ravel/releases/download/0.1/ravel_cluster_admin
+ravel_node_url=https://github.com/adityameharia/ravel/releases/download/v0.1-alpha/ravel_node
+ravel_cluster_admin_url=https://github.com/adityameharia/ravel/releases/download/v0.1-alpha/ravel_cluster_admin
 
-curl -LJO $ravel_node_url  && sudo mv ./ravel_node /usr/local/bin
+curl -LJO $ravel_node_url
+sudo mv ./ravel_node /usr/local/bin
 curl -LJO $ravel_cluster_admin_url && sudo mv ./ravel_cluster_admin /usr/local/bin
 chmod +x /usr/local/bin/ravel_node
 chmod +x /usr/local/bin/ravel_cluster_admin
