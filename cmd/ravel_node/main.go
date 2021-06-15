@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 
@@ -134,12 +135,13 @@ func setUpConf() {
 		log.Println(err)
 		log.Fatal("Conf: Unable to Setup Database")
 	}
-	cID, err := conf.Read([]byte("clusterID"))
-	if err == nil {
-		nodeConfig.ClusterID = string(cID)
+	config, err := conf.Read([]byte("config"))
+	if err != nil {
+		log.Println("Error reading config details from file")
 	}
-	nID, err := conf.Read([]byte("nodeID"))
-	if err == nil {
-		nodeConfig.NodeID = string(nID)
+
+	err = json.Unmarshal(config, &nodeConfig)
+	if err != nil {
+		log.Println("Error reading config details from file")
 	}
 }

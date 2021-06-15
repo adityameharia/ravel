@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"os"
 
@@ -13,16 +12,6 @@ import (
 
 func killCluster(replicaCount int) {
 	if replicaCount == 2 || replicaCount == -1 {
-
-		config, err := conf.Read([]byte("config"))
-		if err != nil {
-			log.Fatal("Error reading config details from file")
-		}
-
-		err = json.Unmarshal(config, &nodeConfig)
-		if err != nil {
-			log.Fatal("Error reading config details from file")
-		}
 
 		adminConn, err := grpc.Dial(nodeConfig.AdminGRPCAddr, grpc.WithInsecure())
 		if err != nil {

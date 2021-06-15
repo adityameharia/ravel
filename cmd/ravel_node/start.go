@@ -42,11 +42,11 @@ func startReplica() {
 
 	var ravelNode node.RavelNode
 
-	_, err = conf.Read([]byte("clusterID"))
+	_, err = conf.Read([]byte("config"))
 	if err == nil {
 		ravelNode.Raft, ravelNode.Fsm, err = ravelNode.Open(false, nodeConfig.NodeID, nodeConfig.StorageDir, nodeConfig.RaftInternalAddr)
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
 
 	} else {
@@ -65,16 +65,7 @@ func startReplica() {
 				nodeConfig.ClusterID = ravelCluster.ClusterId
 				ravelNode.Raft, ravelNode.Fsm, err = ravelNode.Open(nodeConfig.IsLeader, nodeConfig.NodeID, nodeConfig.StorageDir, nodeConfig.RaftInternalAddr)
 				if err != nil {
-					log.Println(err)
-				}
-
-				err = conf.Write([]byte("clusterID"), []byte(ravelCluster.ClusterId))
-				if err != nil {
-					log.Fatalf("Unable to clsuterID to disk")
-				}
-				err = conf.Write([]byte("nodeID"), []byte(nodeConfig.NodeID))
-				if err != nil {
-					log.Fatalf("Unable to clsuterID to disk")
+					log.Fatal(err)
 				}
 
 				// this node is the leader
@@ -94,10 +85,9 @@ func startReplica() {
 				nodeConfig.ClusterID = ravelCluster.ClusterId
 				ravelNode.Raft, ravelNode.Fsm, err = ravelNode.Open(nodeConfig.IsLeader, nodeConfig.NodeID, nodeConfig.StorageDir, nodeConfig.RaftInternalAddr)
 				if err != nil {
-					log.Println(err)
+					log.Fatal(err)
 				}
 
-				log.Println("here")
 				err = RequestJoinToClusterLeader(ravelCluster.LeaderGrpcAddress, &RavelNodePB.Node{
 					NodeId:      nodeConfig.NodeID,
 					ClusterId:   nodeConfig.ClusterID,
@@ -105,15 +95,7 @@ func startReplica() {
 					RaftAddress: nodeConfig.RaftInternalAddr,
 				})
 				if err != nil {
-					log.Println(err)
-				}
-				err = conf.Write([]byte("clusterID"), []byte(ravelCluster.ClusterId))
-				if err != nil {
-					log.Fatalf("Unable to clsuterID to disk")
-				}
-				err = conf.Write([]byte("nodeID"), []byte(nodeConfig.NodeID))
-				if err != nil {
-					log.Fatalf("Unable to clsuterID to disk")
+					log.Fatal(err)
 				}
 			}
 		}
@@ -131,7 +113,7 @@ func startReplica() {
 			})
 
 			if err != nil {
-				log.Println(err)
+				log.Fatal(err)
 			}
 		}
 	}()

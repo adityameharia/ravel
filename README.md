@@ -22,13 +22,25 @@ of data across clusters.
 
 ## Installation
 
-### Using Docker
-
-### From Source
-
 Ravel has two functional components. A cluster admin server and a replica node, both of them have their separate binary
 files.
 
+### Using Curl
+
+Installing the ravel components are very easy with curl
+
+1. Ravel Node, which is the replica node
+
+```shell
+curl -LJO https://github.com/adityameharia/ravel/releases/download/0.1/ravel_node && sudo mv ./ravel_node /usr/local/bin
+```
+2. Ravel Cluster Admin, which is the cluster admin server
+
+```shell
+curl -LJO https://github.com/adityameharia/ravel/releases/download/0.1/ravel_cluster_admin && sudo mv ./ravel_cluster_admin /usr/local/bin
+```
+
+### From Source
 - `cmd/ravel_node` directory has the implementation of `ravel_node` which is the replica node
 - `cmd/ravel_cluster_admin` directory has the implementation of `ravel_cluster_admin` which is the cluster admin server
 
@@ -44,9 +56,9 @@ git checkout master
 
 ```shell
 cd cmd/ravel_node
-go build
+go build && go intsall
 cd ../ravel_cluster_admin
-go build
+go build && go intsall
 ```
 
 This will build the `ravel_node` and `ravel_cluster_admin` binaries in `cmd/ravel_node`
@@ -55,6 +67,19 @@ and `cmd/ravel_cluster_admin` respectively.
 You can copy them to your `$PATH` or run them from those directories
 
 ## Setup and Usage
+
+The most simple configuration in the ravel system would be to have 2 cluster with 3 replicas each.
+
+1. Setup the admin server
+
+```shell
+ravel_cluster_admin --http="localhost:5000" --grpc="localhost:42000" --backupPath="~/ravel_admin"
+```
+2. Setting up the cluster leaders
+
+```shell
+ravel_node
+```
 
 ## Examples
 
