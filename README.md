@@ -15,6 +15,7 @@ of data across clusters.
     * [From Source](#from-source)
 * [Usage](#usage)
 * [Setup a Cluster](#setup-a-cluster)
+* [Reading and Writing Data](#reading-and-writing-data)
 * [Killing A Ravel Instance](#killing-a-ravel-instance)
 * [Uninstalling Ravel](#unistalling-ravel)
 * [Documentation and Further Reading](#documentation-and-further-reading)
@@ -25,12 +26,13 @@ of data across clusters.
 ## Installation
 
 Ravel has two functional components. A cluster admin server and a replica node, both of them have their separate binary
-files. To setup Ravel correctly, you'll need to start one cluster admin server and many replica nodes as per requirement.
+files. To setup Ravel correctly, you'll need to start one cluster admin server and many replica nodes as per
+requirement.
 
-### Using `curl` 
+### Using `curl`
 
-This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`, make sure you
-have it in your `$PATH`
+This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`, make sure
+you have it in your `$PATH`
 
 ```sh
 curl https://raw.githubusercontent.com/adityameharia/ravel/main/install.sh | bash
@@ -126,13 +128,20 @@ OPTIONS:
 
 ## Setup a Cluster
 
-The most simple configuration in the ravel system would be to have 2 cluster with 3 replicas each.
+Executing the following instructions will setup a sample Ravel instance. The most simple configuration of a Ravel
+instance would consist of 2 clusters with 3 replicas each.
 
-1. Setup the admin server
+The key value pairs will be sharded across the two clusters and replicated thrice on each cluster. The admin will
+automatically decide which replica goes to which cluster. Adding and removing clusters from the system automatically
+relocates all the keys in that cluster to some other one. Deleting the last standing cluster deletes all the keys in the
+instance.
+
+1. Setup the cluster admin server
 
 ```shell
 sudo ravel_cluster_admin --http="localhost:5000" --grpc="localhost:42000" --backupPath="~/ravel_admin"
 ```
+
 2. Setting up the cluster leaders
 
 ```shell
@@ -149,33 +158,93 @@ sudo ravel_node start -s="/tmp/ravel_replica3" -r="localhost:60004" -g="localhos
 sudo ravel_node start -s="/tmp/ravel_replica4" -r="localhost:60005" -g="localhost:50005" -a="localhost:42000"
 ```
 
-Once the replicas and admin are set up,we can start sending http req to our admin.
-
-The admin exposes 3 routes for us to use:
-
-- /put: Send a POST request to this route with attributes `key` and `val` in body to store the data in one of the clusters.
-- /get: Send a POST request to this route with the `key` attribute in body to get the key-value pair 
-- /delete: Send a POST request to this route with the `key` attribute in body to delete the key-value pair from the system.
-
----
 **NOTE**
-- -l=true sets up a new cluster,defaults to false
+
+- `-l=true` sets up a new cluster,defaults to false
 - Dont forget the storage directory as you will need it to delete the replica
-- All the commands and flag can be viewed using the -h or --help flag  
-- The admin will automatically decide which replica goes to which cluster
-- Adding and removing clusters from the system automatically relocates all the keys in the cluster.Removing the last cluster deletes all the keys in that cluster.
----
+- All the commands and flag can be viewed using the -h or --help flag
+
+## Reading and Writing Data
+
+Once the replicas and admin are set up, we can start sending HTTP requests to our cluster admin server to read, write
+and delete key value pairs.
+
+The cluster admin server exposes 3 HTTP routes:
+
+- URL: `/put`
+  - Method: `POST`
+  - Description: Store a key value pair in the system 
+  - Request Body: `{"key": "<your_key_here>", "val":<your_value_here>}`
+    - `key = [string]`
+    - `val = [string | float | JSON Object]`
+  - Success Response: `200` with body `{"msg": "ok"}`
+
+- URL: `/get`
+  - Method:`POST`
+  - Description: Get a key value pair from the system
+  - Request Body: `{"key": "<your_key_here>"`
+    - `key = [string]`
+  - Success Response: `200` with body `{"key": <key>, "val":<value>}`
+
+- URL: `/get`
+  - Method:`POST`
+  - Description: Delete a key value pair from the system
+  - Request Body: `{"key": "<your_key_here>"`
+    - `key = [string]`
+  - Success Response: `200` with body `{"msg": "ok"}`
+  
+### Sample Requests
+
+* Sample `/put` requests
+```json
+{
+  "key": "the_answer",
+  "value": 42
+}
+```
+```json
+{
+  "key": "dogegod",
+  "value": "Elon Musk"
+}
+```
+```json
+{
+  "key": "hello_friend",
+  "value": {
+    "elliot": "Rami Malek",
+    "darlene": "Carly Chaikin"
+  }
+}
+```
+
+* Sample `/get` request
+```json
+{
+  "key": "dogegod"
+}
+```
+
+* Sample `/delete` request
+```json
+{
+  "key": "dogegod"
+}
+```
 
 ## Killing A Ravel Instance
 
-Stopping a ravel instance niethers delete the data or configuration nor removes it from the system, it just replicates a crash.
+Stopping a ravel instance niethers delete the data or configuration nor removes it from the system, it just replicates a
+crash.
 
 In order to delete all the data and configuration and remove the instance from the system you need to kill it.
 
 ```shell
 ravel_node kill -s="the storage directory you specified while starting the node"
 ```
-Stopping the ravel_admin breaks the entire system and renders it useless.It is recommended not to stop/kill the admin unless all the replicas have been properly killed.
+
+Stopping the ravel_admin breaks the entire system and renders it useless.It is recommended not to stop/kill the admin
+unless all the replicas have been properly killed.
 
 In order to kill the admin just delete its storage directory.
 
@@ -195,7 +264,9 @@ sudo rm /usr/local/bin/ravel_cluster_admin
 ## Documentation and Further Reading
 
 * API Reference : https://pkg.go.dev/github.com/adityameharia/ravel
-* In order to read about the data flow of the system refer to [data flow in admin](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_cluster_admin/README.md) and [data flow in replica](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_node/README.md)
+* In order to read about the data flow of the system refer
+  to [data flow in admin](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_cluster_admin/README.md)
+  and [data flow in replica](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_node/README.md)
 * Each package also has its own readme explainin what it does and how it does it.
 * Other blogs and resources
     * https://raft.github.io/
