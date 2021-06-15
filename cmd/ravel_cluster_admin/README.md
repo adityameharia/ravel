@@ -43,6 +43,7 @@ partition
   every cluster gets an even distribution of load with minimal relocation.
 - Data relocation also takes place when clusters are removed. 
 
+`protoc` command to compile the protocol buffers file
 ```shell
 protoc --go_out=. \
     --go-grpc_out=require_unimplemented_servers=false:. \
