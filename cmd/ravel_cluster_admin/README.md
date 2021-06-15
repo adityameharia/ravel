@@ -40,7 +40,7 @@ partition
       the existing keys are hashed at also changes. So the keys that will now get hashed to this new cluster are
       relocated there.
 - This hashing is done using [consistent hashing with bounded loads](https://arxiv.org/abs/1608.01350) to ensure that
-  every cluster gets and even distribution of load with minimal relocation.
+  every cluster gets an even distribution of load with minimal relocation.
 - Data relocation also takes place when clusters are removed. 
 
 ```shell
