@@ -160,7 +160,7 @@ sudo ravel_node start -s="/tmp/ravel_replica4" -r="localhost:60005" -g="localhos
 
 **NOTE**
 
-- `-l=true` sets up a new cluster,defaults to false
+- `-l=true` sets up a new cluster, defaults to false
 - Dont forget the storage directory as you will need it to delete the replica
 - All the commands and flag can be viewed using the -h or --help flag
 
