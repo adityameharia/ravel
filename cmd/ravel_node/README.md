@@ -1,6 +1,6 @@
-# Ravel_node
+# Ravel Node
 
-The ravel_node package implements the replicas which eventually form a cluster. It is responsible for storing the Key-Value pairs in a persistent manner and communicates with other servers in the cluster for fault tolernce.
+The `ravel_node` package implements the replicas which eventually form a cluster. It is responsible for storing the Key-Value pairs in a persistent manner and communicates with other servers in the cluster for fault tolernce.
 
 Since we use the [Raft consensus algorithm](https://raft.github.io/) for fault tolerance each replica server can be the leader or follower i.e. if a leader is down the follower can become the leader and handle requests from the admin servers. This server communicates only with the admin servers and other replicas in its cluster.
 
