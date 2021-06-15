@@ -77,22 +77,22 @@ The most simple configuration in the ravel system would be to have 2 cluster wit
 1. Setup the admin server
 
 ```shell
-ravel_cluster_admin --http="localhost:5000" --grpc="localhost:42000" --backupPath="~/ravel_admin"
+sudo ravel_cluster_admin --http="localhost:5000" --grpc="localhost:42000" --backupPath="~/ravel_admin"
 ```
 2. Setting up the cluster leaders
 
 ```shell
-ravel_node start -s="/tmp/ravel_leader1" -l=true -r="localhost:60000" -g="localhost:50000" -a="localhost:42000"
-ravel_node start -s="/tmp/ravel_leader2" -l=true -r="localhost:60001" -g="localhost:50001" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_leader1" -l=true -r="localhost:60000" -g="localhost:50000" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_leader2" -l=true -r="localhost:60001" -g="localhost:50001" -a="localhost:42000"
 ```
 
 3. Setting up the replicas
 
 ```shell
-ravel_node start -s="/tmp/ravel_replica1" -r="localhost:60002" -g="localhost:50002" -a="localhost:42000"
-ravel_node start -s="/tmp/ravel_replica2" -r="localhost:60003" -g="localhost:50003" -a="localhost:42000"
-ravel_node start -s="/tmp/ravel_replica3" -r="localhost:60004" -g="localhost:50004" -a="localhost:42000"
-ravel_node start -s="/tmp/ravel_replica4" -r="localhost:60005" -g="localhost:50005" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_replica1" -r="localhost:60002" -g="localhost:50002" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_replica2" -r="localhost:60003" -g="localhost:50003" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_replica3" -r="localhost:60004" -g="localhost:50004" -a="localhost:42000"
+sudo ravel_node start -s="/tmp/ravel_replica4" -r="localhost:60005" -g="localhost:50005" -a="localhost:42000"
 ```
 
 Once the replicas and admin are set up,we can start sending http req to our admin.
@@ -125,7 +125,7 @@ ravel_node kill -s="the storage directory you specified while starting the node"
 ```
 Stopping the ravel_admin breaks the entire system and renders it useless.It is recommended not to stop/kill the admin unless all the replicas have been properly killed.
 
-In order to kill the admin just deletes its storage directory.
+In order to kill the admin just delete its storage directory.
 
 ```shell
 sudo rm -rf "path to storage directory"
@@ -143,6 +143,8 @@ sudo rm /usr/local/bin/ravel_cluster_admin
 ## Documentation and Further Reading
 
 * API Reference : https://pkg.go.dev/github.com/adityameharia/ravel
+* In order to read about the data flow of the system refer to [data flow in admin](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_cluster_admin/README.md) and [data flow in replica](https://github.com/adityameharia/ravel/blob/main/cmd/ravel_node/README.md)
+* Each package also has its own readme explainin what it does and how it does it.
 * Other blogs and resources
     * https://raft.github.io/
     * https://blog.dgraph.io/post/badger/
