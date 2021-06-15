@@ -172,42 +172,45 @@ and delete key value pairs.
 The cluster admin server exposes 3 HTTP routes:
 
 - URL: `/put`
-  - Method: `POST`
-  - Description: Store a key value pair in the system 
-  - Request Body: `{"key": "<your_key_here>", "val":<your_value_here>}`
-    - `key = [string]`
-    - `val = [string | float | JSON Object]`
-  - Success Response: `200` with body `{"msg": "ok"}`
+    - Method: `POST`
+    - Description: Store a key value pair in the system
+    - Request Body: `{"key": "<your_key_here>", "val":<your_value_here>}`
+        - `key = [string]`
+        - `val = [string | float | JSON Object]`
+    - Success Response: `200` with body `{"msg": "ok"}`
 
 - URL: `/get`
-  - Method:`POST`
-  - Description: Get a key value pair from the system
-  - Request Body: `{"key": "<your_key_here>"`
-    - `key = [string]`
-  - Success Response: `200` with body `{"key": <key>, "val":<value>}`
+    - Method:`POST`
+    - Description: Get a key value pair from the system
+    - Request Body: `{"key": "<your_key_here>"`
+        - `key = [string]`
+    - Success Response: `200` with body `{"key": <key>, "val":<value>}`
 
 - URL: `/get`
-  - Method:`POST`
-  - Description: Delete a key value pair from the system
-  - Request Body: `{"key": "<your_key_here>"`
-    - `key = [string]`
-  - Success Response: `200` with body `{"msg": "ok"}`
-  
+    - Method:`POST`
+    - Description: Delete a key value pair from the system
+    - Request Body: `{"key": "<your_key_here>"`
+        - `key = [string]`
+    - Success Response: `200` with body `{"msg": "ok"}`
+
 ### Sample Requests
 
 * Sample `/put` requests
+
 ```json
 {
   "key": "the_answer",
   "value": 42
 }
 ```
+
 ```json
 {
   "key": "dogegod",
   "value": "Elon Musk"
 }
 ```
+
 ```json
 {
   "key": "hello_friend",
@@ -219,6 +222,7 @@ The cluster admin server exposes 3 HTTP routes:
 ```
 
 * Sample `/get` request
+
 ```json
 {
   "key": "dogegod"
@@ -226,6 +230,7 @@ The cluster admin server exposes 3 HTTP routes:
 ```
 
 * Sample `/delete` request
+
 ```json
 {
   "key": "dogegod"
@@ -234,8 +239,8 @@ The cluster admin server exposes 3 HTTP routes:
 
 ## Killing A Ravel Instance
 
-Stopping a ravel instance niethers delete the data or configuration nor removes it from the system, it just replicates a
-crash.
+Stopping a ravel instance neither deletes the data/configuration nor removes it from the system, it replicates a crash
+with the hope that the node will come back up. Once the node is up, it will sync up all the data from the leader node.
 
 In order to delete all the data and configuration and remove the instance from the system you need to kill it.
 
@@ -243,18 +248,15 @@ In order to delete all the data and configuration and remove the instance from t
 ravel_node kill -s="the storage directory you specified while starting the node"
 ```
 
-Stopping the ravel_admin breaks the entire system and renders it useless.It is recommended not to stop/kill the admin
-unless all the replicas have been properly killed.
+Stopping the ravel_cluster_admin breaks the entire system and renders it useless. It is recommended not to stop/kill the
+admin unless all the replicas have been properly killed.
 
-In order to kill the admin just delete its storage directory.
-
-```shell
-sudo rm -rf "path to storage directory"
-```
+> The cluster admin server persists its state on disk for recovery. In order to truly reset it, you have to delete its storage
+directory.
 
 ## Uninstalling Ravel
 
-Ravel can be uninstalled bye deleting the binaries from /usr/local/bin
+Ravel can be uninstalled by deleting the binaries from /usr/local/bin
 
 ```shell
 sudo rm /usr/local/bin/ravel_node
