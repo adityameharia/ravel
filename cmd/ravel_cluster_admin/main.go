@@ -36,20 +36,6 @@ func startAdminHTTPServer() {
 	clusterAdminHTTPServer.Router.Run(RavelClusterAdminHTTPAddr)
 }
 
-// func init() {
-// 	// dirname, err := os.UserHomeDir()
-// 	// if err != nil {
-// 	// 	log.Println(err)
-// 	// }
-// 	RavelClusterAdminHTTPAddr = "0.0.0.0:5000"
-// 	RavelClusterAdminGRPCAddr = "0.0.0.0:42000"
-// 	RavelClusterAdminBackupPath = "/tmp/ravel_admin"
-
-// 	// flag.StringVar(&RavelClusterAdminBackupPath, "backupPath", dirname, "Path where the Cluster Admin should persist its state on disk")
-// 	// flag.StringVar(&RavelClusterAdminHTTPAddr, "http", "", "Address (with port) on which the HTTP server should listen")
-// 	// flag.StringVar(&RavelClusterAdminGRPCAddr, "grpc", "", "Address (with port) on which the gRPC server should listen")
-// }
-
 func main() {
 	app := cli.NewApp()
 	app.Name = "Ravel Cluster Admin"

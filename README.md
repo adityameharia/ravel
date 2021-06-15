@@ -13,8 +13,8 @@ of data across clusters.
 * [Installation](#installation)
     * [Using Curl](#using-curl)
     * [From Source](#from-source)
-* [Setup and Usage](#setup-and-usage)
-* [Examples](#examples)
+* [Usage](#usage)
+* [Setup a Cluster](#setup-a-cluster)
 * [Killing A Ravel Instance](#killing-a-ravel-instance)
 * [Uninstalling Ravel](#unistalling-ravel)
 * [Documentation and Further Reading](#documentation-and-further-reading)
@@ -29,7 +29,7 @@ files. To setup Ravel correctly, you'll need to start one cluster admin server a
 
 ### Using `curl` 
 
-This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`. Make sure you
+This will download the `ravel_node` and `ravel_cluster_admin` binary files and move it to `/usr/local/bin`, make sure you
 have it in your `$PATH`
 
 ```sh
@@ -61,11 +61,70 @@ sudo mv ./ravel_cluster_admin /usr/local/bin
 ```
 
 This will build the `ravel_node` and `ravel_cluster_admin` binaries in `cmd/ravel_node`
-and `cmd/ravel_cluster_admin` respectively and move them to /usr/local/bin
+and `cmd/ravel_cluster_admin` respectively and move them to `/usr/local/bin`
 
-You can copy them to your `$PATH` or run them from those directories
+## Usage
 
-## Setup and Usage
+Usage info for `ravel_cluster_admin`
+
+```shell
+$ ravel_cluster_admin --help
+NAME:
+   Ravel Cluster Admin - Start a Ravel Cluster Admin server
+
+USAGE:
+   ravel_cluster_admin [global options] command [command options] [arguments...]
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --http value        Address (with port) on which the HTTP server should listen
+   --grpc value        Address (with port) on which the gRPC server should listen
+   --backupPath value  Path where the Cluster Admin should persist its state on disk
+   --help, -h          show help
+```
+
+Usage info for `ravel_node`
+
+```shell
+$ ravel_node --help
+NAME:
+   Ravel Replica - Manage a Ravel replica server
+
+USAGE:
+   ravel_node [global options] command [command options] [arguments...]
+
+COMMANDS:
+   start    Starts a replica server
+   kill     Removes and deletes all the data in the cluster
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h  show help (default: false)
+```
+
+Usage info for the `start` command in `ravel_node`. Use this command to start a replica server.
+
+```shell
+$ ravel_node start --help
+NAME:
+   ravel_node start - Starts a replica server
+
+USAGE:
+   ravel_node start [command options] [arguments...]
+
+OPTIONS:
+   --storagedir value, -s value    Storage Dir (default: "~/ravel_replica")
+   --grpcaddr value, -g value      GRPC Addr of this replica (default: "localhost:50000")
+   --raftaddr value, -r value      Raft Internal address for this replica (default: "localhost:60000")
+   --adminrpcaddr value, -a value  GRPC address of the cluster admin (default: "localhost:42000")
+   --yaml value, -y value          yaml file containing the config
+   --leader, -l                    Register this node as a new leader or not (default: false)
+   --help, -h                      show help (default: false)
+```
+
+## Setup a Cluster
 
 The most simple configuration in the ravel system would be to have 2 cluster with 3 replicas each.
 
@@ -106,8 +165,6 @@ The admin exposes 3 routes for us to use:
 - The admin will automatically decide which replica goes to which cluster
 - Adding and removing clusters from the system automatically relocates all the keys in the cluster.Removing the last cluster deletes all the keys in that cluster.
 ---
-
-## Examples
 
 ## Killing A Ravel Instance
 

@@ -224,6 +224,7 @@ func (s *ClusterAdminGRPCServer) DeleteKey(key []byte, clusterID string) error {
 		return err
 	}
 
+	consistentHash.DeleteKey(key)
 	client := RavelNodePB.NewRavelNodeClient(conn)
 	resp, err := client.Run(context.TODO(), &RavelNodePB.Command{
 		Operation: "delete",

@@ -219,6 +219,19 @@ func (rch *RavelConsistentHash) LocateKey(key []byte) consistent.Member {
 	return rch.HashRing.LocateKey(key)
 }
 
+func (rch *RavelConsistentHash) DeleteKey(key []byte) {
+	rch.mutex.Lock()
+	defer rch.mutex.Unlock()
+
+	partID := rch.HashRing.FindPartitionID(key)
+	rch.PartitionKeyMap[uint64(partID)].Delete(key)
+
+	err := rch.BackupToDisk(RavelClusterAdminBackupPath)
+	if err != nil {
+		log.Println("Error in Backing Up to Disk:", err.Error())
+	}
+}
+
 // relocatePartitions checks for owner changes and then relocates the keys in that partition to the new owner
 func (rch *RavelConsistentHash) relocatePartitions() {
 	log.Println("Relocating Partitions")
