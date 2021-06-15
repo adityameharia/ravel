@@ -11,10 +11,12 @@ of data across clusters.
 ## Table of Contents
 
 * [Installation](#installation)
-    * [Using Docker](#using-docker)
+    * [Using Curl](#using-curl)
     * [From Source](#from-source)
 * [Setup and Usage](#setup-and-usage)
 * [Examples](#examples)
+* [Killing Ravel Instance](#killing-ravel-instance)
+* [Uninstalling Ravel](#unistalling-ravel)
 * [Documentation and Further Reading](#documentation-and-further-reading)
 * [Contributing](#contributing)
 * [Contact](#contact)
@@ -56,9 +58,11 @@ git checkout master
 
 ```shell
 cd cmd/ravel_node
-go build && go intsall
+go build 
+sudo mv ./ravel_node /usr/local/bin
 cd ../ravel_cluster_admin
-go build && go intsall
+go build
+sudo mv ./ravel_cluster_admin /usr/local/bin
 ```
 
 This will build the `ravel_node` and `ravel_cluster_admin` binaries in `cmd/ravel_node`
@@ -78,10 +82,63 @@ ravel_cluster_admin --http="localhost:5000" --grpc="localhost:42000" --backupPat
 2. Setting up the cluster leaders
 
 ```shell
-ravel_node
+ravel_node start -s="/tmp/ravel_leader1" -l=true -r="localhost:60000" -g="localhost:50000" -a="localhost:42000"
+ravel_node start -s="/tmp/ravel_leader2" -l=true -r="localhost:60001" -g="localhost:50001" -a="localhost:42000"
 ```
 
+3. Setting up the replicas
+
+```shell
+ravel_node start -s="/tmp/ravel_replica1" -r="localhost:60002" -g="localhost:50002" -a="localhost:42000"
+ravel_node start -s="/tmp/ravel_replica2" -r="localhost:60003" -g="localhost:50003" -a="localhost:42000"
+ravel_node start -s="/tmp/ravel_replica3" -r="localhost:60004" -g="localhost:50004" -a="localhost:42000"
+ravel_node start -s="/tmp/ravel_replica4" -r="localhost:60005" -g="localhost:50005" -a="localhost:42000"
+```
+
+Once the replicas and admin are set up,we can start sending http req to our admin.
+
+The admin exposes 3 routes for us to use:
+
+- /put: Send a POST request to this route with attributes `key` and `val` in body to store the data in one of the clusters.
+- /get: Send a POST request to this route with the `key` attribute in body to get the key-value pair 
+- /delete: Send a POST request to this route with the `key` attribute in body to delete the key-value pair from the system.
+
+---
+**NOTE**
+- -l=true sets up a new cluster,defaults to false
+- Dont forget the storage directory as you will need it to delete the replica
+- All the commands and flag can be viewed using the -h or --help flag  
+- The admin will automatically decide which replica goes to which cluster
+- Adding and removing clusters from the system automatically relocates all the keys in the cluster.Removing the last cluster deletes all the keys in that cluster.
+---
+
 ## Examples
+
+## Killing Ravel Instance
+
+Stopping a ravel instance niethers delete the data or configuration nor removes it from the system, it just replicates a crash.
+
+In order to delete all the data and configuration and remove the instance from the system you need to kill it.
+
+```shell
+ravel_node kill -s="the storage directory you specified while starting the node"
+```
+Stopping the ravel_admin breaks the entire system and renders it useless.It is recommended not to stop/kill the admin unless all the replicas have been properly killed.
+
+In order to kill the admin just deletes its storage directory.
+
+```shell
+sudo rm -rf "path to storage directory"
+```
+
+## Uninstalling Ravel
+
+Ravel can be uninstalled bye deleting the binaries from /usr/local/bin
+
+```shell
+sudo rm /usr/local/bin/ravel_node
+sudo rm /usr/local/bin/ravel_cluster_admin
+```
 
 ## Documentation and Further Reading
 
