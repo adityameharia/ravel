@@ -33,7 +33,7 @@ This will download the `ravel_node` and `ravel_cluster_admin` binary files and m
 have it in your `$PATH`
 
 ```sh
-curl https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+curl https://raw.githubusercontent.com/adityameharia/ravel/main/install.sh | bash
 ```
 
 
