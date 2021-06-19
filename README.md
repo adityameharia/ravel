@@ -186,7 +186,7 @@ The cluster admin server exposes 3 HTTP routes:
         - `key = [string]`
     - Success Response: `200` with body `{"key": <key>, "val":<value>}`
 
-- URL: `/get`
+- URL: `/delete`
     - Method:`POST`
     - Description: Delete a key value pair from the system
     - Request Body: `{"key": "<your_key_here>"`
